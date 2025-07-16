@@ -1,11 +1,10 @@
-```html
-
-
-
-  
-  
-  Chatbot IA en Éducation - Cadre d'Usage
-  
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chatbot IA en Éducation - Cadre d'Usage</title>
+  <style>
     html, body {
       height: 100%;
       width: 100%;
@@ -263,77 +262,77 @@
       .send-btn { font-size: 0.91em; padding: 8px 5px; min-width: 45px;}
       .avatar { width: 26px; height: 26px; font-size: 0.9em; }
     }
-  
-
-
-  
-    
-      🤖 Assistant IA en Éducation
-      Cadre d'usage de l'IA dans l'éducation française - Juin 2025
-    
-    
-      
-        🤖
-        
+  </style>
+</head>
+<body>
+  <div class="chatbot-container">
+    <div class="header">
+      <h1>🤖 Assistant IA en Éducation</h1>
+      <p>Cadre d'usage de l'IA dans l'éducation française - Juin 2025</p>
+    </div>
+    <div class="chat-container" id="chatContainer">
+      <div class="message bot">
+        <div class="avatar bot">🤖</div>
+        <div class="message-content">
           Bonjour ! Je suis votre assistant pour le cadre d'usage de l'IA en éducation. Je peux répondre à vos questions sur les directives françaises concernant l'utilisation de l'intelligence artificielle dans l'enseignement. Comment puis-je vous aider ?
-        
-      
-    
-    
-      
-        
-        
-        
-      
-    
-    
-      
-        Principes généraux
-        Usage élèves
-        Obligations légales
-        Protection données
-        Remplacement enseignants
-        Impact environnemental
-        Devoirs et évaluations
-        Formation IA
-        Données autorisées
-        Primaire
-        Outils recommandés
-        Détection IA
-        Risques
-        Aide aux devoirs
-        Sensibilisation
-        Sanctions fraude
-      
-      
-        
-        Envoyer
-      
-    
-    
+        </div>
+      </div>
+    </div>
+    <div class="typing-indicator" id="typingIndicator">
+      <div class="typing-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    <div class="input-container">
+      <div class="suggestions-bar" id="suggestions">
+        <button type="button" class="suggestion-btn">Principes généraux</button>
+        <button type="button" class="suggestion-btn">Usage élèves</button>
+        <button type="button" class="suggestion-btn">Obligations légales</button>
+        <button type="button" class="suggestion-btn">Protection données</button>
+        <button type="button" class="suggestion-btn">Remplacement enseignants</button>
+        <button type="button" class="suggestion-btn">Impact environnemental</button>
+        <button type="button" class="suggestion-btn">Devoirs et évaluations</button>
+        <button type="button" class="suggestion-btn">Formation IA</button>
+        <button type="button" class="suggestion-btn">Données autorisées</button>
+        <button type="button" class="suggestion-btn">Primaire</button>
+        <button type="button" class="suggestion-btn">Outils recommandés</button>
+        <button type="button" class="suggestion-btn">Détection IA</button>
+        <button type="button" class="suggestion-btn">Risques</button>
+        <button type="button" class="suggestion-btn">Aide aux devoirs</button>
+        <button type="button" class="suggestion-btn">Sensibilisation</button>
+        <button type="button" class="suggestion-btn">Sanctions fraude</button>
+      </div>
+      <form class="input-group" onsubmit="event.preventDefault();sendUserMessage();">
+        <input type="text" class="input-field" id="userInput" placeholder="Tapez votre question ici..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeypress="handleKeyPress(event)">
+        <button type="button" class="send-btn" id="sendBtn" onclick="sendUserMessage()">Envoyer</button>
+      </form>
+    </div>
+    <div class="footer">
       Chatbot généré avec l'aide de l'IA et supervisé par Amélie Silvert &mdash;
-      Voir le profil LinkedIn
-    
-  
-  
+      <a href="https://www.linkedin.com/in/amélie-silvert-2359b576/" target="_blank" rel="noopener">Voir le profil LinkedIn</a>
+    </div>
+  </div>
+  <script>
     const knowledgeBase = {
       "principes généraux": {
         keywords: ["principe", "général", "valeur", "objectif", "éthique"],
-        response: `Principes généraux pour l'usage de l'IA en éducation :
-        • Respect des valeurs républicaines.
-        • Usage responsable.
-        • Assistance, non remplacement de l'humain.
-        • Impact environnemental : privilégier un usage raisonné.
-        • Solutions libres et transparentes dès que possible.
-        • Transparence auprès des élèves et parents.`
+        response: `<strong>Principes généraux</strong> pour l'usage de l'IA en éducation :<br>
+        • <b>Respect des valeurs républicaines</b>.<br>
+        • <b>Usage responsable</b>.<br>
+        • <b>Assistance, non remplacement de l'humain</b>.<br>
+        • <b>Impact environnemental</b> : privilégier un usage raisonné.<br>
+        • <b>Solutions libres et transparentes</b> dès que possible.<br>
+        • <b>Transparence auprès des élèves et parents</b>.`
       },
       // Ajoutez les autres entrées :
       "usage élèves": {
         keywords: ["élève","étudiant","scolaire","classe","enfant"],
-        response: `Usage de l'IA par les élèves
-        École primaire : Sensibilisation, pas d'utilisation directe d'IA générative.
-        Collège/lycée : Utilisation encadrée, autorisée selon niveau et contexte pédagogique.
-        L'utilisation d'IA générative sans autorisation pour un devoir constitue une fraude.`
+        response: `<strong>Usage de l'IA par les élèves</strong><br>
+        <b>École primaire :</b> Sensibilisation, pas d'utilisation directe d'IA générative.<br>
+        <b>Collège/lycée :</b> Utilisation encadrée, autorisée selon niveau et contexte pédagogique.<br>
+        <div class="warning-box">L'utilisation d'IA générative sans autorisation pour un devoir constitue une <strong>fraude</strong>.</div>`
       },
       // ...ajoutez les autres thèmes sur le même modèle...
     };
@@ -353,8 +352,8 @@
       const msg = document.createElement('div');
       msg.className = `message ${isUser ? 'user' : 'bot'}`;
       msg.innerHTML = `
-        ${isUser ? '👤' : '🤖'}
-        ${content}
+        <div class="avatar ${isUser ? 'user' : 'bot'}">${isUser ? '👤' : '🤖'}</div>
+        <div class="message-content">${content}</div>
       `;
       chat.appendChild(msg);
       chat.scrollTop = chat.scrollHeight;
@@ -376,16 +375,16 @@
       if (/au revoir|bye/i.test(u))
         return "Au revoir ! N'hésitez pas à revenir si vous avez d'autres questions sur l'IA en éducation. Bonne journée !";
       return `Je n'ai pas trouvé d'information spécifique sur "${u}" dans le cadre d'usage de l'IA en éducation.
-        
-          Vous pouvez me poser des questions sur :
-          • Les principes généraux d'usage de l'IA
-          • L'utilisation par les élèves selon les niveaux
-          • Les obligations légales et protection des données
-          • L'impact environnemental et les risques
-          • Les devoirs, évaluations et détection
-          • Le rôle des enseignants et les outils
+        <div class="info-box">
+          <strong>Vous pouvez me poser des questions sur :</strong><br>
+          • Les principes généraux d'usage de l'IA<br>
+          • L'utilisation par les élèves selon les niveaux<br>
+          • Les obligations légales et protection des données<br>
+          • L'impact environnemental et les risques<br>
+          • Les devoirs, évaluations et détection<br>
+          • Le rôle des enseignants et les outils<br>
           • La formation, sensibilisation et sanctions
-        
+        </div>
         Essayez une suggestion ci-dessus ou reformulez votre question.`;
     }
     function sendMessage(msg) {
@@ -421,17 +420,6 @@
         });
       });
     });
-  
-
-
-```
-
-- **Les mots clés en bas sont tous des boutons qui fonctionnent :** le clic sur un mot lance exactement la requête correspondante auprès du chatbot, même sur smartphone — sans aucun scroll nécessaire.
-- **Responsive** : affichage automatique adapté à toutes les tailles d’écran ; la barre des suggestions reste visible et ergonomique.
-- **Champ de saisie et bouton envoyer** restent toujours accessibles et lisibles, sans débordement.
-- **Complétez la base de connaissances dans `knowledgeBase` pour chaque réponse souhaitée.**
-- Footer conforme avec supervision et lien LinkedIn.
-
-Collez ce code sur GitHub Pages, vos suggestions fonctionneront désormais parfaitement sur tout appareil.
-
-[1] https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/75994888/5de8cc68-e73d-4902-93bc-e1884ad1ab9f/chatbot_cadre_IA-3.html
+  </script>
+</body>
+</html>
