@@ -1,566 +1,439 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Assistant IA en Éducation</title>
-  <style>
-    html, body {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      background: #f7fafd;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
-    .chatbot-container {
-      width: 100%;
-      max-width: 700px;
-      min-height: 98vh;
-      background: #fff;
-      border: 2px solid #4a90e2;
-      box-shadow: 0 8px 38px rgba(74,144,226,0.09), 0 2px 7px rgba(0,0,0,0.05);
-      border-radius: 18px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      margin: 10px;
-    }
-    .header {
-      background: linear-gradient(132deg, #1e3a8a 0%, #ea580c 100%);
-      color: white;
-      padding: 24px 4vw 12px 4vw;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-      flex-shrink: 0;
-    }
-    .header h1 {
-      font-size: 1.35rem;
-      margin: 0 0 8px 0;
-    }
-    .header p {
-      font-size: 1.02rem;
-      opacity: 0.97;
-      line-height: 1.54;
-      margin: 0 auto;
-      max-width: 700px;
-    }
-    .chat-container {
-      flex-grow: 1;
-      overflow-y: auto;
-      background: #f8f9fa;
-      padding: 20px 12px 18px 12px;
-    }
-    .message {
-      margin-bottom: 13px;
-      display: flex;
-      align-items: flex-start;
-      animation: fadeIn 0.25s;
-    }
-    .message.user { justify-content: flex-end; }
-    .message-content {
-      max-width: 85%;
-      padding: 13px 15px;
-      border-radius: 15px;
-      font-size: 1rem;
-      line-height: 1.45;
-      word-break: break-word;
-      white-space: pre-line;
-    }
-    .message.bot .message-content {
-      background: #eaf2fb;
-      color: #133d66;
-      border: 1px solid #acd2fa;
-      margin-left: 8px;
-    }
-    .message.user .message-content {
-      background: #ea580c;
-      color: white;
-      margin-right: 8px;
-    }
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1.15rem;
-      background: #e8effa;
-      border: 2px solid #4a90e2;
-      color: #1e3a8a;
-      margin-right: 7px;
-      flex-shrink: 0;
-    }
-    .avatar.user {
-      background: #ea580c;
-      color: white;
-      border: none;
-      margin: 0 0 0 7px;
-    }
-    .input-container {
-      background: #fcfcff;
-      border-top: 2px solid #e9ecef;
-      flex-shrink: 0;
-      padding: 8px 4vw 10px 4vw;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .suggestions-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 7px 7px;
-      padding: 8px 2px 7px 2px;
-      background: #f9fafd;
-      border: 1.5px solid #acd2fa;
-      border-radius: 13px;
-      margin-bottom: 8px;
-      width: 100%;
-    }
-    .suggestion-btn {
-      background: #f3f8fd;
-      border: 1px solid #acd2fa;
-      color: #2364a5;
-      padding: 8px 11px;
-      border-radius: 15px;
-      font-size: 0.99em;
-      cursor: pointer;
-      transition: background 0.14s, border-color 0.14s, color 0.13s;
-      box-shadow: 0 1px 2px rgba(160,192,232,0.09);
-      user-select: none;
-      white-space: nowrap;
-      font-weight: 500;
-      min-width: 98px;
-      max-width: 100vw;
-      text-align: center;
-    }
-    .suggestion-btn:focus, .suggestion-btn:active {
-      outline: none;
-      background: #e9f1fb;
-      border-color: #4a90e2;
-      color: #ea580c;
-    }
-    .suggestion-btn:hover {
-      background: #e6f1fd;
-      color: #ea580c;
-      border-color: #ea580c;
-    }
-    .input-group {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      width: 100%;
-      justify-content: center;
-    }
-    .input-field {
-      flex: 1;
-      min-width: 60px;
-      max-width: 250px;
-      padding: 11px 11px;
-      border: 2px solid #acd2fa;
-      border-radius: 19px;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.15s;
-      background: #f7fbff;
-    }
-    .input-field:focus { border-color: #4a90e2; }
-    .send-btn {
-      background: #ea580c;
-      color: white;
-      border: none;
-      padding: 11px 17px;
-      border-radius: 19px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.15s;
-      user-select: none;
-      font-weight: 600;
-      min-width: 63px;
-      white-space: nowrap;
-    }
-    .send-btn:hover:not(:disabled) { background: #c2410c; }
-    .send-btn:disabled { background: #6c757d; cursor: not-allowed; }
-    .typing-indicator {
-      display: none;
-      padding: 9px 14px;
-      background: #eaf2fb;
-      border: 1.2px solid #acd2fa;
-      border-radius: 15px;
-      margin-left: 25px;
-      margin-bottom: 10px;
-      font-size: 1rem;
-    }
-    .typing-dots { display: flex; gap: 4px; }
-    .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #acd2fa;
-      animation: typing 1.3s infinite;
-    }
-    .dot:nth-child(2) { animation-delay: 0.2s; }
-    .dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes typing {
-      0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-8px); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
-    .info-box, .success-box, .error-box {
-      border-radius: 10px;
-      padding: 14px;
-      margin: 12px 0;
-      font-size: 0.97rem;
-    }
-    .info-box { background: #dbeafe; border: 1px solid #93c5fd;}
-    .success-box { background: #d1fae5; border: 1px solid #34d399;}
-    .error-box { background: #fee2e2; border: 1px solid #f87171;}
-    .footer {
-      text-align: center;
-      font-size: 0.99rem;
-      color: #1e3a8a;
-      padding: 12px 5px 7px 5px;
-      border-top: 1px solid #dbeafe;
-      background: #f4faff;
-    }
-    .footer a {
-      color: #ea580c;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .footer a:hover { text-decoration: underline; }
-    @media (max-width: 560px) {
-      .chatbot-container {
-        border-radius: 0;
-        margin: 0;
-      }
-      .header { padding: 10px 1vw 4px 1vw;}
-      .header h1 { font-size: 1.05em;}
-      .header p { font-size: 0.93rem;}
-      .chat-container { padding: 7px 1vw 7px 1vw;}
-      .input-container { padding: 7px 1vw 7px 1vw;}
-      .suggestions-row { gap: 5px 4px;}
-      .suggestion-btn { font-size: .92em; min-width: 82px; }
-      .input-field { padding: 7px 3px; max-width: 68vw; font-size: .97em;}
-      .send-btn { padding: 8px 4px; font-size: .96em; min-width: 41px;}
-      .footer { font-size: 0.95rem;}
-    }
-    ul {
-      margin: 7px 0 7px 16px;
-      padding: 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot IA en Éducation - Cadre d'Usage</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f7fafd;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .chatbot-container {
+            width: 95%;
+            max-width: 800px;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #ea580c 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            animation: fadeIn 0.3s ease-in;
+        }
+        .message.user { justify-content: flex-end; }
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            line-height: 1.4;
+        }
+        .message.bot .message-content {
+            background: #f1f5f9;
+            color: #1e3a8a;
+            margin-left: 10px;
+        }
+        .message.user .message-content {
+            background: #ea580c;
+            color: white;
+            margin-right: 10px;
+        }
+        .avatar {
+            width: 35px; height: 35px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; color: white; font-size: 0.9rem; flex-shrink: 0;
+        }
+        .avatar.bot { background: #1e3a8a; }
+        .avatar.user { background: #ea580c; }
+        .input-container {
+            padding: 20px; background: white;
+            border-top: 1px solid #e9ecef;
+        }
+        .suggestions {
+            display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;
+        }
+        .suggestion-btn {
+            background: #f3f8fd;
+            border: 1px solid #acd2fa;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer; font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .suggestion-btn:hover {
+            background: #e6f1fd;
+            border-color: #ea580c;
+            color: #ea580c;
+        }
+        .input-group {
+            display: flex; gap: 10px;
+        }
+        .input-field {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-field:focus { border-color: #1e3a8a; }
+        .send-btn {
+            background: #ea580c; color: white;
+            border: none; padding: 12px 20px;
+            border-radius: 25px; cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .send-btn:hover { background: #c2410c; }
+        .send-btn:disabled { background: #6c757d; cursor: not-allowed; }
+        .typing-indicator {
+            display: none; padding: 10px 16px;
+            background: #e9ecef;
+            border-radius: 18px; margin-left: 45px; margin-bottom: 15px;
+        }
+        .typing-dots { display: flex; gap: 4px; }
+        .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #6c757d; animation: typing 1.4s infinite;
+        }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0);}
+            30% { transform: translateY(-10px);}
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .info-box {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        .fraude-box {
+            background: #feecea;
+            border: 1.5px solid #e35353;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 13px 0 10px 0;
+            color: #bb2124;
+            font-size: 0.96rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+        }
+        .fraude-icon {
+            font-size: 1.35em;
+            margin-right: 7px;
+            color: #e35353;
+            margin-top: 2px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.89rem;
+            color: #1e3a8a;
+            padding: 12px 5px 8px 5px;
+            border-top: 1px solid #dbeafe;
+            background: #f4faff;
+        }
+        .footer a {
+            color: #ea580c; text-decoration: none; font-weight: 500;
+        }
+        .footer a:hover { text-decoration: underline; }
+        @media (max-width: 600px) {
+            .chatbot-container { width: 100%; height: 100vh; border-radius: 0;}
+            .message-content { max-width: 85%; }
+            .suggestions { gap: 6px; }
+        }
+    </style>
 </head>
 <body>
-<div class="chatbot-container">
-  <div class="header">
-    <h1>🤖 Assistant IA en Éducation</h1>
-    <p>
-      Cadre d'usage de l'IA dans l'éducation française (2025)<br>
-      Cliquez sur un mot-clé, tapez une question classique ou essayez les exemples suggérés.
-    </p>
-  </div>
-  <div class="chat-container" id="chatContainer">
-    <div class="message bot">
-      <div class="avatar bot">🤖</div>
-      <div class="message-content">
-        Bonjour ! Je suis votre assistant pour le cadre d'usage de l'IA en éducation.<br>
-        Posez-moi vos questions sur les droits, usages, risques ou innovations liées à l’intelligence artificielle à l’école.<br>
-        Exemples d'interactions possibles :
-        <ul>
-          <li>Quels sont les dangers de l’IA pour les élèves ?</li>
-          <li>Un enseignant peut-il utiliser ChatGPT ?</li>
-          <li>Y aura-t-il des sanctions pour la triche avec l’IA ?</li>
-          <li>Comment expliquer l’IA à un enfant ?</li>
-          <li>Peut-on corriger un devoir avec une IA ?</li>
-        </ul>
-        Ou utilisez les mots-clés plus bas pour naviguer dans les principaux thèmes.
-      </div>
+    <div class="chatbot-container">
+        <div class="header">
+            <h1>🤖 Assistant IA en Éducation</h1>
+            <p>Cadre d'usage de l'IA dans l'éducation française - Juin 2025</p>
+        </div>
+        <div class="chat-container" id="chatContainer">
+            <div class="message bot">
+                <div class="avatar bot">🤖</div>
+                <div class="message-content">
+                    Bonjour ! Je suis votre assistant pour le cadre d'usage de l'IA en éducation. Je peux répondre à vos questions sur les directives françaises concernant l'intelligence artificielle dans l'enseignement. Comment puis-je vous aider ?
+                </div>
+            </div>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+        <div class="input-container">
+            <div class="suggestions" id="suggestions">
+                <div class="suggestion-btn">Principes généraux</div>
+                <div class="suggestion-btn">Usage élèves</div>
+                <div class="suggestion-btn">Obligations légales</div>
+                <div class="suggestion-btn">Protection données</div>
+                <div class="suggestion-btn">Remplacement enseignants</div>
+                <div class="suggestion-btn">Impact environnemental</div>
+                <div class="suggestion-btn">Devoirs et évaluations</div>
+                <div class="suggestion-btn">Formation IA</div>
+                <div class="suggestion-btn">Données autorisées</div>
+                <div class="suggestion-btn">Primaire</div>
+                <div class="suggestion-btn">Outils recommandés</div>
+                <div class="suggestion-btn">Détection IA</div>
+                <div class="suggestion-btn">Risques</div>
+                <div class="suggestion-btn">Aide aux devoirs</div>
+                <div class="suggestion-btn">Sensibilisation</div>
+                <div class="suggestion-btn">Sanctions fraude</div>
+            </div>
+            <form class="input-group" onsubmit="event.preventDefault();sendUserMessage();">
+                <input type="text" class="input-field" id="userInput" placeholder="Tapez votre question ici..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeypress="handleKeyPress(event)">
+                <button type="button" class="send-btn" id="sendBtn" onclick="sendUserMessage()">Envoyer</button>
+            </form>
+        </div>
+        <div class="footer">
+            Chatbot généré avec l'aide de l'IA et supervisé par Amélie Silvert &mdash;
+            <a href="https://www.linkedin.com/in/amélie-silvert-2359b576/" target="_blank" rel="noopener">Voir le profil LinkedIn</a>
+        </div>
     </div>
-  </div>
-  <div class="typing-indicator" id="typingIndicator">
-    <div class="typing-dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-  </div>
-  <div class="input-container">
-    <div class="suggestions-row" id="suggestions">
-      <button type="button" class="suggestion-btn" data-key="principes généraux">Principes généraux</button>
-      <button type="button" class="suggestion-btn" data-key="usage élèves">Usages élèves</button>
-      <button type="button" class="suggestion-btn" data-key="obligations légales">Obligations légales</button>
-      <button type="button" class="suggestion-btn" data-key="protection données">Protection données</button>
-      <button type="button" class="suggestion-btn" data-key="remplacement enseignants">Remplacement enseignants</button>
-      <button type="button" class="suggestion-btn" data-key="impact environnemental">Impact environnemental</button>
-      <button type="button" class="suggestion-btn" data-key="devoirs et évaluations">Devoirs et évaluations</button>
-      <button type="button" class="suggestion-btn" data-key="formation ia">Formation IA</button>
-      <button type="button" class="suggestion-btn" data-key="données autorisées">Données autorisées</button>
-      <button type="button" class="suggestion-btn" data-key="primaire">Primaire</button>
-      <button type="button" class="suggestion-btn" data-key="outils recommandés">Outils recommandés</button>
-      <button type="button" class="suggestion-btn" data-key="détection ia">Détection IA</button>
-      <button type="button" class="suggestion-btn" data-key="risques">Risques</button>
-      <button type="button" class="suggestion-btn" data-key="aide aux devoirs">Aide aux devoirs</button>
-      <button type="button" class="suggestion-btn" data-key="sensibilisation">Sensibilisation</button>
-      <button type="button" class="suggestion-btn" data-key="sanctions fraude">Sanctions fraude</button>
-    </div>
-    <form class="input-group" onsubmit="event.preventDefault();sendUserMessage();">
-      <input type="text" class="input-field" id="userInput" placeholder="Tapez votre question ici..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-      <button type="submit" class="send-btn" id="sendBtn">Envoyer</button>
-    </form>
-  </div>
-  <div class="footer">
-    Chatbot généré avec l'aide de l'IA et supervisé par Amélie Silvert &mdash;
-    <a href="https://www.linkedin.com/in/amélie-silvert-2359b576/" target="_blank" rel="noopener">Voir le profil LinkedIn</a>
-  </div>
-</div>
-<script>
-  const knowledgeBase = {
-    "principes généraux": {
-      keywords: ["principe", "général", "valeur", "objectif", "éthique"],
-      response: `<b>Principes généraux</b> pour l'usage de l'IA en éducation :<br>
-      <ul>
-        <li><b>Respect des valeurs républicaines</b> et des droits fondamentaux.</li>
-        <li><b>Usage responsable</b>, transparent, avec supervision humaine.</li>
-        <li><b>Jamais de remplacement total des enseignants par l’IA</b>.</li>
-        <li>Respect de la <b>protection des données et du RGPD</b>.</li>
-        <li>Limiter l'impact environnemental et garantir l'équité d'accès aux outils.</li>
-      </ul>`
-    },
-    "usage élèves": {
-      keywords: ["élève", "étudiant", "classe", "scolaire", "enfant"],
-      response: `<b>Usages élèves</b> :
-      <ul>
-        <li><b>Primaire</b> : sensibilisation uniquement, pas de manipulation d'IA générative.</li>
-        <li><b>Collège/Lycée</b> : usages pédagogiques encadrés par l'enseignant, formation aux risques et au RGPD.</li>
-        <li>L'utilisation d'une IA générative pour un devoir sans autorisation est <b>interdite</b> et peut être assimilée à une fraude.</li>
-        <li>Acquérir un esprit critique et savoir expliquer sa démarche lors d’évaluations.</li>
-      </ul>`
-    },
-    "obligations légales": {
-      keywords: ["légal", "loi", "obligation", "droit", "rgpd"],
-      response: `<b>Obligations légales</b><br>
-      <ul>
-        <li>Respect du RGPD et de la loi Informatique et Libertés.</li>
-        <li>Pas de données personnelles dans les IA publiques.</li>
-        <li>Informer et rendre transparent tout usage d’IA aux élèves et aux parents.</li>
-        <li>Se référer au DPO ou à la DSI pour tout nouvel outil ou service IA.</li>
-      </ul>`
-    },
-    "protection données": {
-      keywords: ["donnée", "personnel", "confidentiel", "protection", "privé", "rgpd", "saisir"],
-      response: `<b>Protection des données</b> :
-      <ul>
-        <li>Ne jamais saisir le nom, adresse ou note d’un élève dans une IA grand public.</li>
-        <li>N’utiliser que des textes officiels ou anonymes.</li>
-        <li>Bien vérifier la politique de confidentialité de chaque outil numérique.</li>
-      </ul>`
-    },
-    "remplacement enseignants": {
-      keywords: ["remplacement", "enseignant", "professeur", "substituer"],
-      response: `<b>Remplacement enseignants</b> :
-      <ul>
-        <li>L’IA ne doit servir qu’en soutien ou pour automatiser des tâches répétitives.</li>
-        <li>La relation pédagogique et l’accompagnement restent le cœur du métier d’enseignant.</li>
-        <li><span class="info-box">Aucune IA ne peut évaluer ou orienter un élève sans validation humaine.</span></li>
-      </ul>`
-    },
-    "impact environnemental": {
-      keywords: ["environnemental", "écologique", "énergie", "carbone", "durable", "empreinte"],
-      response: `<b>Impact environnemental</b> :
-      <ul>
-        <li>Prendre en compte la consommation et l’empreinte carbone des IA génératives.</li>
-        <li>Éviter d’utiliser l’IA pour les besoins simples remplaçables par des méthodes “classiques”.</li>
-        <li>Favoriser les alternatives sobres et européennes.</li>
-      </ul>`
-    },
-    "devoirs et évaluations": {
-      keywords: ["devoir", "évaluation", "notation", "corriger", "triche"],
-      response: `<b>Devoirs & évaluations</b> :
-      <ul>
-        <li>Bien expliquer aux élèves la notion de fraude liée à l'usage d’IA sans autorisation.</li>
-        <li>Évaluer le raisonnement, la démarche et l’esprit critique, pas seulement le résultat.</li>
-        <li>Privilégier la diversité des modes d’évaluation (orale, en présentiel, analyse de production…)</li>
-      </ul>`
-    },
-    "formation ia": {
-      keywords: ["formation", "compétence", "apprentissage", "mooc"],
-      response: `<b>Formation IA</b> :
-      <ul>
-        <li>Formation Pix IA obligatoire dès la 4e, en CAP et en Seconde.</li>
-        <li>Formations continues pour enseignants sur Magistère, Réseau Canopé, DRANE…</li>
-        <li>Accompagnement par les référents numériques et corps d’inspection.</li>
-      </ul>`
-    },
-    "données autorisées": {
-      keywords: ["donnée", "autorisé", "confidentiel", "anonyme", "saisir"],
-      response: `<b>Données autorisées</b> :
-      <ul>
-        <li>Uniquement des textes officiels ou ressources éducatives libres de droits.</li>
-        <li>Statistiques anonymisées, œuvres du domaine public.</li>
-        <li>Jamais de contenu à caractère personnel ni de notes individuelles.</li>
-      </ul>`
-    },
-    "primaire": {
-      keywords: ["primaire", "élémentaire", "cp", "ce1", "ce2", "cm1", "cm2"],
-      response: `<b>IA à l’école primaire</b> :
-      <ul>
-        <li>Sensibilisation uniquement, pas de manipulation directe de l’IA par les élèves.</li>
-        <li>Découverte des bases : l’IA, c’est quoi, où la trouve-t-on, pourquoi doit-on rester prudent ?</li>
-        <li>Rôle de l’enseignant : préparer, différencier, adapter, mais sans exposer les élèves à une IA générative.</li>
-      </ul>`
-    },
-    "outils recommandés": {
-      keywords: ["outil", "recommandé", "logiciel", "application", "plateforme"],
-      response: `<b>Outils IA recommandés</b> :
-      <ul>
-        <li>Solutions qui respectent le RGPD : EdTech françaises, plateformes validées par la DSI ou la DRANE.</li>
-        <li>Éviter les IA grand public (ex : ChatGPT, Copilot) pour les données sensibles/non anonymisées.</li>
-        <li>Privilégier l’hébergement européen et la transparence sur le traitement des données.</li>
-      </ul>`
-    },
-    "détection ia": {
-      keywords: ["détection", "détecter", "copie", "chatgpt", "triche"],
-      response: `<b>Détection de l’usage d’IA</b> :
-      <ul>
-        <li>Les logiciels de détection d’IA sont peu fiables et peuvent générer des faux positifs.</li>
-        <li>Pour vérifier, privilégier l’oral, l’analyse du processus, la production progressive.</li>
-        <li>Parler avec les élèves, demander de détailler la démarche en cas de doute.</li>
-      </ul>`
-    },
-    "risques": {
-      keywords: ["risque", "danger", "biais", "problème", "limite"],
-      response: `<b>Risques de l’IA en éducation</b> :
-      <ul>
-        <li>Dépendance excessive, perte d’autonomie, réponses fausses, biais algorithmiques.</li>
-        <li>Tentation de tricher, risques d’addiction, de désinformation ou de contenus inadaptés.</li>
-        <li>Risques pour les données personnelles et le respect du RGPD.</li>
-      </ul>`
-    },
-    "aide aux devoirs": {
-      keywords: ["aide", "devoirs", "maison", "soutien"],
-      response: `<b>Aide aux devoirs avec l’IA</b> :
-      <ul>
-        <li>S’entraîner, reformuler, structurer un raisonnement.</li>
-        <li>Usage transparent avec l’enseignant : appropriation obligatoire.</li>
-        <li>Copier-coller non autorisé sans compréhension personnelle.</li>
-      </ul>`
-    },
-    "sensibilisation": {
-      keywords: ["sensibiliser", "sensibilisation", "éduquer", "prévenir", "information"],
-      response: `<b>Sensibilisation à l’IA</b> :
-      <ul>
-        <li>Développer l’esprit critique, expliquer les biais, encourager les débats en classe.</li>
-        <li>Formation Pix, parcours EMI, projets croisés (SNT, EMI, sciences...)</li>
-        <li>Participation d’experts, interventions ponctuelles.</li>
-      </ul>`
-    },
-    "sanctions fraude": {
-      keywords: ["sanction", "fraude", "triche", "punition"],
-      response: `<b>Sanctions en cas de fraude</b> :
-      <ul>
-        <li>Sanctions selon le règlement intérieur : zéro, devoir à refaire, avertissement, voire conseil de discipline.</li>
-        <li>Privilégier l’explication, la prévention et la sensibilisation pédagogique avant la sanction lourde.</li>
-      </ul>`
-    }
-  };
-  function findBestMatch(userInput) {
-    const input = userInput.trim().toLowerCase();
-    for (const [cat, data] of Object.entries(knowledgeBase)) {
-      if (
-        cat === input ||
-        input === cat.replace(/s$/, "") ||
-        input.replace(/s$/, "") === cat ||
-        data.keywords.some(k => input.includes(k))
-      ) {
-        return data;
-      }
-    }
-    return null;
-  }
-  function addMessage(content, isUser = false) {
-    const chat = document.getElementById('chatContainer');
-    const msg = document.createElement('div');
-    msg.className = `message ${isUser ? 'user' : 'bot'}`;
-    msg.innerHTML = `
-      <div class="avatar ${isUser ? 'user' : 'bot'}">${isUser ? '👤' : '🤖'}</div>
-      <div class="message-content">${content}</div>
-    `;
-    chat.appendChild(msg);
-    chat.scrollTop = chat.scrollHeight;
-  }
-  function showTypingIndicator() {
-    document.getElementById('typingIndicator').style.display = 'block';
-    document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
-  }
-  function hideTypingIndicator() {
-    document.getElementById('typingIndicator').style.display = 'none';
-  }
-  function generateResponse(u) {
-    const kw = findBestMatch(u);
-    if (kw) return kw.response;
-    if (/bonjour|salut/i.test(u))
-      return "Bonjour ! Je suis là pour vous aider avec vos questions sur le cadre d'usage de l'IA en éducation. N'hésitez pas à me poser vos questions !";
-    if (/merci/i.test(u))
-      return "Avec plaisir ! N'hésitez pas à demander d'autres précisions sur l'usage de l'IA en éducation.";
-    if (/au revoir|bye/i.test(u))
-      return "Au revoir ! N'hésitez pas à revenir si vous avez d'autres questions sur l'IA en éducation. Bonne journée !";
-    return `Je n'ai pas trouvé d'information spécifique sur "<b>${u}</b>" dans le cadre d'usage de l'IA en éducation.
-      <div class="info-box">
-      <strong>Vous pouvez me poser des questions sur :</strong><br>
-      • Les principes généraux d'usage de l'IA<br>
-      • L'utilisation par les élèves selon les niveaux<br>
-      • Les obligations légales et protection des données<br>
-      • L'impact environnemental et les risques<br>
-      • Les devoirs, évaluations et détection<br>
-      • Le rôle des enseignants et les outils<br>
-      • La formation, sensibilisation et sanctions
-      </div>
-      Essayez une suggestion ci-dessous ou reformulez votre question.`;
-  }
-  function sendMessage(msg) {
-    const input = document.getElementById('userInput');
-    input.value = msg;
-    sendUserMessage();
-  }
-  function sendUserMessage() {
-    const input = document.getElementById('userInput');
-    const msg = input.value.trim();
-    if (!msg) return;
-    const sendBtn = document.getElementById('sendBtn');
-    sendBtn.disabled = true;
-    addMessage(msg, true);
-    input.value = '';
-    showTypingIndicator();
-    setTimeout(() => {
-      hideTypingIndicator();
-      const res = generateResponse(msg);
-      addMessage(res, false);
-      sendBtn.disabled = false;
-      input.focus();
-    }, 700 + Math.random() * 400);
-  }
-  function handleKeyPress(e) {
-    if (e.key === 'Enter') sendUserMessage();
-  }
-  document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('userInput').focus();
-    document.querySelectorAll('.suggestion-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        sendMessage(this.getAttribute('data-key'));
-      });
-    });
-  });
-</script>
+    <script>
+        const knowledgeBase = {
+            "principes généraux": {
+                keywords: ["principe","général","valeur","objectif","éthique"],
+                response: `<strong>Principes généraux</strong> pour l'usage de l'IA en éducation :<br>
+                • <b>Respect des valeurs républicaines</b>.<br>
+                • <b>Usage responsable</b>.<br>
+                • <b>Assistance, non remplacement de l'humain</b>.<br>
+                • <b>Impact environnemental</b> : usage raisonné.<br>
+                • <b>Solutions libres et transparentes</b> dès que possible.<br>
+                • <b>Transparence auprès des élèves et parents</b>.`
+            },
+            "usage élèves": {
+                keywords: ["élève","étudiant","scolaire","classe","enfant"],
+                response: `<strong>Usage de l'IA par les élèves</strong><br>
+                <b>École primaire :</b> sensibilisation, pas d'utilisation directe d'IA générative.<br>
+                <b>Collège/lycée :</b> utilisation encadrée par les enseignants, autorisée selon le niveau et le contexte pédagogique.<br>
+                <div class="fraude-box"><span class="fraude-icon">⚠️</span>
+                Utiliser une IA générative pour un devoir ou une production sans le signaler explicitement à l'enseignant est considéré comme une <b>tentative de fraude</b> et expose à des sanctions scolaires et pédagogiques.
+                </div>`
+            },
+            "obligations légales": {
+                keywords: ["légal","loi","obligation","droit","rgpd"],
+                response: `<strong>Obligations légales pour l'usage de l'IA :</strong><br>
+                • Respect du RGPD<br>
+                • Pas de données personnelles d'élèves dans des IA non validées<br>
+                • Transparence sur l'utilisation auprès des familles<br>
+                • Validation préalable de la DSI pour tout nouvel outil`
+            },
+            "protection données": {
+                keywords: ["donnée", "personnel", "protection", "confidentiel", "privé"],
+                response: `<strong>Protection des données :</strong><br>
+                • Aucun nom ou donnée personnelle dans une IA grand public<br>
+                • Saisir seulement des données anonymes ou officielles<br>
+                • S'informer auprès de la DSI si un doute !`
+            },
+            "remplacement enseignants": {
+                keywords: ["remplacement","enseignant","professeur"],
+                response: `<strong>L’IA ne remplace pas l’enseignant !</strong><br>
+                Les outils IA assistent ou suggèrent, mais la décision pédagogique reste humaine.`
+            },
+            "impact environnemental": {
+                keywords: ["environnement","écologique","énergie","carbone","écologie"],
+                response: `<strong>Impact environnemental de l’IA :</strong><br>
+                • Modèles d’IA = consommation énergétique élevée<br>
+                • Utiliser l’IA uniquement si nécessaire<br>
+                • Préférer des alternatives "frugales" chaque fois possible`
+            },
+            "devoirs et évaluations": {
+                keywords: ["devoir","évaluation","correction","notation","rendu"],
+                response: `<strong>Devoirs & évaluations :</strong><br>
+                • L’usage d’IA générative sans autorisation = fraude<br>
+                • Privilégier des questionnements oraux, analytiques ou personnalisés<br>
+                • Multiplier les formes d’évaluation pour limiter la triche`
+            },
+            "formation ia": {
+                keywords: ["formation","compétence","apprentissage"],
+                response: `<strong>Formation IA :</strong><br>
+                • Formation obligatoire pour tous les enseignants et référents numériques<br>
+                • Formation Pix obligatoire pour les élèves dès la 4e<br>
+                • Ressources sur Magistère, Réseau Canopé, sites officiels`
+            },
+            "données autorisées": {
+                keywords: ["donnée","autorisé","confidentiel","anonyme"],
+                response: `<strong>Données autorisées :</strong><br>
+                • Textes et documents officiels non confidentiels<br>
+                • Jamais de noms, notes, adresses, etc.<br>
+                • Privilégier des contenus déjà publics`
+            },
+            "primaire": {
+                keywords: ["primaire","élémentaire","cp","ce1","ce2","cm1","cm2"],
+                response: `<strong>IA à l’école primaire :</strong><br>
+                • Sensibilisation uniquement, pas de manipulation d’IA générative<br>
+                • Développer l’esprit critique par l’analyse d’images ou d’informations`
+            },
+            "outils recommandés": {
+                keywords: ["outil","recommandé","plateforme","logiciel","appli"],
+                response: `<strong>Outils recommandés :</strong><br>
+                • Outils validés par la DSI ou la DRANE<br>
+                • Plateformes respectant le RGPD, hébergées en Europe<br>
+                • Éviter les IA américaines si les données sont sensibles`
+            },
+            "détection ia": {
+                keywords: ["détection", "triche", "copie", "chatgpt"],
+                response: `<strong>Détection IA chez les élèves :</strong><br>
+                • Outils de détection imprécis, non reconnus officiellement<br>
+                • Privilégier l’oral et le suivi des productions<br>
+                • Informer clairement les élèves en début d’année`
+            },
+            "risques": {
+                keywords: ["risque","danger","biais","problème"],
+                response: `<strong>Risques de l’IA :</strong><br>
+                • Perte de recul<br>
+                • Biais algorithmiques<br>
+                • Confidentialité compromise si usage mauvais outil`
+            },
+            "aide aux devoirs": {
+                keywords: ["aide","soutien","assistant","aider"],
+                response: `<strong>Aide aux devoirs avec l’IA :</strong><br>
+                • Peut aider à structurer son raisonnement<br>
+                • Doit être signalé à l’enseignant<br>
+                • Copie sans appropriation = fraude`
+            },
+            "sensibilisation": {
+                keywords: ["sensibilisation","éduquer","information"],
+                response: `<strong>Sensibilisation à l’IA :</strong><br>
+                • Éduquer à l’éthique, à l’usage responsable<br>
+                • Former à la détection des biais et deepfakes`
+            },
+            "sanctions fraude": {
+                keywords: ["sanction","fraude","triche"],
+                response: `<strong>Sanctions en cas de fraude :</strong><br>
+                • Application du règlement (zéro, devoir à refaire, conseil de discipline etc.)<br>
+                • Toujours privilégier la pédagogie et l’explication avant la sanction`
+            }
+        };
+        function findBestMatch(userInput) {
+            const input = userInput.trim().toLowerCase();
+            let best = null, score = 0;
+            for (const [cat, data] of Object.entries(knowledgeBase)) {
+                let m = 0;
+                data.keywords.forEach(k => { if (input.includes(k)) m++; });
+                if (input === cat.toLowerCase()) m += 2;
+                if (m > score) { score = m; best = data; }
+            }
+            return best;
+        }
+        function addMessage(content, isUser = false) {
+            const chat = document.getElementById('chatContainer');
+            const msg = document.createElement('div');
+            msg.className = `message ${isUser ? 'user' : 'bot'}`;
+            msg.innerHTML = `
+                <div class="avatar ${isUser ? 'user' : 'bot'}">${isUser ? '👤' : '🤖'}</div>
+                <div class="message-content">${content}</div>
+            `;
+            chat.appendChild(msg);
+            chat.scrollTop = chat.scrollHeight;
+        }
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'block';
+            document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
+        }
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+        function generateResponse(u) {
+            const kw = findBestMatch(u);
+            if (kw) return kw.response;
+            if (/bonjour|salut/i.test(u))
+                return "Bonjour ! Je suis là pour vous aider avec vos questions sur le cadre d'usage de l'IA en éducation. N'hésitez pas à me poser vos questions !";
+            if (/merci/i.test(u))
+                return "Avec plaisir ! N'hésitez pas à demander d'autres précisions sur l'usage de l'IA en éducation.";
+            if (/au revoir|bye/i.test(u))
+                return "Au revoir ! N'hésitez pas à revenir si vous avez d'autres questions sur l'IA en éducation. Bonne journée !";
+            return `Je n'ai pas trouvé d'information spécifique sur "${u}" dans le cadre d'usage de l'IA en éducation.
+            <div class="info-box">
+                <strong>Vous pouvez me poser des questions sur :</strong><br>
+                • Les principes généraux d'usage de l'IA<br>
+                • L'utilisation par les élèves selon les niveaux<br>
+                • Les obligations légales et protection des données<br>
+                • L'impact environnemental et les risques<br>
+                • Les devoirs, évaluations et détection<br>
+                • Le rôle des enseignants et les outils<br>
+                • La formation, sensibilisation et sanctions
+            </div>
+            Essayez une suggestion ci-dessus ou reformulez votre question.`;
+        }
+        function sendMessage(msg) {
+            const input = document.getElementById('userInput');
+            input.value = msg;
+            sendUserMessage();
+        }
+        function sendUserMessage() {
+            const input = document.getElementById('userInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            addMessage(msg, true);
+            input.value = '';
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                const res = generateResponse(msg);
+                addMessage(res, false);
+                sendBtn.disabled = false;
+                input.focus();
+            }, 700 + Math.random() * 400);
+        }
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendUserMessage();
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('userInput').focus();
+            document.querySelectorAll('.suggestion-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    sendMessage(this.textContent.trim());
+                });
+            });
+        });
+    </script>
 </body>
 </html>
