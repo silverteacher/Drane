@@ -6,7 +6,6 @@
   <title>Chatbot IA en Éducation - Cadre d'Usage</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f7fafd;
@@ -18,7 +17,7 @@
     }
     .chatbot-container {
       width: 100%;
-      max-width: 880px;
+      max-width: 900px;
       min-height: 96vh;
       background: #fff;
       border: 2.5px solid #4a90e2;
@@ -31,18 +30,39 @@
     .header {
       background: linear-gradient(133deg, #1e3a8a 0%, #ea580c 100%);
       color: white;
-      padding: 30px 32px 18px 32px;
+      padding: 36px 4vw 24px 4vw;
       text-align: center;
       box-shadow: 0 2px 10px rgba(0,0,0,0.07);
     }
-    .header h1 { font-size: 2.1rem; margin-bottom: 6px; }
+    .header-title-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+    .bot-ico-header {
+      width: 2.5em; height: 2.5em; background: #fff;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 1px 4px rgba(30,58,138,0.07);
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-size: 2.3rem;
+      margin: 0;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      background: none;
+      display: inline-block;
+    }
     .header p {
-      font-size: 1.09rem;
-      opacity: 0.9;
-      line-height: 1.45;
-      margin-top: 13px;
-      margin-bottom: 0;
+      font-size: 1.22rem;
+      opacity: 0.97;
+      line-height: 1.60;
       font-weight: 400;
+      margin: 0 auto;
+      max-width: 860px;
+      word-break: normal;
     }
     .chat-container {
       flex-grow: 1;
@@ -78,33 +98,37 @@
       margin-right: 12px;
     }
     .avatar {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
-      color: white;
-      font-size: 1.13rem;
+      font-size: 1.3rem;
       flex-shrink: 0;
-      background: #e0e7ef;
-      border:2px solid #4a90e2;
+      background: #e8effa;
+      border: 2px solid #4a90e2;
+      color: #1e3a8a;
+      margin-right: 10px;
     }
-    /* Changement de l'avatar bot (feuille stylisée) */
-    .avatar.bot {
-      background: #e0f3ed;
-      border: 2px solid #10b981;
-      color: #10b981;
-      font-size: 1.55rem;
-      font-family: system-ui, "Apple Color Emoji", "Segoe UI Emoji";
+    .avatar.bot svg {
+      width: 28px;
+      height: 28px;
+      display: block;
     }
-    .avatar.user { background: #ea580c; color: white; border: none;}
+    .avatar.user {
+      background: #ea580c;
+      color: white;
+      border: none;
+      font-size: 1.17rem;
+      margin-right: 9px;
+    }
     .input-container {
       background: #fcfcff;
       border-top: 2px solid #d8e7fa;
       flex-shrink: 0;
-      padding: 18px 28px 22px 28px;
+      padding: 19px 24px 20px 24px;
       position: relative;
     }
     .suggestions-window {
@@ -116,23 +140,24 @@
       margin-bottom: 22px;
       display: flex;
       flex-wrap: wrap;
-      gap: 12px 14px;
-      max-height: none;
+      gap: 11px 13px;
       justify-content: center;
+      width: 100%;
     }
     .suggestion-btn {
       background: #f3f8fd;
       border: 1px solid #acd2fa;
       color: #2364a5;
-      padding: 12px 22px;
+      padding: 11px 14px;
       border-radius: 19px;
-      font-size: 1.05em;
+      font-size: 1.04em;
       cursor: pointer;
       transition: background 0.17s, border-color 0.17s, color 0.17s;
-      box-shadow: 0 2px 7px rgba(160,192,232,0.10);
+      box-shadow: 0 2px 6px rgba(160,192,232,0.08);
       user-select: none;
       white-space: nowrap;
       margin: 0;
+      font-weight: 500;
     }
     .suggestion-btn:active,
     .suggestion-btn:focus {
@@ -148,51 +173,52 @@
     }
     .input-group {
       display: flex;
-      gap: 15px;
+      gap: 10px;
       align-items: center;
       width: 100%;
       margin-top: 7px;
+      justify-content: center;
     }
     .input-field {
-      flex: 0 1 58%;
-      min-width: 110px;
-      max-width: 330px;
-      padding: 13px 13px;
+      flex: 0 1 60%;
+      min-width: 95px;
+      max-width: 200px;
+      padding: 13px 11px;
       border: 2px solid #acd2fa;
       border-radius: 25px;
-      font-size: 1.11rem;
+      font-size: 1.07rem;
       outline: none;
       transition: border-color 0.2s;
       background: #f7fbff;
+      margin-right: 1px;
     }
     .input-field:focus { border-color: #4a90e2; }
     .send-btn {
       background: #ea580c;
       color: white;
       border: none;
-      padding: 13px 24px;
+      padding: 13px 20px;
       border-radius: 25px;
       cursor: pointer;
-      font-size: 1.13rem;
-      transition: background 0.18s;
+      font-size: 1.07rem;
+      transition: background 0.16s;
       user-select: none;
-      margin-left: 6px;
-      min-width: 90px;
-      flex: 0;
-      box-shadow: 0 2px 7px rgba(160,192,232,0.05);
-      font-weight: 500;
+      font-weight: 600;
+      min-width: 82px;
+      max-width: 102px;
+      align-self: center;
     }
     .send-btn:hover:not(:disabled) { background: #c2410c; }
     .send-btn:disabled { background: #6c757d; cursor: not-allowed; }
     .typing-indicator {
       display: none;
-      padding: 16px 20px;
+      padding: 13px 16px;
       background: #eaf2fb;
-      border: 1.5px solid #acd2fa;
+      border: 1.4px solid #acd2fa;
       border-radius: 18px;
-      margin-left: 53px;
-      margin-bottom: 17px;
-      font-size: 1.1rem;
+      margin-left: 44px;
+      margin-bottom: 15px;
+      font-size: 1rem;
     }
     .typing-dots { display: flex; gap: 4px; }
     .dot {
@@ -236,45 +262,51 @@
       word-break: break-all;
     }
     .footer a:hover { text-decoration: underline; }
-
     @media (max-width: 800px) {
       .chatbot-container { border-radius: 0; }
-      .chat-container { padding: 14px 2vw 22px 2vw; }
-      .input-container { padding: 11px 2vw 13px 2vw; }
-      .suggestions-window {padding: 10px 4px 10px 4px; gap: 8px 8px;}
-      .suggestion-btn { font-size: 1em; padding: 9px 10px;}
-      .input-group { gap:9px;}
+      .chat-container { padding: 10px 4vw 20px 4vw; }
+      .input-container { padding: 7px 2vw 13px 2vw; }
+      .suggestions-window {padding: 10px 4px 10px 4px; gap: 7px 6px;}
+      .suggestion-btn { font-size: 1em; padding: 8.5px 8px;}
+      .input-group { gap:7px;}
+      .input-field{max-width:160px;}
+      .header h1 { font-size: 1.36rem;}
+      .header p { font-size: 1.035rem;}
     }
     @media (max-width: 600px) {
-      .chatbot-container {
-        width: 100vw; max-width: none; min-height: 100vh; border-radius: 0; border-width: 0 0 2.5px 0;
-      }
-      .header { padding: 9px 1vw 15px 1vw;}
-      .chat-container { padding: 7px 0vw 13px 0vw;}
-      .input-container { padding: 8px 1vw 10px 1vw;}
-      .footer { font-size: 1.00rem; padding: 13px 2vw 11px 2vw;}
+      .chatbot-container { width: 100vw; max-width: none; min-height: 100vh; border-radius: 0; border-width: 0 0 2.5px 0;}
+      .header { padding: 9px 1vw 11px 1vw;}
+      .header h1 { font-size: 1.12rem; }
+      .header .bot-ico-header{ width:2em; height:2em;}
+      .header p { font-size: 1rem; padding-left:0;padding-right:0;}
+      .chat-container { padding: 7px 0.7vw 13px 0.7vw;}
+      .input-container { padding: 6px 2vw 8px 2vw;}
+      .footer { font-size: 0.97rem; padding: 13px 2vw 11px 2vw;}
       .suggestions-window {
-        gap: 6px 5px;
+        gap: 7px 5px;
         padding: 6px 2px 6px 2px;
-        margin-bottom: 9px;
+        margin-bottom: 7px;
         justify-content: center;
+        font-size:.93em;
       }
       .suggestion-btn {
-        font-size: 0.95em;
-        padding: 7px 6px;
-        min-width: 120px;
+        font-size: .94em;
+        padding: 8px 4px;
+        min-width: 90px;
+        max-width: 100vw;
       }
       .input-field {
-        min-width: 85px;
-        max-width: 190px;
-        font-size: 1em;
-        padding: 10px 7px;
+        min-width: 50px;
+        max-width: 82px;
+        font-size: 0.96em;
+        padding: 8px 5px;
       }
       .send-btn {
-        padding: 10px 10px;
-        font-size: .99em;
-        min-width: 60px;
-        margin-left: 4px;
+        padding: 10px 4px;
+        font-size: .95em;
+        min-width: 48px;
+        margin-left: 3px;
+        max-width: 57px;
       }
     }
   </style>
@@ -282,18 +314,40 @@
 <body>
   <div class="chatbot-container">
     <div class="header">
-      <h1>🌿 Assistant Cadre IA Education</h1>
+      <span class="header-title-wrap">
+        <span class="bot-ico-header">
+          <!-- Icône chatbot SVG -->
+          <svg width="34" height="34" viewBox="0 0 38 34" fill="none" aria-hidden="true" focusable="false">
+            <ellipse cx="19" cy="15" rx="14" ry="12" fill="#4a90e2"/>
+            <ellipse cx="19" cy="15" rx="13" ry="11" fill="#fff"/>
+            <ellipse cx="14" cy="15" rx="1.4" ry="1.3" fill="#1e3a8a"/>
+            <ellipse cx="24" cy="15" rx="1.4" ry="1.3" fill="#1e3a8a"/>
+            <path d="M15.5 19c.8 2.1 7.2 2.1 8 .0" stroke="#1e3a8a" stroke-width="1.4" stroke-linecap="round"/>
+            <ellipse cx="19" cy="22" rx="6.5" ry="2.2" fill="#eaf2fb"/>
+          </svg>
+        </span>
+        <h1>Assistant Cadre IA Éducation</h1>
+      </span>
       <p>
-        <b>Bienvenue sur votre assistant numérique dédié !</b><br>
-        Posez toutes vos questions sur l’utilisation responsable, éthique, sécurisée et pédagogique de l’intelligence artificielle à l’école, au collège ou au lycée.&nbsp; <br>
-        <span style="opacity:0.92;">Directives, devoirs, protection, outils, risques et innovations : obtenez des réponses claires sur le nouveau cadre d’usage de l’IA du ministère français (mise à jour 2025).</span>
+        <strong>Bienvenue !</strong> Ce chatbot vous accompagne pour toutes vos questions sur le nouveau cadre d’utilisation de l’intelligence artificielle dans l’éducation (école, collège, lycée).<br>
+        Obtenez instantanément des réponses concrètes et à jour&nbsp;: droits, devoirs, sécurité, outils, limites et innovations de l’IA pour les élèves et enseignants (référentiel 2025, ministère de l’Éducation nationale).
       </p>
     </div>
     <div class="chat-container" id="chatContainer">
       <div class="message bot">
-        <div class="avatar bot">🌿</div>
+        <div class="avatar bot">
+          <!-- Icône chatbot -->
+          <svg width="26" height="26" viewBox="0 0 34 34" fill="none" aria-hidden="true" focusable="false">
+            <ellipse cx="17" cy="15" rx="12" ry="12" fill="#4a90e2"/>
+            <ellipse cx="17" cy="15" rx="11" ry="10" fill="#fff"/>
+            <ellipse cx="13" cy="16" rx="1.3" ry="1.2" fill="#1e3a8a"/>
+            <ellipse cx="21" cy="16" rx="1.3" ry="1.2" fill="#1e3a8a"/>
+            <path d="M14.7 19.3q2.7 1.5 4.6 0" stroke="#1e3a8a" stroke-width="1.1" stroke-linecap="round"/>
+            <ellipse cx="17" cy="24" rx="5.0" ry="1.5" fill="#eaf2fb"/>
+          </svg>
+        </div>
         <div class="message-content">
-          Bonjour ! Je suis là pour vous accompagner sur le cadre d'usage de l'IA en éducation. Vous pouvez me poser toutes vos questions sur les directives françaises concernant l'utilisation de l'intelligence artificielle à l'école, au collège ou au lycée.
+          Bonjour ! Je suis là pour vous accompagner sur toutes les questions liées au cadre d'usage de l'IA à l'école, au collège ou au lycée. Posez-moi vos questions&nbsp;: directives, devoirs, sécurité, risques, innovations...
         </div>
       </div>
     </div>
@@ -343,7 +397,7 @@
     </div>
   </div>
   <script>
-    // Exemple base minimale pour démo ; remplacez par la vôtre
+    // Base réduite pour exemple ; remplacez par la vôtre
     const knowledgeBase = {
       principes: {
         keywords: ['principe', 'général', 'valeur', 'objectif', 'éthique'],
@@ -355,7 +409,7 @@
         • <b>Solutions libres et transparentes</b> dès que possible.<br>
         • <b>Transparence auprès des élèves et parents</b>.`
       }
-      // ... Ajoutez votre base complète ici ...
+      // ... Complétez selon vos besoins ...
     };
     function findBestMatch(userInput) {
       const input = userInput.toLowerCase();
@@ -372,7 +426,17 @@
       const messageDiv = document.createElement('div');
       messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
       messageDiv.innerHTML = `
-        <div class="avatar ${isUser ? 'user' : 'bot'}">${isUser ? '👤' : '🌿'}</div>
+        <div class="avatar ${isUser ? 'user' : 'bot'}">${
+          isUser
+            ? '👤'
+            : `<svg width="24" height="24" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+                <ellipse cx="17" cy="15" rx="11" ry="10" fill="#4a90e2"/>
+                <ellipse cx="17" cy="15" rx="10" ry="9" fill="#fff"/>
+                <ellipse cx="13" cy="16" rx="1.2" ry="1.2" fill="#1e3a8a"/>
+                <ellipse cx="21" cy="16" rx="1.2" ry="1.2" fill="#1e3a8a"/>
+                <path d="M15 19q2.3 1.2 4 0" stroke="#1e3a8a" stroke-width="1" stroke-linecap="round"/>
+              </svg>`
+        }</div>
         <div class="message-content">${content}</div>
       `;
       chatContainer.appendChild(messageDiv);
@@ -425,11 +489,19 @@ Pouvez-vous reformuler votre question ou choisir un sujet parmi les suggestions 
         addMessage(response, false);
         sendBtn.disabled = false;
         input.focus();
-      }, 1000 + Math.random() * 1000);
+      }, 700 + Math.random() * 700);
     }
-    function handleKeyPress(event) { if (event.key === 'Enter') sendUserMessage(); }
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') sendUserMessage();
+    }
     document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('userInput').focus();
+      // Suggestions fix
+      Array.from(document.getElementsByClassName('suggestion-btn')).forEach(function(btn){
+        btn.addEventListener('click', function() {
+          sendMessage(btn.textContent);
+        });
+      });
     });
   </script>
 </body>
