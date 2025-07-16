@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot IA en Éducation - Cadre d'Usage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: transparent;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chatbot-container {
+            width: 95%;
+            max-width: 800px;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #ea580c 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .message.bot .message-content {
+            background: #f1f5f9;
+            color: #1e3a8a;
+            margin-left: 10px;
+        }
+
+        .message.user .message-content {
+            background: #ea580c;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .avatar.bot {
+            background: #1e3a8a;
+        }
+
+        .avatar.user {
+            background: #ea580c;
+        }
+
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .suggestion-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .suggestion-btn:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: #1e3a8a;
+        }
+
+        .send-btn {
+            background: #ea580c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .send-btn:hover {
+            background: #c2410c;
+        }
+
+        .send-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 10px 16px;
+            background: #e9ecef;
+            border-radius: 18px;
+            margin-left: 45px;
+            margin-bottom: 15px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #6c757d;
+            animation: typing 1.4s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-box {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .chatbot-container {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+            
+            .suggestions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbot-container">
+        <div class="header">
+            <h1>🤖 Assistant IA en Éducation</h1>
+            <p>Cadre d'usage de l'IA dans l'éducation française - Juin 2025</p>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="message bot">
+                <div class="avatar bot">🤖</div>
+                <div class="message-content">
+                    Bonjour ! Je suis votre assistant pour le cadre d'usage de l'IA en éducation. Je peux répondre à vos questions sur les directives françaises concernant l'utilisation de l'intelligence artificielle dans l'enseignement. Comment puis-je vous aider ?
+                </div>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <div class="suggestions" id="suggestions">
+                <div class="suggestion-btn" onclick="sendMessage('Quels sont les principes généraux pour utiliser l\'IA en éducation ?')">
+                    Principes généraux
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('L\'IA est-elle autorisée pour les élèves ?')">
+                    Usage élèves
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Quelles sont les obligations légales ?')">
+                    Obligations légales
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Comment protéger les données personnelles ?')">
+                    Protection données
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('L\'IA peut-elle remplacer les enseignants ?')">
+                    Remplacement enseignants
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Quels sont les risques environnementaux ?')">
+                    Impact environnemental
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Comment évaluer les devoirs avec l\'IA ?')">
+                    Devoirs et évaluations
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Quelles formations sont nécessaires ?')">
+                    Formation IA
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Quelles données peut-on saisir dans l\'IA ?')">
+                    Données autorisées
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('L\'IA au primaire est-elle autorisée ?')">
+                    Primaire
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Quels outils IA sont recommandés ?')">
+                    Outils recommandés
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Comment détecter l\'usage d\'IA par les élèves ?')">
+                    Détection IA
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Quels sont les risques de l\'IA en éducation ?')">
+                    Risques
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('L\'IA pour l\'aide aux devoirs est-elle autorisée ?')">
+                    Aide aux devoirs
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Comment sensibiliser les élèves à l\'IA ?')">
+                    Sensibilisation
+                </div>
+                <div class="suggestion-btn" onclick="sendMessage('Quelles sont les sanctions en cas de fraude ?')">
+                    Sanctions fraude
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <input type="text" class="input-field" id="userInput" placeholder="Tapez votre question ici..." onkeypress="handleKeyPress(event)">
+                <button class="send-btn" id="sendBtn" onclick="sendUserMessage()">Envoyer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base de connaissances extraite du document
+        const knowledgeBase = {
+            "principes": {
+                keywords: ["principe", "général", "valeur", "objectif", "éthique"],
+                response: `Les <strong>principes généraux</strong> pour l'usage de l'IA en éducation sont :
+
+• <strong>Respect des valeurs républicaines</strong> : L'IA doit respecter les valeurs et principes de l'École de la République<br>
+• <strong>Usage responsable</strong> : Utilisation réflexive s'appuyant sur l'expertise professionnelle<br>
+• <strong>Assistance, non remplacement</strong> : L'IA peut assister mais jamais remplacer les personnels<br>
+• <strong>Impact environnemental</strong> : Usage frugal privilégié, uniquement si aucune solution moins coûteuse écologiquement n'existe<br>
+• <strong>Solutions libres</strong> : À privilégier quand c'est possible<br>
+• <strong>Transparence</strong> : Communication explicite sur l'usage de l'IA dans les décisions`
+            },
+            
+            "eleves": {
+                keywords: ["élève", "étudiant", "enfant", "classe", "scolaire"],
+                response: `<strong>Usage de l'IA par les élèves</strong> selon les niveaux :
+
+<strong>🏫 École primaire</strong> : <br>
+• Sensibilisation aux connaissances de base sur l'IA<br>
+• <strong>Aucune manipulation directe</strong> d'IA générative<br><br>
+
+<strong>🎓 Collège (à partir de la 4ème)</strong> :<br>
+• Utilisation pédagogique <strong>encadrée</strong> par l'enseignant<br>
+• Formation obligatoire aux enjeux de l'IA sur Pix<br><br>
+
+<strong>🎒 Lycée</strong> :<br>
+• Usage <strong>autonome</strong> dans un cadre défini par l'enseignant<br>
+• Formation continue aux enjeux de l'IA<br><br>
+
+<div class="warning-box">
+<strong>Important</strong> : L'utilisation d'IA générative pour faire un devoir sans autorisation constitue une <strong>fraude</strong>.
+</div>`
+            },
+            
+            "legal": {
+                keywords: ["légal", "loi", "obligation", "rgpd", "droit"],
+                response: `<strong>Obligations légales</strong> pour l'usage de l'IA en éducation :
+
+<strong>🔒 Protection des données</strong> :<br>
+• Respect du RGPD et principe de minimisation<br>
+• Aucune donnée personnelle dans les outils grand public<br>
+• Accord du responsable de traitement nécessaire<br><br>
+
+<strong>👥 Transparence</strong> :<br>
+• Information explicite sur l'usage de l'IA<br>
+• Supervision humaine obligatoire pour les décisions importantes<br>
+• Validation préalable pour l'impact sur l'évaluation/orientation<br><br>
+
+<strong>🚫 Interdictions</strong> :<br>
+• Pas de création de comptes personnels élèves sur IA grand public<br>
+• Aucune donnée confidentielle dans les outils accessibles au public`
+            },
+            
+            "donnees": {
+                keywords: ["donnée", "personnel", "confidentiel", "protection", "privé"],
+                response: `<strong>Protection des données personnelles</strong> :
+
+<strong>✅ Autorisé à saisir</strong> :<br>
+• Textes et programmes officiels<br>
+• Ressources éducatives libres<br>
+• Données statistiques anonymisées<br>
+• Œuvres du domaine public<br><br>
+
+<strong>❌ Interdit de saisir</strong> :<br>
+• Données à caractère personnel<br>
+• Informations confidentielles<br>
+• Contenus protégés par le droit d'auteur<br><br>
+
+<strong>🔐 Règles importantes</strong> :<br>
+• Les services grand public ne garantissent pas la non-réutilisation<br>
+• Renoncez à l'IA si des données sensibles sont impliquées<br>
+• Privilégiez les solutions libres pour un meilleur contrôle`
+            },
+            
+            "enseignant": {
+                keywords: ["enseignant", "professeur", "remplacer", "substituer", "métier"],
+                response: `<strong>L'IA et les enseignants</strong> :
+
+<strong>🤝 Principe fondamental</strong> : L'IA peut <strong>assister</strong> mais <strong>jamais remplacer</strong> les enseignants.<br><br>
+
+<strong>📚 Usages autorisés pour les enseignants</strong> :<br>
+• Préparation de cours<br>
+• Aide à l'évaluation et correction<br>
+• Adaptation des contenus aux besoins particuliers<br>
+• Tâches administratives (notes, courriers, synthèses)<br><br>
+
+<strong>⚠️ Obligations</strong> :<br>
+• Vérifier et croiser les productions IA avec d'autres sources<br>
+• Exercer un esprit critique constant<br>
+• Respecter la transparence dans l'usage<br>
+• Se former aux enjeux et usages de l'IA<br><br>
+
+<strong>🎯 Rôle pédagogique</strong> : Sensibiliser les élèves aux enjeux éthiques et développer leur esprit critique sur l'IA.`
+            },
+            
+            "environnement": {
+                keywords: ["environnement", "écologique", "énergie", "carbone", "durable"],
+                response: `<strong>Impact environnemental de l'IA</strong> :
+
+<strong>⚡ Consommation énergétique</strong> :<br>
+• Une réponse IA générative = 10x plus d'énergie qu'une recherche web<br>
+• Technologie fortement consommatrice en ressources et énergie<br><br>
+
+<strong>🌱 Recommandations</strong> :<br>
+• <strong>Usage frugal</strong> : N'utiliser l'IA que si nécessaire<br>
+• Renoncer à l'IA si une solution moins coûteuse existe<br>
+• Sensibilisation dans le cadre de l'éducation au développement durable<br><br>
+
+<strong>🎯 Principe de nécessité</strong> :<br>
+• L'IA ne doit être utilisée que si aucune autre solution moins coûteuse écologiquement ne répond au besoin<br>
+• Privilégier les solutions libres et durables`
+            },
+            
+            "evaluation": {
+                keywords: ["évaluation", "devoir", "fraude", "triche", "note"],
+                response: `<strong>Devoirs et évaluations</strong> avec l'IA :
+
+<strong>🚫 Fraude</strong> : Utiliser l'IA générative pour un devoir sans autorisation explicite de l'enseignant et sans travail personnel d'appropriation constitue une <strong>fraude</strong>.<br><br>
+
+<strong>📝 Adaptations nécessaires</strong> :<br>
+• Mettre le raisonnement et la résolution de problème au premier plan<br>
+• Diversifier les modalités d'évaluation<br>
+• Tenir compte des usages IA pour l'équité<br><br>
+
+<strong>⚠️ Détection</strong> :<br>
+• Les logiciels de détection d'IA ne sont <strong>pas recommandés</strong> (peu fiables)<br>
+• Risque de pénaliser à tort un élève<br><br>
+
+<strong>🎯 Conseil</strong> : Expliquer clairement aux élèves les règles d'usage et les conséquences de la fraude.`
+            },
+            
+            "formation": {
+                keywords: ["formation", "apprentissage", "compétence", "pédagogie"],
+                response: `<strong>Formation et développement professionnel</strong> :
+
+<strong>👨‍🏫 Pour les enseignants</strong> :<br>
+• Formation obligatoire aux enjeux de l'IA<br>
+• Développement professionnel continu<br>
+• Accompagnement par les corps d'inspection<br><br>
+
+<strong>🎓 Pour les élèves</strong> :<br>
+• Formation obligatoire en 4ème, 2nde et CAP sur Pix<br>
+• Sensibilisation dès le primaire<br>
+• Développement de l'esprit critique<br><br>
+
+<strong>📚 Modalités</strong> :<br>
+• Formations en établissement<br>
+• Programmes EAFC, DRANE, Réseau Canopé<br>
+• Parcours M@gistère et MOOC AI4T<br>
+• Communauté CREIA et groupes GTnum`
+            }
+        };
+
+        function findBestMatch(userInput) {
+            const input = userInput.toLowerCase();
+            let bestMatch = null;
+            let maxMatches = 0;
+
+            for (const [category, data] of Object.entries(knowledgeBase)) {
+                let matches = 0;
+                data.keywords.forEach(keyword => {
+                    if (input.includes(keyword)) {
+                        matches++;
+                    }
+                });
+
+                if (matches > maxMatches) {
+                    maxMatches = matches;
+                    bestMatch = data;
+                }
+            }
+
+            return bestMatch;
+        }
+
+        function addMessage(content, isUser = false) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+            messageDiv.innerHTML = `
+                <div class="avatar ${isUser ? 'user' : 'bot'}">${isUser ? '👤' : '🤖'}</div>
+                <div class="message-content">${content}</div>
+            `;
+
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'block';
+            document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        function generateResponse(userInput) {
+            const match = findBestMatch(userInput);
+            
+            if (match) {
+                return match.response;
+            }
+
+            // Réponses pour des questions générales
+            if (userInput.toLowerCase().includes('bonjour') || userInput.toLowerCase().includes('salut')) {
+                return "Bonjour ! Je suis là pour vous aider avec vos questions sur le cadre d'usage de l'IA en éducation. N'hésitez pas à me poser vos questions !";
+            }
+
+            if (userInput.toLowerCase().includes('merci')) {
+                return "De rien ! N'hésitez pas si vous avez d'autres questions sur l'usage de l'IA en éducation.";
+            }
+
+            // Réponse par défaut
+            return `Je ne trouve pas d'information spécifique sur "${userInput}" dans le cadre d'usage de l'IA en éducation. 
+
+<div class="info-box">
+<strong>Vous pouvez me poser des questions sur :</strong><br>
+• Les principes généraux d'usage de l'IA<br>
+• L'utilisation par les élèves selon les niveaux<br>
+• Les obligations légales et protection des données<br>
+• L'impact environnemental<br>
+• Les devoirs et évaluations<br>
+• Le rôle des enseignants<br>
+• La formation et les compétences
+</div>
+
+Pouvez-vous reformuler votre question ou choisir un sujet parmi les suggestions ?`;
+        }
+
+        function sendMessage(message) {
+            const input = document.getElementById('userInput');
+            input.value = message;
+            sendUserMessage();
+        }
+
+        function sendUserMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+
+            // Désactiver le bouton pendant le traitement
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+
+            // Ajouter le message de l'utilisateur
+            addMessage(message, true);
+            
+            // Vider le champ input
+            input.value = '';
+
+            // Afficher l'indicateur de saisie
+            showTypingIndicator();
+
+            // Simuler un délai de traitement
+            setTimeout(() => {
+                hideTypingIndicator();
+                const response = generateResponse(message);
+                addMessage(response, false);
+                sendBtn.disabled = false;
+                input.focus();
+            }, 1000 + Math.random() * 1000);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendUserMessage();
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('userInput').focus();
+        });
+    </script>
+</body>
+</html>
