@@ -288,22 +288,22 @@
   </div>
   <div class="input-container">
     <div class="suggestions-row" id="suggestions">
-      <button type="button" class="suggestion-btn">Principes généraux</button>
-      <button type="button" class="suggestion-btn">Usage élèves</button>
-      <button type="button" class="suggestion-btn">Obligations légales</button>
-      <button type="button" class="suggestion-btn">Protection données</button>
-      <button type="button" class="suggestion-btn">Remplacement enseignants</button>
-      <button type="button" class="suggestion-btn">Impact environnemental</button>
-      <button type="button" class="suggestion-btn">Devoirs et évaluations</button>
-      <button type="button" class="suggestion-btn">Formation IA</button>
-      <button type="button" class="suggestion-btn">Données autorisées</button>
-      <button type="button" class="suggestion-btn">Primaire</button>
-      <button type="button" class="suggestion-btn">Outils recommandés</button>
-      <button type="button" class="suggestion-btn">Détection IA</button>
-      <button type="button" class="suggestion-btn">Risques</button>
-      <button type="button" class="suggestion-btn">Aide aux devoirs</button>
-      <button type="button" class="suggestion-btn">Sensibilisation</button>
-      <button type="button" class="suggestion-btn">Sanctions fraude</button>
+      <button type="button" class="suggestion-btn" data-key="principes généraux">Principes généraux</button>
+      <button type="button" class="suggestion-btn" data-key="usage élèves">Usage élèves</button>
+      <button type="button" class="suggestion-btn" data-key="obligations légales">Obligations légales</button>
+      <button type="button" class="suggestion-btn" data-key="protection données">Protection données</button>
+      <button type="button" class="suggestion-btn" data-key="remplacement enseignants">Remplacement enseignants</button>
+      <button type="button" class="suggestion-btn" data-key="impact environnemental">Impact environnemental</button>
+      <button type="button" class="suggestion-btn" data-key="devoirs et évaluations">Devoirs et évaluations</button>
+      <button type="button" class="suggestion-btn" data-key="formation ia">Formation IA</button>
+      <button type="button" class="suggestion-btn" data-key="données autorisées">Données autorisées</button>
+      <button type="button" class="suggestion-btn" data-key="primaire">Primaire</button>
+      <button type="button" class="suggestion-btn" data-key="outils recommandés">Outils recommandés</button>
+      <button type="button" class="suggestion-btn" data-key="détection ia">Détection IA</button>
+      <button type="button" class="suggestion-btn" data-key="risques">Risques</button>
+      <button type="button" class="suggestion-btn" data-key="aide aux devoirs">Aide aux devoirs</button>
+      <button type="button" class="suggestion-btn" data-key="sensibilisation">Sensibilisation</button>
+      <button type="button" class="suggestion-btn" data-key="sanctions fraude">Sanctions fraude</button>
     </div>
     <form class="input-group" onsubmit="event.preventDefault();sendUserMessage();">
       <input type="text" class="input-field" id="userInput" placeholder="Tapez votre question ici..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -316,7 +316,7 @@
   </div>
 </div>
 <script>
-  // Version réduite mais fonctionnelle, à compléter :
+  // Version fonctionnelle
   const knowledgeBase = {
     "principes généraux": {
       keywords: ["principe", "général", "valeur", "objectif", "éthique"],
@@ -328,19 +328,122 @@
         • <b>Solutions libres et transparentes</b> dès que possible.<br>
         • <b>Transparence auprès des élèves et parents</b>.`
     },
-    // Ajoutez ici toutes vos autres réponses comme ci-dessus
+    "usage élèves": {
+      keywords: ["élève", "étudiant", "classe", "scolaire"],
+      response: `<strong>Usage de l'IA par les élèves</strong> :<br>
+        • <strong>Primaire</strong> : sensibilisation, pas d'usage direct<br>
+        • <strong>Collège/Lycée</strong> : usages encadrés selon le niveau, formation Pix dès la 4e<br>
+        <span class="warning-box"><b>Attention&nbsp;!</b> L'usage d'une IA générative pour faire un devoir sans autorisation est considéré comme une fraude.</span>`
+    },
+    "obligations légales": {
+      keywords: ["légal", "loi", "obligation", "droit", "rgpd"],
+      response: `<strong>Obligations légales pour l'usage de l'IA :</strong><br>
+        • Respect du RGPD<br>
+        • Pas de données personnelles d'élèves dans les IA non validées<br>
+        • Transparence sur l'utilisation auprès des familles<br>
+        • Validation préalable de la DSI pour tout nouvel outil`
+    },
+    "protection données": {
+      keywords: ["donnée", "personnel", "confidentiel", "protection", "privé", "rgpd", "saisir"],
+      response: `<strong>Protection des données :</strong><br>
+        • Pas de noms, notes ou infos personnelles dans les IA grand public<br>
+        • Saisir seulement des données anonymes ou officielles<br>
+        • S'informer auprès de la DSI si doute sur l'outil utilisé`
+    },
+    "remplacement enseignants": {
+      keywords: ["remplacement", "enseignant", "professeur"],
+      response: `<strong>L’IA ne remplace pas l’enseignant !</strong><br>
+        Les outils IA assistent ou suggèrent mais la décision pédagogique reste humaine.<br>
+        <span class="info-box">L’IA ne prend aucune décision d’évaluation, d’orientation ou de notation à la place des équipes enseignantes.</span>`
+    },
+    "impact environnemental": {
+      keywords: ["environnemental", "écologique", "énergie", "carbone", "développement durable", "écologie"],
+      response: `<strong>Impact environnemental de l’IA :</strong><br>
+        • Les grands modèles consomment beaucoup d'énergie<br>
+        • Utiliser l’IA seulement si nécessaire<br>
+        • Envisager des alternatives plus 'frugales' lorsque possible`
+    },
+    "devoirs et évaluations": {
+      keywords: ["devoir", "évaluation", "notation", "corriger", "évaluer"],
+      response: `<strong>Devoirs & évaluations :</strong><br>
+        • L’usage d’IA générative sans autorisation = fraude<br>
+        • Privilégier un questionnement qui mobilise l’esprit critique, l’oral ou l’analyse<br>
+        • Diversifier les formes d’évaluation pour limiter la triche`
+    },
+    "formation ia": {
+      keywords: ["formation", "compétence", "apprentissage"],
+      response: `<strong>Formation IA :</strong><br>
+        • Formation continue obligatoire enseignants et référents numériques<br>
+        • Formation Pix obligatoire pour élèves dès la 4e<br>
+        • Ressources sur Magistère, Réseau Canopé, sites officiels`
+    },
+    "données autorisées": {
+      keywords: ["donnée", "autorisé", "confidentiel", "anonyme"],
+      response: `<strong>Données autorisées :</strong><br>
+        • Textes officiels, documents non confidentiels<br>
+        • Données d’élèves SANS infos personnelles (jamais de noms, notes, adresses, etc.)<br>
+        • Favoriser des contenus génériques ou déjà publics`
+    },
+    "primaire": {
+      keywords: ["primaire", "élémentaire", "cp", "ce1", "ce2", "cm1", "cm2"],
+      response: `<strong>IA à l’école primaire :</strong><br>
+        • Sensibilisation seulement, pas d’usage autonome ni de création de comptes IA<br>
+        • Travail pédagogique sur l’esprit critique, l’image, l’info, la créativité`
+    },
+    "outils recommandés": {
+      keywords: ["outil", "recommandé", "plateforme", "logiciel", "appli", "service"],
+      response: `<strong>Outils recommandés :</strong><br>
+        • Outils signalés par la DSI, la DRANE, EdTech de confiance<br>
+        • Plateformes validées RGPD, hébergées en Europe<br>
+        • Eviter les IA commerciales américaines pour des infos sensibles`
+    },
+    "détection ia": {
+      keywords: ["détection", "détecter", "triche", "copie", "chatgpt"],
+      response: `<strong>Détection IA élèves :</strong><br>
+        • Les outils de détection sont peu fiables et non reconnus officiellement<br>
+        • Privilégier l’oral, l’analyse de processus, l’accompagnement, le dialogue<br>
+        • Expliquer clairement les règles et sanctions en début d’année`
+    },
+    "risques": {
+      keywords: ["risque", "danger", "biais", "problème", "limite"],
+      response: `<strong>Risques de l’IA en éducation :</strong><br>
+        • Perte d’autonomie, fausses réponses, biais algorithmiques<br>
+        • Développement de la triche et des inégalités<br>
+        • Risques pour la vie privée si usage inadapté`
+    },
+    "aide aux devoirs": {
+      keywords: ["aide", "devoirs", "maison", "soutien"],
+      response: `<strong>Aide aux devoirs avec l’IA :</strong><br>
+        • Peut servir à s’entraîner, reformuler, structurer un raisonnement<br>
+        • Doit être utilisé de façon transparente avec l’enseignant<br>
+        • Copier-coller non autorisé sans appropriation personnelle`
+    },
+    "sensibilisation": {
+      keywords: ["sensibiliser", "sensibilisation", "éduquer", "prévenir", "information"],
+      response: `<strong>Sensibilisation à l’IA :</strong><br>
+        • Aborder les enjeux éthiques, l’esprit critique, les biais<br>
+        • Débats en classe, formation Pix<br>
+        • Projets interdisciplinaires (EMI, SNT, sciences...)`
+    },
+    "sanctions fraude": {
+      keywords: ["sanction", "fraude", "triche", "punition"],
+      response: `<strong>Sanctions en cas de fraude :</strong><br>
+        • Règlement intérieur appliqué<br>
+        • Possibilité de 0, devoir à refaire, avertissement, voire conseil de discipline<br>
+        • Privilégier d’abord l’explication et la prévention`
+    }
   };
 
   function findBestMatch(userInput) {
     const input = userInput.trim().toLowerCase();
-    let best = null, score = 0;
     for (const [cat, data] of Object.entries(knowledgeBase)) {
-      let m = 0;
-      data.keywords.forEach(k => { if (input.includes(k)) m++; });
-      if (input === cat.toLowerCase()) m += 2;
-      if (m > score) { score = m; best = data; }
+      // Recherche exacte sur le libellé du bouton
+      if (cat === input) return data;
+      // Sinon s'il y a des mots clés pertinents dans l'entrée
+      const found = data.keywords.some(keyword => input.includes(keyword));
+      if (found) return data;
     }
-    return best;
+    return null;
   }
 
   function addMessage(content, isUser = false) {
@@ -415,12 +518,12 @@
     if (e.key === 'Enter') sendUserMessage();
   }
 
-  // Suggestions
   document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('userInput').focus();
+    // Associe chaque suggestion à sa catégorie (clé exacte)
     document.querySelectorAll('.suggestion-btn').forEach(btn => {
       btn.addEventListener('click', function() {
-        sendMessage(this.textContent);
+        sendMessage(this.getAttribute('data-key'));
       });
     });
   });
