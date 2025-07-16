@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Assistant IA en Éducation</title>
+  <title>Assistant IA en Éducation - Usages élèves corrigés</title>
   <style>
     html, body {
       height: 100%;
@@ -216,16 +216,26 @@
       from { opacity: 0; transform: translateY(10px);}
       to { opacity: 1; transform: translateY(0);}
     }
-    .info-box, .warning-box, .success-box, .error-box {
+    .info-box, .error-box, .success-box {
       border-radius: 10px;
       padding: 14px;
       margin: 12px 0;
       font-size: 0.97rem;
     }
     .info-box { background: #dbeafe; border: 1px solid #93c5fd;}
-    .warning-box { background: #fef3c7; border: 1px solid #fbbf24;}
-    .success-box { background: #d1fae5; border: 1px solid #34d399;}
     .error-box { background: #fee2e2; border: 1px solid #f87171;}
+    .success-box { background: #d1fae5; border: 1px solid #34d399;}
+    /* Corrected yellow warning box */
+    .warning-box {
+      background: #fffbea;
+      border: 1px solid #ffe066;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 9px 0;
+      font-size: 0.97rem;
+      color: #856404;
+      display: block;
+    }
     .footer {
       text-align: center;
       font-size: 0.99rem;
@@ -241,10 +251,7 @@
     }
     .footer a:hover { text-decoration: underline; }
     @media (max-width: 560px) {
-      .chatbot-container {
-        border-radius: 0;
-        margin: 0;
-      }
+      .chatbot-container { border-radius: 0; margin: 0;}
       .header { padding: 10px 1vw 4px 1vw;}
       .header h1 { font-size: 1.05em;}
       .header p { font-size: 0.93rem;}
@@ -256,6 +263,8 @@
       .send-btn { padding: 8px 4px; font-size: .96em; min-width: 41px;}
       .footer { font-size: 0.95rem;}
     }
+    ul, ol { margin: 7px 0 7px 16px; }
+    li { margin-bottom: 3px; }
   </style>
 </head>
 <body>
@@ -263,25 +272,25 @@
   <div class="header">
     <h1>🤖 Assistant IA en Éducation</h1>
     <p>
-      Cadre d'usage de l'IA dans l'éducation française (2025)<br>
-      Cliquez sur un mot-clé ci-dessous, tapez une question classique ou essayez un exemple (voir suggestions).
+      Cadre d'usage de l'IA dans l'éducation française (2025). Essayez une question courante ou cliquez sur un des mots-clés ci-dessous !
     </p>
   </div>
   <div class="chat-container" id="chatContainer">
     <div class="message bot">
       <div class="avatar bot">🤖</div>
       <div class="message-content">
-        Bonjour ! Je suis votre assistant pour le cadre d'usage de l'IA en éducation.<br>
-        Posez-moi vos questions sur les droits, usages, risques ou innovations liées à l’intelligence artificielle à l’école.<br>
-        Exemples d'interactions possibles :
+        Bonjour ! Je suis votre assistant sur le cadre d'usage de l'IA à l'école.<br>
+        Posez-moi vos questions sur : devoirs, triche, RGPD, formation, outils, dangers, innovation, etc.<br>
+        <b>Exemples d'interactions naturelles :</b>
         <ul>
-          <li>Quels sont les dangers de l’IA pour les élèves&nbsp;?</li>
-          <li>Un enseignant peut-il utiliser ChatGPT&nbsp;?</li>
-          <li>Y aura-t-il des sanctions pour la triche avec l’IA&nbsp;?</li>
-          <li>Comment expliquer l’IA à un enfant&nbsp;?</li>
-          <li>Peut-on corriger un devoir avec une IA&nbsp;?</li>
+          <li>En quoi l'IA change-t-elle les devoirs à la maison&nbsp;?</li>
+          <li>Un élève peut-il utiliser ChatGPT sans avoir d'autorisation&nbsp;?</li>
+          <li>Quels sont les risques pour les enfants au collège&nbsp;?</li>
+          <li>Comment se former à l'IA quand on est prof&nbsp;?</li>
+          <li>Quels outils IA choisir à l'école&nbsp;?</li>
+          <li>L’IA peut-elle remplacer l’enseignant ?</li>
         </ul>
-        Ou utilisez les mots-clés plus bas pour naviguer dans les principaux thèmes.
+        Ou cliquez sur un mot-clé.
       </div>
     </div>
   </div>
@@ -325,162 +334,165 @@
   const knowledgeBase = {
     "principes généraux": {
       keywords: ["principe", "général", "valeur", "objectif", "éthique"],
-      response: `<b>Principes généraux</b> pour l'usage de l'IA en éducation :<br>
+      response: `<b>Principes généraux</b> pour l'usage de l'IA en éducation :
       <ul>
         <li><b>Respect des valeurs républicaines</b> et des droits fondamentaux.</li>
         <li><b>Usage responsable</b>, transparent, avec supervision humaine.</li>
-        <li><b>Jamais de remplacement total des enseignants par l’IA</b>.</li>
-        <li>Respect de la <b>protection des données et du RGPD</b>.</li>
-        <li>Limiter l'impact environnemental et garantir l'équité d'accès aux outils.</li>
+        <li>Jamais de remplacement total des enseignants par l’IA.</li>
+        <li>Protection stricte des données personnelles (RGPD).</li>
+        <li>Limiter l'impact environnemental, garantir l’équité des outils.</li>
       </ul>`
     },
     "usage élèves": {
       keywords: ["élève", "étudiant", "classe", "scolaire", "enfant"],
       response: `<b>Usages élèves</b> :
       <ul>
-        <li><b>Primaire</b> : sensibilisation uniquement, pas de manipulation d'IA générative.</li>
-        <li><b>Collège/lycée</b> : usages pédagogiques encadrés par l'enseignant, formation aux risques et au RGPD.</li>
-        <li>L'utilisation d'une IA générative pour un devoir sans autorisation = <span class="warning-box">fraude</span>.</li>
-        <li>Acquérir un esprit critique et savoir expliquer sa démarche lors d’évaluations.</li>
+        <li><b>Primaire</b> : uniquement sensibilisation, <b>pas</b> de manipulation d'IA générative.</li>
+        <li><b>Collège/Lycée</b> : usages pédagogiques encadrés par l'enseignant, formation Pix dès la 4e.</li>
+        <li>Tout devoir fait avec une IA sans autorisation est une 
+          <span class="warning-box" style="background:#fffbea!important;border:1px solid #ffe066!important;color:#856404!important;padding:10px 12px;display:inline-block;">
+            fraude
+          </span>.
+        </li>
+        <li>L’élève doit savoir expliquer comment il a travaillé en cas de question.</li>
       </ul>`
     },
     "obligations légales": {
       keywords: ["légal", "loi", "obligation", "droit", "rgpd"],
-      response: `<b>Obligations légales</b><br>
+      response: `<b>Obligations légales</b>
       <ul>
         <li>Respect du RGPD et de la loi Informatique et Libertés.</li>
-        <li>Pas de données personnelles dans les IA publiques.</li>
-        <li>Informer et rendre transparent tout usage d’IA aux élèves et aux parents.</li>
-        <li>Se référer au DPO ou à la DSI pour tout nouvel outil ou service IA.</li>
+        <li>Pas de données personnelles dans une IA publique.</li>
+        <li>Informer chaque usager (élève/parent) de l’utilisation d’IA.</li>
+        <li>Se référer au DPO ou DSI pour toute expérimentation IA.</li>
       </ul>`
     },
     "protection données": {
       keywords: ["donnée", "personnel", "confidentiel", "protection", "privé", "rgpd", "saisir"],
       response: `<b>Protection des données</b> :
       <ul>
-        <li>Ne jamais saisir le nom, adresse ou note d’un élève dans une IA grand public.</li>
-        <li>N’utiliser que des textes officiels ou anonymes.</li>
-        <li>Bien vérifier la politique de confidentialité de chaque outil numérique.</li>
+        <li>Ne jamais saisir de noms, notes, ou adresses d’élèves dans un outil grand public.</li>
+        <li>N’utiliser que des textes officiels, anonymes ou publics.</li>
+        <li>Cherchez le label ou la validation RGPD sur les outils utilisés.</li>
       </ul>`
     },
     "remplacement enseignants": {
       keywords: ["remplacement", "enseignant", "professeur", "substituer"],
       response: `<b>Remplacement enseignants</b> :
       <ul>
-        <li>L’IA ne doit servir qu’en soutien ou pour automatiser des tâches répétitives.</li>
-        <li>La relation pédagogique et l’accompagnement restent le cœur du métier d’enseignant.</li>
-        <li><span class="info-box">Aucune IA ne peut évaluer ou orienter un élève sans validation humaine.</span></li>
+        <li>L'IA ne doit que soutenir l’enseignant et automatiser des tâches répétitives.</li>
+        <li>Aucune IA n’évalue ou oriente seule un élève.</li>
+        <li>La relation humaine reste centrale.</li>
       </ul>`
     },
     "impact environnemental": {
       keywords: ["environnemental", "écologique", "énergie", "carbone", "durable", "empreinte"],
       response: `<b>Impact environnemental</b> :
       <ul>
-        <li>Prendre en compte la consommation et l’empreinte carbone des IA génératives.</li>
-        <li>Éviter d’utiliser l’IA pour les besoins simples remplaçables par des méthodes “classiques”.</li>
-        <li>Favoriser les alternatives sobres et européennes.</li>
+        <li>L’usage d’IA générative consomme fortement de l’énergie.</li>
+        <li>À utiliser seulement si le besoin ne peut être satisfait autrement.</li>
+        <li>Favorisez les outils sobres développés en Europe quand c’est possible.</li>
       </ul>`
     },
     "devoirs et évaluations": {
       keywords: ["devoir", "évaluation", "notation", "corriger", "triche"],
       response: `<b>Devoirs & évaluations</b> :
       <ul>
-        <li>Bien expliquer aux élèves la notion de fraude liée à l'usage d’IA sans autorisation.</li>
-        <li>Évaluer le raisonnement, la démarche et l’esprit critique, pas seulement le résultat.</li>
-        <li>Privilégier la diversité des modes d’évaluation (orale, en présentiel, analyse de production…)</li>
+        <li>Bien poser les règles dès le début de l’année sur la fraude IA.</li>
+        <li>Évaluer la démarche, la réflexion, l’argumentation.</li>
+        <li>Diversifiez : oral, entretien, corrections croisées.</li>
       </ul>`
     },
     "formation ia": {
       keywords: ["formation", "compétence", "apprentissage", "mooc"],
       response: `<b>Formation IA</b> :
       <ul>
-        <li>Formation Pix IA obligatoire dès la 4e, en CAP et en Seconde.</li>
-        <li>Formations continues pour enseignants sur Magistère, Réseau Canopé, DRANE…</li>
-        <li>Accompagnement par les référents numériques et corps d’inspection.</li>
+        <li>Formation Pix obligatoire (élèves, enseignants) dès la 4e.</li>
+        <li>Parcours Magistère, MOOC AI4T, formations DANE, Canopé…</li>
+        <li>Former à l’esprit critique, à la créativité et à l’éthique face à l’IA.</li>
       </ul>`
     },
     "données autorisées": {
-      keywords: ["donnée", "autorisé", "confidentiel", "anonyme", "saisir"],
+      keywords: ["donnée", "autorisé", "confidentiel", "anonyme"],
       response: `<b>Données autorisées</b> :
       <ul>
-        <li>Uniquement des textes officiels ou ressources éducatives libres de droits.</li>
-        <li>Statistiques anonymisées, œuvres du domaine public.</li>
-        <li>Jamais de contenu à caractère personnel ni de notes individuelles.</li>
+        <li>Textes et ressources pédagogiques sans identification personnelle.</li>
+        <li>Statistiques anonymisées.</li>
+        <li>Oeuvres du domaine public, contenus éducatifs ouverts.</li>
       </ul>`
     },
     "primaire": {
       keywords: ["primaire", "élémentaire", "cp", "ce1", "ce2", "cm1", "cm2"],
       response: `<b>IA à l’école primaire</b> :
       <ul>
-        <li>Sensibilisation uniquement, pas de manipulation directe de l’IA par les élèves.</li>
-        <li>Découverte des bases : l’IA, c’est quoi, où la trouve-t-on, pourquoi doit-on rester prudent ?</li>
-        <li>Rôle de l’enseignant : préparer, différencier, adapter, mais sans exposer les élèves à une IA générative.</li>
+        <li>Sensibilisation – “Qu’est-ce que l’IA ?” avec des exemples adaptés.</li>
+        <li>Interdiction de manipulation directe d’outils génératifs.</li>
+        <li>L’IA est essentiellement un outil pour les enseignants (préparation de ressources…)</li>
       </ul>`
     },
     "outils recommandés": {
-      keywords: ["outil", "recommandé", "logiciel", "application", "plateforme"],
-      response: `<b>Outils IA recommandés</b> :
+      keywords: ["outil", "recommandé", "plateforme", "logiciel", "appli", "service"],
+      response: `<b>Outils recommandés</b> :
       <ul>
-        <li>Solutions qui respectent le RGPD : EdTech françaises, plateformes validées par la DSI ou la DRANE.</li>
-        <li>Éviter les IA grand public (par ex. ChatGPT, Copilot) pour les données sensibles ou non anonymisées.</li>
-        <li>Privilégier l’hébergement européen et la transparence sur le traitement des données.</li>
+        <li>Outils proposés par les DSI, DANE ou plateformes validées.</li>
+        <li>Services respectant le RGPD, hébergés en Europe.</li>
+        <li>Pas d’IA américaines grand public avec des données sensibles.</li>
       </ul>`
     },
     "détection ia": {
-      keywords: ["détection", "détecter", "copie", "chatgpt", "triche"],
-      response: `<b>Détection de l’usage d’IA</b> :
+      keywords: ["détection", "détecter", "triche", "copie", "chatgpt"],
+      response: `<b>Détection IA élèves</b> :
       <ul>
-        <li>Les logiciels de détection d’IA sont peu fiables et peuvent générer des faux positifs.</li>
-        <li>Pour vérifier, privilégier l’oral, l’analyse du processus, la production progressive.</li>
-        <li>Parler avec les élèves, demander de détailler la démarche en cas de doute.</li>
+        <li>Les outils de détection sont peu fiables.</li>
+        <li>Privilégier l’oral, retracer le processus de réflexion et le dialogue.</li>
+        <li>
+          Expliquer dès le début les règles et sanctions à tous.
+        </li>
       </ul>`
     },
     "risques": {
       keywords: ["risque", "danger", "biais", "problème", "limite"],
       response: `<b>Risques de l’IA en éducation</b> :
       <ul>
-        <li>Dépendance excessive, perte d’autonomie, réponses fausses, biais algorithmiques.</li>
-        <li>Tentation de tricher, risques d’addiction, de désinformation ou de contenus inadaptés.</li>
-        <li><b>Solution :</b> développer l’esprit critique, expliquer les limites, encadrer l’usage.</li>
+        <li>Dépendance excessive, perte d’autonomie de l’élève.</li>
+        <li>Biais algorithmiques, réponses fausses non détectées.</li>
+        <li>Aggravation de la triche, nouveaux types de facilitation de la fraude.</li>
       </ul>`
     },
     "aide aux devoirs": {
       keywords: ["aide", "devoirs", "maison", "soutien"],
       response: `<b>Aide aux devoirs avec l’IA</b> :
       <ul>
-        <li>Oui, si l’élève s’approprie la réponse, reformule, explique sa démarche.</li>
-        <li>Non si le texte est copié-collé ou s’il n’a pas travaillé lui-même.</li>
-        <li>En cas de doute, l’enseignant peut demander à l’élève d’expliquer le cheminement ou d’approfondir à l’oral.</li>
+        <li>S’entraîner et reformuler, mais le devoir doit refléter l’effort personnel.</li>
+        <li>Usage transparent : l’élève doit indiquer ce qui a été fait avec IA.</li>
+        <li>Pas de copier-coller systématique, appropriation personnelle obligatoire.</li>
       </ul>`
     },
     "sensibilisation": {
       keywords: ["sensibiliser", "sensibilisation", "éduquer", "prévenir", "information"],
       response: `<b>Sensibilisation à l’IA</b> :
       <ul>
-        <li>Organiser des débats en classe (ex: “Peut-on tout confier à l’IA ?”).</li>
-        <li>Expériences pratiques sur le tri d’informations, l’analyse des sources.</li>
-        <li>Évoquer l’impact environnemental, la question des biais, des données.</li>
-        <li>Utiliser Pix et construire des séquences dédiées en EMI, SNT, SPC, NSI…</li>
+        <li>Travailler sur les enjeux éthiques, l’esprit critique, la notion de biais.</li>
+        <li>Enseignements via Pix, EMI, projets interdisciplinaires.</li>
+        <li>Aborder le sujet en classe et organiser des débats.</li>
       </ul>`
     },
     "sanctions fraude": {
       keywords: ["sanction", "fraude", "triche", "punition"],
       response: `<b>Sanctions en cas de fraude</b> :
       <ul>
-        <li>Application du règlement intérieur de l’établissement (avertissement, note nulle, devoir à refaire…)</li>
-        <li>Une démarche éducative (explication, dialogue, possibilité de rattrapage en cas de premier manquement).</li>
-        <li>Pour les récidives : sanctions progressives (retenue, conseil de discipline).</li>
+        <li>Application du règlement intérieur (zéro, devoir à refaire, avertissement, etc.).</li>
+        <li>Approche éducative privilégiée : d'abord expliquer puis sanctionner si besoin.</li>
       </ul>`
     }
   };
 
   function findBestMatch(userInput) {
     const input = userInput.trim().toLowerCase();
-    if (knowledgeBase[input]) return knowledgeBase[input];
+    if (knowledgeBase.hasOwnProperty(input)) return knowledgeBase[input];
     for (const [cat, data] of Object.entries(knowledgeBase)) {
-      if (cat === input || (data.keywords && data.keywords.some(k => input.includes(k)))) {
+      if (input.includes(cat) || data.keywords.some(k => input.includes(k))) 
         return data;
-      }
     }
     return null;
   }
@@ -509,39 +521,20 @@
   function generateResponse(u) {
     const kw = findBestMatch(u);
     if (kw) return kw.response;
-    // Cas d'interactions naturelles
-    const q = u.toLowerCase();
-    if (/danger.*élève|élève.*danger/.test(q))
-      return knowledgeBase["risques"].response;
-    if (/chatgpt|peut[- ]?on utiliser.*chatgpt|enseignant.*chatgpt/.test(q))
-      return `<b>Usage de ChatGPT par un enseignant :</b><br>L’usage est possible pour préparer des séquences, différencier, corriger, mais l’enseignant reste responsable des contenus transmis et ne doit jamais soumettre de données personnelles d’élèves. <br><span class="info-box">Renseignez-vous auprès de votre DSI avant de créer un compte « professionnel » sur un service IA grand public.</span>`;
-    if (/trich(e|er)|sanction/.test(q))
-      return knowledgeBase["sanctions fraude"].response;
-    if (/corriger.*devoir.*ia|peut[- ]?on corriger.*ia/.test(q))
-      return `<b>Correction de devoirs avec l’IA :</b><br>L’IA peut aider à générer des barèmes types, proposer des feedbacks personnalisés, aider à la saisie ou au tri des copies. La correction et la décision finale demeurent humaines et professionnelles.`;
-    if (/expliquer.*ia.*enfant|présenter.*ia.*enfant|comment expliquer.*intelligence artificielle/i.test(q))
-      return `<b>Expliquer l’IA à un enfant</b> :
-        <ul><li>L’intelligence artificielle, c’est un programme d’ordinateur qui apprend à résoudre des problèmes ou répondre à des questions comme un humain, mais ce n’est pas magique, ça ne pense pas tout seul&nbsp;!</li>
-        <li>On peut utiliser des jeux de classification, de dessin ou des chatbots simples pour montrer l’IA de façon concrète à l’école primaire.</li></ul>
-        <div class="info-box">Demandez-lui ce qu’il comprend, insistez sur l’esprit critique et le droit à l’erreur des machines.</div>`;
-    if (/bonjour|salut/i.test(q))
-      return "Bonjour ! Je suis là pour vous aider avec vos questions sur le cadre d'usage de l'IA en éducation. N'hésitez pas à me poser vos questions !";
-    if (/merci/i.test(q))
-      return "Avec plaisir ! N'hésitez pas à demander d'autres précisions sur l'usage de l'IA en éducation.";
-    if (/au revoir|bye/i.test(q))
-      return "Au revoir ! N'hésitez pas à revenir si vous avez d'autres questions sur l'IA en éducation. Bonne journée !";
-    return `Je n'ai pas trouvé d'information spécifique sur « ${u} » dans le cadre d'usage de l'IA en éducation.
+    if (/bonjour|salut/i.test(u))
+      return "Bonjour ! Je suis là pour vous aider avec vos questions sur le cadre d'usage de l'IA en éducation. N'hésitez pas à me poser vos questions !";
+    if (/merci/i.test(u))
+      return "Avec plaisir ! N'hésitez pas à demander d'autres précisions sur l'usage de l'IA en éducation.";
+    if (/au revoir|bye/i.test(u))
+      return "Au revoir ! N'hésitez pas à revenir si vous avez d'autres questions sur l'IA en éducation. Bonne journée !";
+    return `Je n'ai pas trouvé d'information spécifique sur "<b>${u}</b>" dans le cadre d'usage de l'IA en éducation.
       <div class="info-box">
-        <strong>Vous pouvez me poser des questions sur :</strong><br>
-        • Les principes généraux d'usage de l'IA<br>
-        • L'utilisation par les élèves selon les niveaux<br>
-        • Les obligations légales et protection des données<br>
-        • L'impact environnemental et les risques<br>
-        • Les devoirs, évaluations et détection<br>
-        • Le rôle des enseignants et les outils<br>
-        • La formation, sensibilisation et sanctions
+      <strong>Vous pouvez me poser des questions sur :</strong><br>
+      • Les principes généraux d'usage de l'IA<br>
+      • Les usages élèves, la protection des données<br>
+      • Les obligations légales, la formation, les risques, la fraude, etc.
       </div>
-      Essayez une suggestion au bas de l'écran ou tapez une question différente.`;
+      Essayez une de mes suggestions ou tapez une question avec vos propres mots.`;
   }
 
   function sendMessage(msg) {
@@ -565,7 +558,7 @@
       addMessage(res, false);
       sendBtn.disabled = false;
       input.focus();
-    }, 700 + Math.random() * 400);
+    }, 600 + Math.random() * 400);
   }
 
   function handleKeyPress(e) {
@@ -576,7 +569,7 @@
     document.getElementById('userInput').focus();
     document.querySelectorAll('.suggestion-btn').forEach(btn => {
       btn.addEventListener('click', function() {
-        sendMessage(this.getAttribute('data-key') || this.textContent);
+        sendMessage(this.getAttribute('data-key'));
       });
     });
   });
