@@ -189,6 +189,21 @@
       position: relative;
       z-index: 1;
     }
+    .linkedin-link {
+      text-align: center;
+      padding-bottom: 24px;
+      padding-top: 6px;
+      font-size: 1.02em;
+    }
+    .linkedin-link a {
+      color: #18386b;
+      text-decoration: underline;
+      word-break: break-all;
+      transition: color 0.15s;
+    }
+    .linkedin-link a:hover, .linkedin-link a:focus {
+      color: #35cfc3;
+    }
     @media (max-width: 700px) {
       .chat-container { 
         margin: 0;
@@ -222,6 +237,7 @@
     }
     @media (max-width: 430px) {
       .chat-title { font-size: 0.97em; }
+      .linkedin-link { font-size: 0.95em;}
     }
   </style>
 </head>
@@ -256,6 +272,12 @@
     </div>
     <div class="mention-ia">
       Contenu partiellement généré par une IA et vérifié par un agent
+    </div>
+    <div class="linkedin-link">
+      <span>
+        Retrouvez-moi sur LinkedIn :
+        <a href="https://www.linkedin.com/in/amélie-silvert-2359b576/" target="_blank" rel="noopener">https://www.linkedin.com/in/amélie-silvert-2359b576/</a>
+      </span>
     </div>
   </div>
 
