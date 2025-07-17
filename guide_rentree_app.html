@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide de la Rentrée Numérique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .pix-icon { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .gar-icon { background: linear-gradient(45deg, #1abc9c, #16a085); }
+        .formation-icon { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .outils-icon { background: linear-gradient(45deg, #e67e22, #d35400); }
+        .evenements-icon { background: linear-gradient(45deg, #f39c12, #e67e22); }
+        .ia-icon { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .card p {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .card-content {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .card.active .card-content {
+            display: block;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .highlight h3 {
+            margin-bottom: 10px;
+        }
+
+        .list-item {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border-left: 4px solid #3498db;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .timeline {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .timeline-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .date {
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            opacity: 0.8;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .card-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .card h2 {
+                font-size: 1.2rem;
+            }
+            
+            .btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+                display: block;
+                text-align: center;
+                margin: 10px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .card-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Guide de la Rentrée Numérique</h1>
+            <p>Focus sur les essentiels - Délégation de Région Académique au Numérique Éducatif</p>
+        </div>
+
+        <div class="grid">
+            <!-- PIX & CERTIFICATION -->
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="card-icon pix-icon">🎯</div>
+                    <h2>Pix & Certification</h2>
+                </div>
+                <p>Découvrez les nouveautés Pix pour les 6ème, la certification et les parcours obligatoires</p>
+                
+                <div class="card-content">
+                    <div class="highlight" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">
+                        <h3>🎓 Pix pour les 6ème - Nouveau dispositif obligatoire</h3>
+                        <p>Tous les élèves de 6ème devront obtenir une attestation via trois parcours spécialisés.</p>
+                    </div>
+                    
+                    <div class="list-item">
+                        <strong>Protection et Sécurité</strong> - Focus cyber-harcèlement et prévention
+                    </div>
+                    <div class="list-item">
+                        <strong>Culture numérique</strong> - Parcours généraliste sur les opportunités du numérique
+                    </div>
+                    <div class="list-item">
+                        <strong>Parcours bilan</strong> - En fin d'année si les deux premiers n'ont pas été réalisés
+                    </div>
+
+                    <div class="timeline">
+                        <h3>📅 Calendrier Certification 2025-2026</h3>
+                        <div class="timeline-item">
+                            <span class="date">Novembre 2025 - Mars 2026</span><br>
+                            Certification Terminale, BTS et CPGE
+                        </div>
+                        <div class="timeline-item">
+                            <span class="date">Mars 2026 - Juin 2026</span><br>
+                            Certification élèves de 3ème
+                        </div>
+                    </div>
+
+                    <a href="https://pix.fr/actualites/sensibilisation-au-numerique-pix-participe-a-la-prevention-pour-les-eleves-de-6e" class="btn">En savoir plus sur Pix 6ème</a>
+                </div>
+            </div>
+
+            <!-- GAR & RESSOURCES -->
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="card-icon gar-icon">🔗</div>
+                    <h2>GAR & Ressources</h2>
+                </div>
+                <p>Le Gestionnaire d'Accès aux Ressources et les outils disponibles dans l'ENT</p>
+                
+                <div class="card-content">
+                    <div class="highlight" style="background: linear-gradient(45deg, #1abc9c, #16a085);">
+                        <h3>🛡️ Avantages du GAR (Gestionnaire d'Accès aux Ressources)</h3>
+                    </div>
+                    
+                    <div class="list-item">
+                        <strong>Protection des données</strong> - Sécurité des données élèves et enseignants
+                    </div>
+                    <div class="list-item">
+                        <strong>Authentification unique</strong> - Connexion simplifiée à Pix via le Médicaentre
+                    </div>
+                    <div class="list-item">
+                        <strong>Manuels numériques</strong> - Accès sans transport de livres
+                    </div>
+                    <div class="list-item">
+                        <strong>Ressources pédagogiques</strong> - Outils pour construire vos cours
+                    </div>
+                    <div class="list-item">
+                        <strong>Support technique</strong> - Système de ticketing accessible aux enseignants
+                    </div>
+
+                    <div class="highlight" style="background: linear-gradient(45deg, #e67e22, #d35400);">
+                        <h3>💡 Astuce</h3>
+                        <p>Une fois connecté au GAR, l'accès à Pix se fait automatiquement sans nouvelle authentification !</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMATIONS & COMPÉTENCES -->
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="card-icon formation-icon">📖</div>
+                    <h2>Formations & Compétences</h2>
+                </div>
+                <p>Pix+Édu, formations numériques et montée en compétences des enseignants</p>
+                
+                <div class="card-content">
+                    <div class="highlight">
+                        <h3>🎓 Formations disponibles</h3>
+                    </div>
+                    
+                    <div class="list-item">
+                        <strong>Pix+Édu</strong> - Certification des compétences numériques pour les enseignants
+                    </div>
+                    <div class="list-item">
+                        <strong>Parcours M@gistère</strong> - Formations en ligne spécialisées
+                    </div>
+                    <div class="list-item">
+                        <strong>Ateliers pratiques</strong> - Sessions de formation en présentiel
+                    </div>
+                    <div class="list-item">
+                        <strong>Accompagnement personnalisé</strong> - Support individuel pour les enseignants
+                    </div>
+
+                    <a href="https://magistere.education.fr/" class="btn">Accéder à M@gistère</a>
+                </div>
+            </div>
+
+            <!-- OUTILS PÉDAGOGIQUES -->
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="card-icon outils-icon">🛠️</div>
+                    <h2>Outils Pédagogiques</h2>
+                </div>
+                <p>Cantoo, Webradio, Éléa et autres ressources pour enrichir vos cours</p>
+                
+                <div class="card-content">
+                    <div class="highlight" style="background: linear-gradient(45deg, #e67e22, #d35400);">
+                        <h3>🎧 Cantoo Web</h3>
+                        <p>Outil d'aide à la lecture et à l'écriture, particulièrement adapté aux élèves avec des troubles d'apprentissage.</p>
+                    </div>
+                    
+                    <div class="highlight" style="background: linear-gradient(45deg, #f39c12, #e67e22);">
+                        <h3>📻 Webradio Saooti</h3>
+                        <p>Création de podcasts avec les élèves, développement de l'expression orale et projets collaboratifs.</p>
+                    </div>
+
+                    <div class="list-item">
+                        <strong>Éléa</strong> - Plateforme Moodle intégrée dans l'ENT NEO
+                    </div>
+                    <div class="list-item">
+                        <strong>Fresque des Cyber-Citoyens</strong> - 2h pour comprendre les enjeux du numérique
+                    </div>
+                    <div class="list-item">
+                        <strong>Jeu "Défis pour Six"</strong> - Développement des compétences numériques sans écran
+                    </div>
+                </div>
+            </div>
+
+            <!-- ÉVÉNEMENTS & CONCOURS -->
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="card-icon evenements-icon">🎉</div>
+                    <h2>Événements & Concours</h2>
+                </div>
+                <p>Calendrier des événements numériques, concours et ateliers de l'année</p>
+                
+                <div class="card-content">
+                    <div class="timeline">
+                        <h3>📅 Calendrier 2025-2026</h3>
+                        <div class="timeline-item">
+                            <span class="date">Septembre</span><br>
+                            #Bienvenules 6ème
+                        </div>
+                        <div class="timeline-item">
+                            <span class="date">Novembre</span><br>
+                            Educatech
+                        </div>
+                        <div class="timeline-item">
+                            <span class="date">Décembre</span><br>
+                            Semaine NSI
+                        </div>
+                        <div class="timeline-item">
+                            <span class="date">Février</span><br>
+                            Numériqu'elles (Lille)
+                        </div>
+                        <div class="timeline-item">
+                            <span class="date">Février</span><br>
+                            Safer Internet Day
+                        </div>
+                        <div class="timeline-item">
+                            <span class="date">Mars</span><br>
+                            Journée du numérique INSPE
+                        </div>
+                        <div class="timeline-item">
+                            <span class="date">Avril</span><br>
+                            Pix-Plaine Image
+                        </div>
+                        <div class="timeline-item">
+                            <span class="date">Mai-Juin</span><br>
+                            Nuit du code
+                        </div>
+                    </div>
+
+                    <div class="highlight" style="background: linear-gradient(45deg, #27ae60, #2ecc71);">
+                        <h3>🏆 Concours disponibles</h3>
+                        <p>Trophée des classes CNIL, Concours Médiatiks, Science Factor, Challenge First Lego League</p>
+                    </div>
+
+                    <a href="https://dane.site.ac-lille.fr/" class="btn">Calendrier complet</a>
+                </div>
+            </div>
+
+            <!-- INTELLIGENCE ARTIFICIELLE -->
+            <div class="card" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="card-icon ia-icon">🤖</div>
+                    <h2>Intelligence Artificielle</h2>
+                </div>
+                <p>Réflexions et ressources sur l'IA dans l'éducation, usages et enjeux</p>
+                
+                <div class="card-content">
+                    <div class="highlight">
+                        <h3>🧠 Constats et enjeux</h3>
+                        <p>L'émergence de l'IA générative soulève des questions sur l'évaluation et l'apprentissage. Le ministère encourage un "usage raisonné".</p>
+                    </div>
+                    
+                    <div class="list-item">
+                        <strong>Gain de temps</strong> - Conception de scénarios pédagogiques
+                    </div>
+                    <div class="list-item">
+                        <strong>Création de contenus</strong> - Aide à la création de contenus éducatifs
+                    </div>
+                    <div class="list-item">
+                        <strong>Personnalisation</strong> - Adaptation aux besoins individuels
+                    </div>
+                    <div class="list-item">
+                        <strong>Évaluation innovante</strong> - Nouveaux outils d'évaluation
+                    </div>
+
+                    <a href="https://www.education.gouv.fr/intelligence-artificielle-et-education-appel-contribution-411138" class="btn">Cadre ministériel IA</a>
+                    <a href="https://www.fun-mooc.fr/fr/cours/intelligence-artificielle-pour-et-par-les-enseignants/" class="btn">MOOC IA pour enseignants</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 - Délégation de Région Académique au Numérique Éducatif</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const isActive = card.classList.contains('active');
+            
+            // Fermer toutes les cartes
+            document.querySelectorAll('.card').forEach(c => {
+                c.classList.remove('active');
+            });
+            
+            // Ouvrir la carte cliquée si elle n'était pas active
+            if (!isActive) {
+                card.classList.add('active');
+            }
+        }
+
+        // Animation d'apparition progressive des cartes
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+
+        // Gestion du responsive
+        window.addEventListener('resize', function() {
+            const cards = document.querySelectorAll('.card.active');
+            if (window.innerWidth <= 768) {
+                cards.forEach(card => {
+                    card.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
