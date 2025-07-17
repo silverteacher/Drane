@@ -22,6 +22,7 @@
       display: flex;
       flex-direction: column;
       min-height: 80vh;
+      position: relative;
     }
     header {
       background: linear-gradient(90deg, #35cfc3 0%, #18386b 100%);
@@ -45,7 +46,6 @@
       height: 36px;
       border-radius: 50%;
       object-fit: contain;
-      /* Ici c'est une vraie bulle chat stylisée, sobre et moderne, pas un robot */
     }
     .chat-title {
       font-size: 1.45em;
@@ -95,18 +95,24 @@
       background: #ffe3b3;
       color: #ca7e08;
       font-weight: bold;
-      font-size: 1.1em;
+      font-size: 0.95em;
       letter-spacing: 0.02em;
+      padding: 0;
+      justify-content: center;
+      align-items: center;
+      width: 38px;
+      height: 38px;
     }
     .chat-bubble {
       background: #fff;
       color: #18386b;
       border-radius: 16px;
-      padding: 1em 1.32em;
+      padding: 1em 1.2em;
       font-size: 1em;
       box-shadow: 0 2px 7px rgba(40,60,125,0.09);
       line-height: 1.5em;
       white-space: pre-line;
+      word-break: break-word;
     }
     .message.user .chat-bubble {
       background: #18386b;
@@ -144,6 +150,8 @@
       padding: 1em;
       border-top: 1px solid #ececf3;
       background: #f9fafd;
+      position: relative;
+      z-index: 2;
     }
     input[type="text"] {
       flex: 1;
@@ -172,9 +180,48 @@
       background: #35cfc3;
       color: #18386b;
     }
-    @media (max-width: 650px) {
-      .chat-container { margin: 0; border-radius: 0; min-height: 100vh;}
-      header, .suggestions-bar, .messages, form { padding-left: 4vw; padding-right: 4vw; }
+    .mention-ia {
+      font-size: 0.98em;
+      color: #93a3b7;
+      text-align: center;
+      padding: 10px 0 18px 0;
+      background: none;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 700px) {
+      .chat-container { 
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh; 
+        width: 100vw;
+        max-width: 100vw;
+      }
+      header, .suggestions-bar, .messages, form { 
+        padding-left: 3vw; 
+        padding-right: 3vw;
+      }
+      .chat-title {
+        font-size: 1.1em;
+      }
+      .header-logo {
+        width: 44px; height: 44px;
+      }
+      .header-logo img {
+        width: 28px; height: 28px;
+      }
+      .avatar, .avatar.user {
+        width: 32px; height: 32px;
+      }
+      .avatar img { width: 24px; height: 24px; }
+      .chat-bubble { padding: 0.8em 0.85em; font-size: 0.97em; }
+      .suggestion-btn {
+        padding: 7px 14px;
+        font-size: 0.98em;
+      }
+    }
+    @media (max-width: 430px) {
+      .chat-title { font-size: 0.97em; }
     }
   </style>
 </head>
@@ -207,6 +254,9 @@
       <button class="suggestion-btn" data-question="Impact environnemental">Impact environnemental</button>
       <button class="suggestion-btn" data-question="Principe d'équité">Principe d'équité</button>
     </div>
+    <div class="mention-ia">
+      Contenu partiellement généré par une IA et vérifié par un agent
+    </div>
   </div>
 
   <script>
@@ -227,7 +277,13 @@
         botImg.alt = "Chatbot";
         avatar.appendChild(botImg);
       } else {
-        avatar.textContent = "Vous";
+        avatar.textContent = "Moi";
+        avatar.style.fontSize = "0.98em";
+        avatar.style.fontWeight = "700";
+        avatar.style.letterSpacing = "0.01em";
+        avatar.style.display = "flex";
+        avatar.style.justifyContent = "center";
+        avatar.style.alignItems = "center";
       }
 
       const bubble = document.createElement('div');
@@ -243,28 +299,33 @@
     function getResponse(question) {
       const q = question.toLowerCase();
       if(q.includes('usages autorisé') || q.includes('pédagogique')) {
-        return `L’IA peut être utilisée en éducation :
-- pour assister les enseignants (préparation de cours, personnalisation...)
-- pour certains usages pédagogiques, à partir de la 4e pour les IA génératives et toujours sous supervision.
-Le respect des valeurs républicaines et du contrôle humain est indispensable[1].`;
+        return `L’IA peut être utilisée en éducation pour assister les enseignants (préparation de cours, adaptation des contenus…), mais aussi pour certains usages pédagogiques avec les élèves dès la classe de 4e, toujours sous la responsabilité de l’enseignant. Le respect des valeurs républicaines et du contrôle humain est indispensable.`;
       }
       if(q.includes('confidentialité') || q.includes('donnée')) {
-        return `Aucune donnée personnelle/confidentielle ne doit être saisie dans une IA grand public. 
-Les élèves n’ont pas à créer de compte sur ces plateformes. Seules les données publiquement partageables sont admises. Le RGPD s’applique strictement[1].`;
+        return `Aucune donnée personnelle ou confidentielle ne doit être saisie dans une IA grand public. Les élèves n’ont pas à créer de compte sur ces plateformes. Seules les données publiquement partageables sont admises. La réglementation sur la protection des données s’applique strictement.`;
       }
       if(q.includes('devoir') || q.includes('évaluation')) {
-        return `Faire un devoir avec l’aide d’une IA sans autorisation expresse, ou sans appropriation, est considéré comme une fraude. Les détecteurs automatiques d’IA ne sont pas jugés fiables : l’accent est mis sur le raisonnement original de l’élève[1].`;
+        return `Faire un devoir avec l’aide d’une IA sans autorisation expresse ou sans appropriation est considéré comme une fraude. Les détecteurs automatiques d’IA ne sont pas jugés fiables. L’évaluation valorise avant tout l’originalité et le raisonnement des élèves.`;
       }
       if(q.includes('environnemental') || q.includes('impact')) {
-        return `L’usage de l’IA doit rester frugal : privilégier les alternatives moins énergivores quand c’est possible. L’Éducation nationale invite à limiter l’empreinte carbone des usages numériques et à sensibiliser à cet enjeu[1].`;
+        return `L’usage de l’IA doit rester raisonné : privilégier les alternatives moins énergivores quand c’est possible et limiter l’empreinte carbone. L’Éducation nationale invite à limiter l’impact environnemental des usages numériques et à sensibiliser à cet enjeu.`;
       }
       if(q.includes('équité') || q.includes('princip')) {
-        return `Tous les usages de l’IA doivent garantir l’équité, l’inclusion et la liberté pédagogique. La transparence, l’accessibilité et le contrôle humain restent les piliers du cadre d’usage officiel[1].`;
+        return `Tous les usages de l’IA à l’école doivent garantir l’équité, l’inclusion et la liberté pédagogique. Transparence, accessibilité et contrôle humain sont essentiels.`;
       }
-      return `Je n’ai pas compris votre demande. Essayez d’être plus précis ou référez-vous à un mot-clé du cadre IA éducation.`;
+      if(q.match(/bonjour|salut|coucou|hey/)) {
+        return `Bonjour ! Posez-moi une question sur l’IA à l’école (confidentialité, pédagogie, principes, environnement, etc.), ou utilisez les mots-clés ci-dessous.`;
+      }
+      if(q.includes('rgpd')) {
+        return `Le RGPD impose de ne jamais saisir de données personnelles dans les outils d’IA utilisés à l’école. Toute utilisation doit aussi être annoncée aux personnes concernées, élèves comme enseignants.`;
+      }
+      if(q.match(/coll[eè]ge/)) {
+        return `En collège, aucune IA générative n’est manipulée directement avant la classe de 4e. Les élèves sont, avant ce niveau, seulement sensibilisés aux principes et enjeux de l’IA.`;
+      }
+      return `Je n’ai pas compris votre demande. Posez une question sur un aspect précis du cadre IA éducation, ou choisissez un mot-clé ci-dessous.`;
     }
 
-    // Gestion des suggestions par mot-clé
+    // Suggestions par mot-clé
     suggestionsBar.addEventListener('click', (e) => {
       if(e.target.classList.contains('suggestion-btn')) {
         const question = e.target.getAttribute('data-question');
@@ -275,7 +336,7 @@ Les élèves n’ont pas à créer de compte sur ces plateformes. Seules les don
       }
     });
 
-    // Gestion de l'envoi classique
+    // Champs de saisie utilisateur
     form.addEventListener('submit', function(ev) {
       ev.preventDefault();
       const userText = input.value.trim();
@@ -285,6 +346,11 @@ Les élèves n’ont pas à créer de compte sur ces plateformes. Seules les don
       setTimeout(() => {
         appendMessage(getResponse(userText), 'bot');
       }, 400);
+    });
+
+    // Scroll bottom au chargement
+    document.addEventListener('DOMContentLoaded', function(){
+      messages.scrollTop = messages.scrollHeight;
     });
   </script>
 </body>
