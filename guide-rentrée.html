@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Guide de rentrée numérique 2024</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial,sans-serif; margin:0; background:#f8f8fa;}
+    header { background:#244879; color:#fff; padding:1em 0; text-align:center;}
+    .container { max-width:900px; margin:0 auto; padding:2em 1em;}
+    .grid {display:flex;flex-wrap:wrap;gap:1em;}
+    .card {
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 2px 6px #e0e0e0;
+      flex:1 1 calc(33% - 1em);
+      min-width:220px;
+      max-width:100%;
+      padding:0;
+      margin-bottom:1em;
+      overflow: hidden;
+      transition: box-shadow .2s;
+      cursor: pointer;
+    }
+    .card-header {
+      padding:1em;
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between;
+    }
+    .card-header h3 {margin:0;font-size:1.15em;}
+    .arrow {
+      font-size: 1.2em;
+      transition: transform 0.3s;
+    }
+    .card.open .arrow {
+      transform: rotate(90deg);
+    }
+    .card-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      padding: 0 1em;
+      background: #f6f7fb;
+    }
+    .card.open .card-content {
+      padding:1em;
+      max-height: 200px; /* Ajuster si nécessaire */
+    }
+    @media (max-width:900px) { .card{flex:1 1 calc(50% - 1em);} }
+    @media (max-width:600px) {.grid{flex-direction:column;}.card{flex:1 1 100%; min-width:unset;}}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Guide de rentrée numérique 2024</h1>
+  <p>Parcours, outils et ressources pour tous</p>
+</header>
+<div class="container">
+
+  <!-- 1ère ligne -->
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <h3>Pix 6e</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Sensibilisation obligatoire au numérique, à la sécurité et à la citoyenneté dès la sixième pour prévenir les risques et former des cybercitoyens.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Certification Pix</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Évaluation nationale reconnue des compétences numériques, valorisée du lycée à l'enseignement supérieur.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>GAR &amp; Ressources ENT</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Portail unique, sécurisé et protégé pour accéder à tous les manuels et outils pédagogiques via l’ENT.
+      </div>
+    </div>
+  </div>
+
+  <!-- 2e ligne -->
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <h3>Cantoo Web</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Suite d’outils accessibles pour besoins particuliers : éditeur de texte, carte mentale, lecteur et plus.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Webradio</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Création de podcasts et direct par les élèves, pour développer expression, confiance et créativité.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Éléa Moodle</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Plateforme de modules interactifs intégrée à l’ENT : activités, quiz, autonomie et accès pour toute la classe.
+      </div>
+    </div>
+  </div>
+
+  <!-- 3e ligne -->
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <h3>Fresque des Cybercitoyens</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Jeu de cartes et ateliers pour comprendre la citoyenneté numérique : sécurité, fausses infos, droits et responsabilités numériques.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Défis pour Six</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Jeu de plateau « débranché » pour développer les compétences numériques et la réflexion collective sans écran.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>TED-i</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Robot de téléprésence pour permettre aux élèves empêchés par une maladie longue de suivre les cours à distance.
+      </div>
+    </div>
+  </div>
+
+  <!-- 4e ligne -->
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <h3>Formations DRANE</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Formations pratiques pour tous les enseignants : outils numériques, pédagogie, IA, sécurité, innovation.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Pix+Édu</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Parcours d’auto-positionnement et modules à la carte pour monter en compétences numériques à son rythme.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Événements &amp; Concours</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Hackathons, concours, journées thématiques, ateliers et projets tout au long de l’année pour élèves et enseignants.
+      </div>
+    </div>
+  </div>
+
+  <!-- 5e ligne -->
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <h3>Ressources IA</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        MOOC, outils, réflexions et formations pour comprendre usages et enjeux éthiques de l’intelligence artificielle en classe.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Robotique</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Programmation, découverte des algorithmes et projets pratiques autour des robots éducatifs.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Contact DRANE</h3><span class="arrow">&#9654;</span>
+      </div>
+      <div class="card-content">
+        Support personnalisé pour découvrir ou approfondir tous les usages numériques à l’école ou au collège.
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+  // Ajoute l’effet d’accordéon à chaque carte
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', function() {
+      // Ferme toutes les autres cartes ouvertes sur la même ligne
+      let siblings = Array.from(card.parentNode.children);
+      siblings.forEach(sib => {
+        if (sib !== card) sib.classList.remove('open');
+      });
+      card.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>
