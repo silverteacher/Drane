@@ -3,63 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chatbot IA Éducation - Cadre d'Usage 2025</title>
+  <title>Chatbot IA Éducation – Cadre 2025</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: none;
-      color: #333333;
+      background: #f5f6fa;
+      color: #23395d;
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f4f6f8;
     }
     .chat-container {
-      width: 100%;
       max-width: 600px;
-      height: 80vh;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(40,60,125,0.12);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      background: #ffffff;
-      overflow: hidden;
+      min-height: 80vh;
     }
     header {
-      background: linear-gradient(90deg, #2b5876, #4e4376); /* bleu-violet moderne */
-      padding: 1em 1.5em;
-      color: white;
-      font-size: 1.5em;
-      font-weight: bold;
+      background: linear-gradient(90deg, #35cfc3 0%, #18386b 100%);
+      padding: 1.4em 1.2em 1.1em 1.2em;
       display: flex;
       align-items: center;
       gap: 1em;
     }
-    header img {
-      width: 40px;
-      height: 40px;
+    .header-logo {
+      width: 52px;
+      height: 52px;
+      background: #fff;
       border-radius: 50%;
-      object-fit: cover;
-      background: white;
-      padding: 4px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 7px rgba(30,60,114,0.08);
+    }
+    .header-logo img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: contain;
+      /* Ici c'est une vraie bulle chat stylisée, sobre et moderne, pas un robot */
+    }
+    .chat-title {
+      font-size: 1.45em;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -.01em;
     }
     .messages {
       flex: 1;
       overflow-y: auto;
-      padding: 1em;
-      background: #eef2f7;
+      background: #f7fafc;
+      padding: 1.5em 1em 1em 1em;
       display: flex;
       flex-direction: column;
-      gap: 1em;
+      gap: 1.1em;
     }
     .message {
       display: flex;
-      gap: 0.8em;
-      max-width: 80%;
+      gap: 0.76em;
+      max-width: 85%;
     }
     .message.bot {
       flex-direction: row;
@@ -69,155 +75,216 @@
       margin-left: auto;
     }
     .avatar {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      background: none;
       display: flex;
-      justify-content: center;
       align-items: center;
-      font-weight: bold;
-      font-size: 1.2em;
-      flex-shrink: 0;
+      justify-content: center;
+      background: #e1f5f3;
       overflow: hidden;
+      flex-shrink: 0;
     }
     .avatar img {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
       border-radius: 50%;
-      object-fit: cover;
+    }
+    .avatar.user {
+      background: #ffe3b3;
+      color: #ca7e08;
+      font-weight: bold;
+      font-size: 1.1em;
+      letter-spacing: 0.02em;
     }
     .chat-bubble {
-      background: white;
-      padding: 0.8em 1.2em;
-      border-radius: 15px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      white-space: pre-wrap;
+      background: #fff;
+      color: #18386b;
+      border-radius: 16px;
+      padding: 1em 1.32em;
       font-size: 1em;
-      line-height: 1.4em;
+      box-shadow: 0 2px 7px rgba(40,60,125,0.09);
+      line-height: 1.5em;
+      white-space: pre-line;
     }
     .message.user .chat-bubble {
-      background: #4e4376;
-      color: white;
+      background: #18386b;
+      color: #fff;
+    }
+    .suggestions-bar {
+      background: #f1f8fa;
+      border-top: 1px solid #e5e8ed;
+      padding: 18px 8px 18px 8px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .suggestion-btn {
+      background: #fff;
+      border: 1.5px solid #35cfc3;
+      color: #18386b;
+      padding: 8px 20px;
+      font-size: 1em;
+      border-radius: 22px;
+      cursor: pointer;
+      margin: 2px 0;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      outline: none;
+    }
+    .suggestion-btn:hover, .suggestion-btn:focus {
+      background: #35cfc3;
+      color: #fff;
+      border-color: #18386b;
     }
     form {
       display: flex;
       gap: 0.5em;
       padding: 1em;
-      border-top: 1px solid #ddd;
-      background: #fafafa;
+      border-top: 1px solid #ececf3;
+      background: #f9fafd;
     }
     input[type="text"] {
       flex: 1;
-      padding: 0.8em 1em;
+      padding: 0.85em 1.1em;
+      border: 1.5px solid #d1d9e0;
       border-radius: 20px;
-      border: 1px solid #ccc;
       font-size: 1em;
       outline: none;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s;
+      background: #fff;
     }
     input[type="text"]:focus {
-      border-color: #4e4376;
+      border-color: #35cfc3;
     }
-    button {
-      background: #4e4376;
+    button[type="submit"] {
+      background: #18386b;
       border: none;
-      color: white;
+      color: #fff;
       padding: 0 1.5em;
-      border-radius: 20px;
+      border-radius: 22px;
       cursor: pointer;
       font-size: 1em;
-      transition: background 0.3s ease;
+      transition: background 0.2s;
     }
-    button:hover {
-      background: #2b5876;
+    button[type="submit"]:hover {
+      background: #35cfc3;
+      color: #18386b;
+    }
+    @media (max-width: 650px) {
+      .chat-container { margin: 0; border-radius: 0; min-height: 100vh;}
+      header, .suggestions-bar, .messages, form { padding-left: 4vw; padding-right: 4vw; }
     }
   </style>
 </head>
 <body>
   <div class="chat-container">
     <header>
-      <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Chatbot" />
-      Cadre d'usage de l'IA - Chatbot Éducation 2025
+      <div class="header-logo" title="Chatbot Éducation">
+        <img src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png" alt="Bulle Chatbot" />
+      </div>
+      <span class="chat-title">Chatbot IA – Cadre d'usage Éducation 2025</span>
     </header>
     <div class="messages" id="messages">
       <div class="message bot">
         <div class="avatar">
-          <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Chatbot" />
+          <img src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png" alt="Chatbot" />
         </div>
         <div class="chat-bubble">
-          Bonjour ! Je suis Chatbot, votre assistant dédié au cadre d’usage de l’IA dans l’éducation française. Posez-moi vos questions pour adopter et respecter les bonnes pratiques de l’IA à l’école.
+          Bonjour ! Je vous informe sur les règles et pratiques de l’IA dans l’éducation française : usage pédagogique, RGPD, principes éthiques, environnement… Tapez une question ou cliquez sur un mot-clé en bas pour commencer.
         </div>
       </div>
     </div>
-    <form id="chat-form">
-      <input type="text" id="user-input" autocomplete="off" placeholder="Tapez votre question ici..." required />
+    <form id="chat-form" autocomplete="off">
+      <input type="text" id="user-input" placeholder="Votre question ici…" required />
       <button type="submit">Envoyer</button>
     </form>
+    <div class="suggestions-bar" id="suggestions-bar">
+      <button class="suggestion-btn" data-question="Usages autorisés">Usages autorisés</button>
+      <button class="suggestion-btn" data-question="Confidentialité des données">Confidentialité des données</button>
+      <button class="suggestion-btn" data-question="IA et devoirs scolaires">IA et devoirs scolaires</button>
+      <button class="suggestion-btn" data-question="Impact environnemental">Impact environnemental</button>
+      <button class="suggestion-btn" data-question="Principe d'équité">Principe d'équité</button>
+    </div>
   </div>
 
   <script>
+    const messages = document.getElementById('messages');
     const form = document.getElementById('chat-form');
     const input = document.getElementById('user-input');
-    const messages = document.getElementById('messages');
+    const suggestionsBar = document.getElementById('suggestions-bar');
 
     function appendMessage(content, sender = 'bot') {
       const messageElem = document.createElement('div');
-      messageElem.classList.add('message', sender);
+      messageElem.className = 'message ' + sender;
 
-      const avatarDiv = document.createElement('div');
-      avatarDiv.classList.add('avatar');
-      if (sender === 'bot') {
-        const avatarImg = document.createElement('img');
-        avatarImg.src = "https://cdn-icons-png.flaticon.com/512/2991/2991148.png";
-        avatarImg.alt = "Chatbot";
-        avatarDiv.appendChild(avatarImg);
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar' + (sender === 'user' ? ' user' : '');
+      if(sender === 'bot') {
+        const botImg = document.createElement('img');
+        botImg.src = "https://cdn-icons-png.flaticon.com/512/9131/9131529.png";
+        botImg.alt = "Chatbot";
+        avatar.appendChild(botImg);
       } else {
-        avatarDiv.textContent = "Vous";
+        avatar.textContent = "Vous";
       }
 
       const bubble = document.createElement('div');
-      bubble.classList.add('chat-bubble');
+      bubble.className = 'chat-bubble';
       bubble.textContent = content;
 
-      messageElem.appendChild(avatarDiv);
+      messageElem.appendChild(avatar);
       messageElem.appendChild(bubble);
       messages.appendChild(messageElem);
       messages.scrollTop = messages.scrollHeight;
     }
 
-    // Réponses enrichies, suggestions allégées
-    function generateResponse(inputText) {
-      const text = inputText.toLowerCase();
-      if (text.includes('principe') || text.includes('valeurs')) {
-        return "Les usages de l’IA doivent respecter les valeurs de l’École de la République : équité, inclusion, liberté pédagogique, et toujours sous contrôle humain. La responsabilité et la transparence priment dans chaque usage.";
-      } else if (text.includes('rgpd') || text.includes('données')) {
-        return "Le RGPD impose de ne jamais saisir de données personnelles ou confidentielles dans les IA publiques utilisées à l’école. L’utilisation de l’IA doit toujours être annoncée aux personnes concernées.";
-      } else if (text.includes('usage')) {
-        return "En primaire, l’accent est mis sur la découverte des concepts d’IA. Dès la 4e, les élèves peuvent manipuler des IA génératives en classe avec l’accompagnement d’un enseignant. Au lycée, l’autonomie est encouragée dans un cadre pédagogique explicite.";
-      } else if (text.includes('évaluation') || text.includes('devoir')) {
-        return "Réaliser un devoir entièrement avec l’aide d’une IA, sans autorisation ou appropriation personnelle, est interdit et assimilé à une fraude. Les évaluations valorisent avant tout le raisonnement personnel des élèves.";
-      } else if (text.includes('environnement') || text.includes('impact')) {
-        return "Il est essentiel d’utiliser l’IA de façon raisonnée : privilégier une utilisation frugale pour limiter l’empreinte écologique, et préférer des solutions libres et sobres lorsque possible.";
-      } else if (text.includes('suggestion') || text.includes('conseil')) {
-        return "Retenez : ne saisissez jamais de données personnelles, annoncez toute utilisation d’IA et privilégiez toujours le contrôle humain et l’esprit critique dans vos usages.";
-      } else {
-        return "Je suis désolé, je n’ai pas compris votre question. Posez-moi une question sur l’IA à l’école : principes, données, usages, environnement, ou évaluations.";
+    function getResponse(question) {
+      const q = question.toLowerCase();
+      if(q.includes('usages autorisé') || q.includes('pédagogique')) {
+        return `L’IA peut être utilisée en éducation :
+- pour assister les enseignants (préparation de cours, personnalisation...)
+- pour certains usages pédagogiques, à partir de la 4e pour les IA génératives et toujours sous supervision.
+Le respect des valeurs républicaines et du contrôle humain est indispensable[1].`;
       }
+      if(q.includes('confidentialité') || q.includes('donnée')) {
+        return `Aucune donnée personnelle/confidentielle ne doit être saisie dans une IA grand public. 
+Les élèves n’ont pas à créer de compte sur ces plateformes. Seules les données publiquement partageables sont admises. Le RGPD s’applique strictement[1].`;
+      }
+      if(q.includes('devoir') || q.includes('évaluation')) {
+        return `Faire un devoir avec l’aide d’une IA sans autorisation expresse, ou sans appropriation, est considéré comme une fraude. Les détecteurs automatiques d’IA ne sont pas jugés fiables : l’accent est mis sur le raisonnement original de l’élève[1].`;
+      }
+      if(q.includes('environnemental') || q.includes('impact')) {
+        return `L’usage de l’IA doit rester frugal : privilégier les alternatives moins énergivores quand c’est possible. L’Éducation nationale invite à limiter l’empreinte carbone des usages numériques et à sensibiliser à cet enjeu[1].`;
+      }
+      if(q.includes('équité') || q.includes('princip')) {
+        return `Tous les usages de l’IA doivent garantir l’équité, l’inclusion et la liberté pédagogique. La transparence, l’accessibilité et le contrôle humain restent les piliers du cadre d’usage officiel[1].`;
+      }
+      return `Je n’ai pas compris votre demande. Essayez d’être plus précis ou référez-vous à un mot-clé du cadre IA éducation.`;
     }
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const userText = input.value.trim();
-      if (!userText) return;
+    // Gestion des suggestions par mot-clé
+    suggestionsBar.addEventListener('click', (e) => {
+      if(e.target.classList.contains('suggestion-btn')) {
+        const question = e.target.getAttribute('data-question');
+        appendMessage(question, 'user');
+        setTimeout(() => {
+          appendMessage(getResponse(question), 'bot');
+        }, 400);
+      }
+    });
 
+    // Gestion de l'envoi classique
+    form.addEventListener('submit', function(ev) {
+      ev.preventDefault();
+      const userText = input.value.trim();
+      if(!userText) return;
       appendMessage(userText, 'user');
       input.value = '';
-
       setTimeout(() => {
-        const response = generateResponse(userText);
-        appendMessage(response, 'bot');
-      }, 500);
+        appendMessage(getResponse(userText), 'bot');
+      }, 400);
     });
   </script>
 </body>
