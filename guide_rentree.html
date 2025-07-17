@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Guide de rentrée numérique 2024</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .background-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 3rem 1rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 1;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      opacity: 0.3;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      font-weight: 300;
+      position: relative;
+      z-index: 2;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .intro {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .intro h2 {
+      color: #2a5298;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+
+    .intro p {
+      color: #666;
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.2);
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #f8f9ff 0%, #e8f0fe 100%);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .card-header h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #2a5298;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+    }
+
+    .arrow {
+      font-size: 1.5rem;
+      color: #667eea;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .card.open .arrow {
+      transform: rotate(90deg);
+      color: #764ba2;
+    }
+
+    .card-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      padding: 0 1.5rem;
+      background: white;
+      opacity: 0;
+    }
+
+    .card.open .card-content {
+      padding: 1.5rem;
+      max-height: 300px;
+      opacity: 1;
+    }
+
+    .card-content p {
+      color: #555;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    .footer p {
+      opacity: 0.9;
+      font-size: 0.9rem;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+    .card:nth-child(4) { animation-delay: 0.4s; }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+      
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .card-header {
+        padding: 1rem;
+      }
+      
+      .card-header h3 {
+        font-size: 1.1rem;
+      }
+      
+      .card-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+      }
+      
+      .intro {
+        padding: 1.5rem;
+      }
+      
+      .intro h2 {
+        font-size: 1.5rem;
+      }
+      
+      .intro p {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 2rem 1rem;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      .card-header h3 {
+        font-size: 1rem;
+      }
+      
+      .card-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Loading animation */
+    .loading {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="background-pattern"></div>
+  
+  <header>
+    <div class="loading">
+      <h1><i class="fas fa-graduation-cap"></i> Guide de rentrée numérique 2024</h1>
+      <p class="subtitle">Parcours, outils et ressources pour tous</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="intro loading">
+      <h2>Découvrez les outils numériques pour l'éducation</h2>
+      <p>Un guide complet pour accompagner enseignants et élèves dans leur parcours numérique. Explorez nos ressources interactives et innovantes.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+            Pix 6e
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Sensibilisation obligatoire au numérique, à la sécurité et à la citoyenneté dès la sixième pour prévenir les risques et former des cybercitoyens responsables.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-certificate"></i></div>
+            Certification Pix
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Évaluation nationale reconnue des compétences numériques, valorisée du lycée à l'enseignement supérieur et dans le monde professionnel.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-cloud"></i></div>
+            GAR & Ressources ENT
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Portail unique, sécurisé et protégé pour accéder à tous les manuels et outils pédagogiques via l'ENT de votre établissement.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-universal-access"></i></div>
+            Cantoo Web
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Suite d'outils accessibles pour besoins particuliers : éditeur de texte adapté, carte mentale, lecteur vocal et bien plus encore.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-podcast"></i></div>
+            Webradio
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Création de podcasts et émissions en direct par les élèves, pour développer expression orale, confiance en soi et créativité.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+            Éléa Moodle
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Plateforme de modules interactifs intégrée à l'ENT : activités pédagogiques, quiz, parcours d'autonomie et accès pour toute la classe.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-users"></i></div>
+            Fresque des Cybercitoyens
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Jeu de cartes et ateliers collaboratifs pour comprendre la citoyenneté numérique : sécurité, fausses informations, droits et responsabilités.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-puzzle-piece"></i></div>
+            Défis pour Six
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Jeu de plateau « débranché » pour développer les compétences numériques et la réflexion collective sans écran ni connexion.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-robot"></i></div>
+            TED-i
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Robot de téléprésence pour permettre aux élèves empêchés par une maladie longue de suivre les cours à distance en temps réel.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-chalkboard"></i></div>
+            Formations DRANE
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Formations pratiques pour tous les enseignants : outils numériques, pédagogie innovante, IA, sécurité et accompagnement personnalisé.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+            Pix+Édu
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Parcours d'auto-positionnement et modules à la carte pour monter en compétences numériques à son rythme et selon ses besoins.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-trophy"></i></div>
+            Événements & Concours
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Hackathons, concours numériques, journées thématiques, ateliers créatifs et projets collaboratifs tout au long de l'année.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-brain"></i></div>
+            Ressources IA
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>MOOC spécialisés, outils pratiques, réflexions éthiques et formations pour comprendre les usages et enjeux de l'IA en classe.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-cogs"></i></div>
+            Robotique
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Programmation créative, découverte des algorithmes et projets pratiques autour des robots éducatifs et de l'automatisation.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>
+            <div class="card-icon"><i class="fas fa-headset"></i></div>
+            Contact DRANE
+          </h3>
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Support personnalisé et accompagnement sur mesure pour découvrir ou approfondir tous les usages numériques à l'école ou au collège.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 Guide de rentrée numérique - Tous droits réservés</p>
+  </footer>
+
+  <script>
+    // Animation d'accordéon améliorée
+    document.querySelectorAll('.card').forEach((card, index) => {
+      // Animation d'entrée échelonnée
+      card.style.animationDelay = `${index * 0.1}s`;
+      
+      card.addEventListener('click', function() {
+        // Ferme toutes les autres cartes
+        document.querySelectorAll('.card').forEach(otherCard => {
+          if (otherCard !== card) {
+            otherCard.classList.remove('open');
+          }
+        });
+        
+        // Toggle la carte actuelle
+        card.classList.toggle('open');
+      });
+    });
+
+    // Animation de défilement
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observer les cartes pour l'animation au scroll
+    document.querySelectorAll('.card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(card);
+    });
+
+    // Smooth scroll pour les liens internes
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
