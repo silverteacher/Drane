@@ -190,21 +190,36 @@
       z-index: 1;
       font-style: italic;
     }
-    .linkedin-link {
+    .linkedin-section {
       text-align: center;
       padding-bottom: 24px;
       padding-top: 2px;
-      font-size: 1.03em;
     }
-    .linkedin-link a {
+    .linkedin-logo {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 7px;
+    }
+    .linkedin-logo svg {
+      width: 27px;
+      height: 27px;
+      vertical-align: middle;
+      border-radius: 5px;
+      box-shadow: 0 1px 7px rgba(30,60,114,0.08);
+      background: #ffffff;
+    }
+    .linkedin-link {
       color: #18386b;
-      text-decoration: underline;
-      word-break: break-all;
-      transition: color 0.15s;
+      font-size: 1.03em;
       font-weight: 500;
+      text-decoration: underline;
+      vertical-align: middle;
+      margin-left: 3px;
+      transition: color 0.15s;
     }
-    .linkedin-link a:hover, .linkedin-link a:focus {
+    .linkedin-link:hover, .linkedin-link:focus {
       color: #35cfc3;
+      text-decoration: underline;
     }
     @media (max-width: 700px) {
       .chat-container { 
@@ -236,10 +251,12 @@
         padding: 7px 14px;
         font-size: 0.98em;
       }
+      .linkedin-logo svg { width:22px; height:22px;}
+      .linkedin-link { font-size: 0.97em;}
     }
     @media (max-width: 430px) {
       .chat-title { font-size: 0.97em; }
-      .linkedin-link { font-size: 0.95em;}
+      .linkedin-link { font-size: 0.92em;}
     }
   </style>
 </head>
@@ -275,8 +292,15 @@
     <div class="mention-ia">
       Contenu partiellement généré par une IA et vérifié par un agent
     </div>
-    <div class="linkedin-link">
-      <a href="https://www.linkedin.com/in/amélie-silvert-2359b576/" target="_blank" rel="noopener">Amélie Silvert</a>
+    <div class="linkedin-section">
+      <span class="linkedin-logo">
+        <!-- Logo LinkedIn stylisé en SVG -->
+        <svg viewBox="0 0 32 32" fill="none">
+          <rect x="1" y="1" width="30" height="30" rx="6" fill="#0077B5" stroke="#e5e8ed" stroke-width="2"/>
+          <text x="16" y="21.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#fff">in</text>
+        </svg>
+      </span>
+      <a class="linkedin-link" href="https://www.linkedin.com/in/amélie-silvert-2359b576/" target="_blank" rel="noopener">Amélie Silvert</a>
     </div>
   </div>
 
