@@ -2,779 +2,158 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <title>Focus sur les essentiels - DRANE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guide de la Rentrée Numérique</title>
+    <!-- Ici, respecter le style existant. Ajouter une feuille style.css si besoin. -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;
-            min-height: 100vh;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            color: #2c3e50;
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: bold;
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.8;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            padding: 25px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .card-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .pix-icon { background: linear-gradient(45deg, #e74c3c, #c0392b); }
-        .gar-icon { background: linear-gradient(45deg, #1abc9c, #16a085); }
-        .formation-icon { background: linear-gradient(45deg, #3498db, #2980b9); }
-        .outils-icon { background: linear-gradient(45deg, #e67e22, #d35400); }
-        .evenements-icon { background: linear-gradient(45deg, #f39c12, #e67e22); }
-        .ia-icon { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
-
-        .card h2 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-            font-weight: 600;
-        }
-
-        .card p {
-            color: #7f8c8d;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .card-content {
-            display: none;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .card.active .card-content {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .highlight {
-            background: #f8f9fa;
-            color: #333;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border-left: 4px solid #3498db;
-        }
-
-        .highlight h3 {
-            margin-bottom: 10px;
-            color: #2c3e50;
-            font-weight: bold;
-        }
-
-        .list-item {
-            background: #f8f9fa;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin: 8px 0;
-            border-left: 4px solid #3498db;
-            transition: all 0.2s ease;
-        }
-
-        .list-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-        }
-
-        .list-item strong {
-            color: #2c3e50;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #3498db, #2980b9);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin: 5px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
-            text-decoration: none;
-            color: white;
-        }
-
-        .timeline {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border-left: 4px solid #3498db;
-        }
-
-        .timeline h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .timeline-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #dee2e6;
-            transition: all 0.2s ease;
-        }
-
-        .timeline-item:last-child {
-            border-bottom: none;
-        }
-
-        .timeline-item:hover {
-            background: rgba(52, 152, 219, 0.05);
-            padding-left: 10px;
-            border-radius: 5px;
-        }
-
-        .date {
-            font-weight: bold;
-            color: #3498db;
-            font-size: 0.95rem;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #7f8c8d;
-            opacity: 0.8;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .toggle-indicator {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.2rem;
-            color: #7f8c8d;
-            transition: transform 0.3s ease;
-        }
-
-        .card.active .toggle-indicator {
-            transform: rotate(180deg);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .header {
-                padding: 25px 20px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .header p {
-                font-size: 1rem;
-            }
-            
-            .card {
-                padding: 20px;
-            }
-            
-            .card-icon {
-                width: 45px;
-                height: 45px;
-                font-size: 1.3rem;
-            }
-            
-            .card h2 {
-                font-size: 1.2rem;
-            }
-            
-            .btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-                display: block;
-                text-align: center;
-                margin: 10px 0;
-                width: 100%;
-            }
-
-            .timeline {
-                padding: 15px;
-            }
-
-            .highlight {
-                padding: 12px;
-            }
-
-            .list-item {
-                padding: 10px 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-
-            .header {
-                padding: 20px 15px;
-            }
-            
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .card {
-                padding: 15px;
-            }
-            
-            .card-header {
-                flex-direction: column;
-                text-align: center;
-                align-items: center;
-            }
-            
-            .card-icon {
-                margin-right: 0;
-                margin-bottom: 10px;
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-
-            .card h2 {
-                font-size: 1.1rem;
-                text-align: center;
-            }
-
-            .toggle-indicator {
-                top: 15px;
-                right: 15px;
-            }
-
-            .timeline-item {
-                padding: 8px 0;
-            }
-
-            .btn {
-                padding: 8px 16px;
-                font-size: 0.85rem;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .header h1 {
-                font-size: 1.5rem;
-            }
-
-            .card {
-                padding: 12px;
-            }
-
-            .card-icon {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-            }
-
-            .highlight, .timeline, .list-item {
-                padding: 10px;
-            }
-        }
-
-        /* Animations d'entrée */
-        .card {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUp 0.5s ease forwards;
-        }
-
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .card:nth-child(1) { animation-delay: 0.1s; }
-        .card:nth-child(2) { animation-delay: 0.2s; }
-        .card:nth-child(3) { animation-delay: 0.3s; }
-        .card:nth-child(4) { animation-delay: 0.4s; }
-        .card:nth-child(5) { animation-delay: 0.5s; }
-        .card:nth-child(6) { animation-delay: 0.6s; }
-
-        /* Accessibilité */
-        .card:focus {
-            outline: 2px solid #3498db;
-            outline-offset: 2px;
-        }
-
-        .btn:focus {
-            outline: 2px solid #2980b9;
-            outline-offset: 2px;
-        }
-
-        /* Print styles */
-        @media print {
-            .card {
-                box-shadow: none;
-                border: 1px solid #ddd;
-                break-inside: avoid;
-                page-break-inside: avoid;
-            }
-
-            .card-content {
-                display: block !important;
-            }
-
-            .btn {
-                display: none;
-            }
-
-            .toggle-indicator {
-                display: none;
-            }
-        }
+    /* Design minimaliste pour la grille et l’expérience, sans forcer de thème ou couleur */
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header, main { max-width:900px; margin:auto; padding:1em;}
+    .briques { display: flex; flex-wrap: wrap; gap: 2em; margin-top:1em}
+    .brique { flex:1 1 250px; border:1px solid #ddd; border-radius:8px; padding:1.5em; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer; background: #fff; transition: box-shadow .15s;}
+    .brique:hover { box-shadow:0 4px 12px rgba(0,0,0,0.11);}
+    .hidden { display: none;}
+    nav { margin-top:1.5em;}
+    a { color:#2a44a5; text-decoration: none;}
+    a:hover { text-decoration: underline;}
+    @media (max-width:600px) { .briques { flex-direction: column; gap:1em;}}
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📚 Guide de la Rentrée Numérique</h1>
-            <p>Focus sur les essentiels - Délégation de Région Académique au Numérique Éducatif</p>
-        </div>
-
-        <div class="grid">
-            <!-- PIX & CERTIFICATION -->
-            <div class="card" onclick="toggleCard(this)" tabindex="0" role="button" aria-expanded="false">
-                <div class="toggle-indicator">▼</div>
-                <div class="card-header">
-                    <div class="card-icon pix-icon">🎯</div>
-                    <h2>Pix & Certification</h2>
+    <header>
+        <h1>Focus sur les essentiels<br>
+        <small>DRANE - Guide de la rentrée</small></h1>
+        <p>
+            Retrouvez tous les incontournables de la rentrée numérique en un clin d'œil&nbsp;: nouveautés Pix, GAR, ressources pédagogiques, événements et IA dans l’éducation !
+        </p>
+    </header>
+    <main id="main">
+        <section id="accueil">
+            <div class="briques">
+                <div class="brique" onclick="goTo('pix6e')">
+                    <h2>Pix pour les 6ème</h2>
+                    <p>Certification et trois parcours obligatoires pour tous les élèves.</p>
                 </div>
-                <p>Découvrez les nouveautés Pix pour les 6ème, la certification et les parcours obligatoires</p>
-                
-                <div class="card-content">
-                    <div class="highlight">
-                        <h3>🎓 Pix pour les 6ème - Nouveau dispositif obligatoire</h3>
-                        <p>Tous les élèves de 6ème devront obtenir une attestation via trois parcours spécialisés.</p>
-                    </div>
-                    
-                    <div class="list-item">
-                        <strong>Protection et Sécurité</strong> - Focus cyber-harcèlement et prévention
-                    </div>
-                    <div class="list-item">
-                        <strong>Culture numérique</strong> - Parcours généraliste sur les opportunités du numérique
-                    </div>
-                    <div class="list-item">
-                        <strong>Parcours bilan</strong> - En fin d'année si les deux premiers n'ont pas été réalisés
-                    </div>
-
-                    <div class="timeline">
-                        <h3>📅 Calendrier Certification 2025-2026</h3>
-                        <div class="timeline-item">
-                            <span class="date">Novembre 2025 - Mars 2026</span><br>
-                            Certification Terminale, BTS et CPGE
-                        </div>
-                        <div class="timeline-item">
-                            <span class="date">Mars 2026 - Juin 2026</span><br>
-                            Certification élèves de 3ème
-                        </div>
-                    </div>
-
-                    <a href="https://pix.fr/actualites/sensibilisation-au-numerique-pix-participe-a-la-prevention-pour-les-eleves-de-6e" class="btn" target="_blank" rel="noopener noreferrer">En savoir plus sur Pix 6ème</a>
+                <div class="brique" onclick="goTo('gar')">
+                    <h2>Gestionnaire d'Accès aux Ressources (GAR)</h2>
+                    <p>Accès automatique à Pix via l’ENT, sans nouvelle authentification.</p>
+                </div>
+                <div class="brique" onclick="goTo('ressources')">
+                    <h2>Ressources : Pix+Édu, Cantoo, Webradio, Éléa…</h2>
+                    <p>Formations numériques et outils innovants pour enrichir vos cours.</p>
+                </div>
+                <div class="brique" onclick="goTo('calendrier')">
+                    <h2>Calendrier des événements numériques</h2>
+                    <p>Concours, ateliers, trophées de l’année scolaire.</p>
+                </div>
+                <div class="brique" onclick="goTo('ia')">
+                    <h2>Intelligence Artificielle et éducation</h2>
+                    <p>Ressources, usages et enjeux pour un usage raisonné dans l’enseignement.</p>
                 </div>
             </div>
+        </section>
 
-            <!-- GAR & RESSOURCES -->
-            <div class="card" onclick="toggleCard(this)" tabindex="0" role="button" aria-expanded="false">
-                <div class="toggle-indicator">▼</div>
-                <div class="card-header">
-                    <div class="card-icon gar-icon">🔗</div>
-                    <h2>GAR & Ressources</h2>
-                </div>
-                <p>Le Gestionnaire d'Accès aux Ressources et les outils disponibles dans l'ENT</p>
-                
-                <div class="card-content">
-                    <div class="highlight">
-                        <h3>🛡️ Avantages du GAR (Gestionnaire d'Accès aux Ressources)</h3>
-                    </div>
-                    
-                    <div class="list-item">
-                        <strong>Protection des données</strong> - Sécurité des données élèves et enseignants
-                    </div>
-                    <div class="list-item">
-                        <strong>Authentification unique</strong> - Connexion simplifiée à Pix via le Médicaentre
-                    </div>
-                    <div class="list-item">
-                        <strong>Manuels numériques</strong> - Accès sans transport de livres
-                    </div>
-                    <div class="list-item">
-                        <strong>Ressources pédagogiques</strong> - Outils pour construire vos cours
-                    </div>
-                    <div class="list-item">
-                        <strong>Support technique</strong> - Système de ticketing accessible aux enseignants
-                    </div>
+        <!-- Brique 1 - Pix 6e -->
+        <section id="pix6e" class="hidden">
+            <h2>Pix pour les 6ème</h2>
+            <p>
+                Tous les élèves de 6ème devront obtenir une attestation de compétences numériques 
+                via <b>trois parcours spécialisés</b> (deux nationaux, un académique).
+            </p>
+            <ul>
+                <li>Chaque élève valide les parcours Pix (parcours nationaux + un parcours DRANE adapté au territoire).</li>
+                <li>L’attestation Pix 6e reconnaît le niveau de maîtrise du numérique en fin d'année.</li>
+                <li>Les enseignants peuvent s’appuyer sur des ressources, guides pédagogiques sur l’ENT et formations dédiées.</li>
+                <li>Un kit de communication est à disposition pour les familles.</li>
+            </ul>
+            <p>
+                Retrouvez toutes les ressources Pix sur l’espace dédié de l’ENT.<br>
+                <strong>Contact référent numérique :</strong> voir sur la page DRANE de votre académie.
+            </p>
+            <nav><a href="#" onclick="goTo('accueil');return false;">&#8592; Retour</a></nav>
+        </section>
 
-                    <div class="highlight">
-                        <h3>💡 Astuce</h3>
-                        <p>Une fois connecté au GAR, l'accès à Pix se fait automatiquement sans nouvelle authentification !</p>
-                    </div>
-                </div>
-            </div>
+        <!-- Brique 2 - GAR -->
+        <section id="gar" class="hidden">
+            <h2>Gestionnaire d'Accès aux Ressources (GAR) &amp; ENT</h2>
+            <p>
+                <b>Une fois connecté au GAR</b>, l’accès à Pix se fait automatiquement depuis l’ENT, 
+                sans nouvelle authentification ni code d’activation pour les 6ème&nbsp;!
+            </p>
+            <ul>
+                <li>Connexion simplifiée aux ressources numériques académiques et nationales</li>
+                <li>Accompagnement au travers de guides sur la sécurité, RGPD et bons usages</li>
+                <li>Pilotage et gestion centralisée des accès par les chefs d’établissement</li>
+            </ul>
+            <p>
+                En cas de problème d’accès, sollicitez votre administrateur ENT ou consultez la FAQ académique.
+            </p>
+            <nav><a href="#" onclick="goTo('accueil');return false;">&#8592; Retour</a></nav>
+        </section>
 
-            <!-- FORMATIONS & COMPÉTENCES -->
-            <div class="card" onclick="toggleCard(this)" tabindex="0" role="button" aria-expanded="false">
-                <div class="toggle-indicator">▼</div>
-                <div class="card-header">
-                    <div class="card-icon formation-icon">📖</div>
-                    <h2>Formations & Compétences</h2>
-                </div>
-                <p>Pix+Édu, formations numériques et montée en compétences des enseignants</p>
-                
-                <div class="card-content">
-                    <div class="highlight">
-                        <h3>🎓 Formations disponibles</h3>
-                    </div>
-                    
-                    <div class="list-item">
-                        <strong>Pix+Édu</strong> - Certification des compétences numériques pour les enseignants
-                    </div>
-                    <div class="list-item">
-                        <strong>Parcours M@gistère</strong> - Formations en ligne spécialisées
-                    </div>
-                    <div class="list-item">
-                        <strong>Ateliers pratiques</strong> - Sessions de formation en présentiel
-                    </div>
-                    <div class="list-item">
-                        <strong>Accompagnement personnalisé</strong> - Support individuel pour les enseignants
-                    </div>
+        <!-- Brique 3 - Ressources -->
+        <section id="ressources" class="hidden">
+            <h2>Pix+Édu, Cantoo, Webradio, Éléa…</h2>
+            <ul>
+                <li><strong>Pix+Édu&nbsp;:</strong> Parcours de formation pour la montée en compétences numériques des enseignants</li>
+                <li><strong>Cantoo&nbsp;:</strong> Outil d’aide à la lecture et à l’écriture, particulièrement adapté aux élèves DYS</li>
+                <li><strong>Webradio&nbsp;:</strong> Créez des podcasts avec vos élèves, développez l’expression orale, menez des projets collaboratifs</li>
+                <li><strong>Éléa&nbsp;:</strong> Plateforme de ressources et parcours pédagogiques interactifs</li>
+                <li>D’autres outils disponibles dans l’ENT pour enrichir vos pratiques</li>
+            </ul>
+            <p>
+                Toutes les informations, guides et tutoriels sont sur votre espace académique ou auprès de la DRANE.
+            </p>
+            <nav><a href="#" onclick="goTo('accueil');return false;">&#8592; Retour</a></nav>
+        </section>
 
-                    <a href="https://magistere.education.fr/" class="btn" target="_blank" rel="noopener noreferrer">Accéder à M@gistère</a>
-                </div>
-            </div>
+        <!-- Brique 4 - Calendrier -->
+        <section id="calendrier" class="hidden">
+            <h2>Calendrier des événements numériques</h2>
+            <ul>
+                <li>Trophée des classes CNIL</li>
+                <li>Concours Médiatiks</li>
+                <li>Science Factor</li>
+                <li>Challenge First Lego League</li>
+                <li>Ateliers et webinaires tout au long de l’année</li>
+            </ul>
+            <p>
+                Suivez les actualités sur la page DRANE de votre académie et participez aux événements majeurs du numérique éducatif.
+            </p>
+            <nav><a href="#" onclick="goTo('accueil');return false;">&#8592; Retour</a></nav>
+        </section>
 
-            <!-- OUTILS PÉDAGOGIQUES -->
-            <div class="card" onclick="toggleCard(this)" tabindex="0" role="button" aria-expanded="false">
-                <div class="toggle-indicator">▼</div>
-                <div class="card-header">
-                    <div class="card-icon outils-icon">🛠️</div>
-                    <h2>Outils Pédagogiques</h2>
-                </div>
-                <p>Cantoo, Webradio, Éléa et autres ressources pour enrichir vos cours</p>
-                
-                <div class="card-content">
-                    <div class="highlight">
-                        <h3>🎧 Cantoo Web</h3>
-                        <p>Outil d'aide à la lecture et à l'écriture, particulièrement adapté aux élèves avec des troubles d'apprentissage.</p>
-                    </div>
-                    
-                    <div class="highlight">
-                        <h3>📻 Webradio Saooti</h3>
-                        <p>Création de podcasts avec les élèves, développement de l'expression orale et projets collaboratifs.</p>
-                    </div>
-
-                    <div class="list-item">
-                        <strong>Éléa</strong> - Plateforme Moodle intégrée dans l'ENT NEO
-                    </div>
-                    <div class="list-item">
-                        <strong>Fresque des Cyber-Citoyens</strong> - 2h pour comprendre les enjeux du numérique
-                    </div>
-                    <div class="list-item">
-                        <strong>Jeu "Défis pour Six"</strong> - Développement des compétences numériques sans écran
-                    </div>
-
-                    <a href="https://fresquedescybercitoyens.fr" class="btn" target="_blank" rel="noopener noreferrer">Fresque des Cyber-Citoyens</a>
-                    <a href="https://dane.site.ac-lille.fr/2022/06/21/defis-pour-six-skills-for-six-des-questions-autour-de-la-culture-numerique/" class="btn" target="_blank" rel="noopener noreferrer">Défis pour Six</a>
-                </div>
-            </div>
-
-            <!-- ÉVÉNEMENTS & CONCOURS -->
-            <div class="card" onclick="toggleCard(this)" tabindex="0" role="button" aria-expanded="false">
-                <div class="toggle-indicator">▼</div>
-                <div class="card-header">
-                    <div class="card-icon evenements-icon">🎉</div>
-                    <h2>Événements & Concours</h2>
-                </div>
-                <p>Calendrier des événements numériques, concours et ateliers de l'année</p>
-                
-                <div class="card-content">
-                    <div class="timeline">
-                        <h3>📅 Calendrier 2025-2026</h3>
-                        <div class="timeline-item">
-                            <span class="date">Septembre</span><br>
-                            #Bienvenules 6ème
-                        </div>
-                        <div class="timeline-item">
-                            <span class="date">Novembre</span><br>
-                            Educatech
-                        </div>
-                        <div class="timeline-item">
-                            <span class="date">Décembre</span><br>
-                            Semaine NSI
-                        </div>
-                        <div class="timeline-item">
-                            <span class="date">Février</span><br>
-                            Numériqu'elles (Lille)
-                        </div>
-                        <div class="timeline-item">
-                            <span class="date">Février</span><br>
-                            Safer Internet Day
-                        </div>
-                        <div class="timeline-item">
-                            <span class="date">Mars</span><br>
-                            Journée du numérique INSPE
-                        </div>
-                        <div class="timeline-item">
-                            <span class="date">Avril</span><br>
-                            Pix-Plaine Image
-                        </div>
-                        <div class="timeline-item">
-                            <span class="date">Mai-Juin</span><br>
-                            Nuit du code
-                        </div>
-                    </div>
-
-                    <div class="highlight">
-                        <h3>🏆 Concours disponibles</h3>
-                        <p>Trophée des classes CNIL, Concours Médiatiks, Science Factor, Challenge First Lego League</p>
-                    </div>
-
-                    <a href="https://dane.site.ac-lille.fr/" class="btn" target="_blank" rel="noopener noreferrer">Calendrier complet</a>
-                </div>
-            </div>
-
-            <!-- INTELLIGENCE ARTIFICIELLE -->
-            <div class="card" onclick="toggleCard(this)" tabindex="0" role="button" aria-expanded="false">
-                <div class="toggle-indicator">▼</div>
-                <div class="card-header">
-                    <div class="card-icon ia-icon">🤖</div>
-                    <h2>Intelligence Artificielle</h2>
-                </div>
-                <p>Réflexions et ressources sur l'IA dans l'éducation, usages et enjeux</p>
-                
-                <div class="card-content">
-                    <div class="highlight">
-                        <h3>🧠 Constats et enjeux</h3>
-                        <p>L'émergence de l'IA générative soulève des questions sur l'évaluation et l'apprentissage. Le ministère encourage un "usage raisonné".</p>
-                    </div>
-                    
-                    <div class="list-item">
-                        <strong>Gain de temps</strong> - Conception de scénarios pédagogiques
-                    </div>
-                    <div class="list-item">
-                        <strong>Création de contenus</strong> - Aide à la création de contenus éducatifs
-                    </div>
-                    <div class="list-item">
-                        <strong>Personnalisation</strong> - Adaptation aux besoins individuels
-                    </div>
-                    <div class="list-item">
-                        <strong>Évaluation innovante</strong> - Nouveaux outils d'évaluation
-                    </div>
-
-                    <a href="https://www.education.gouv.fr/intelligence-artificielle-et-education-appel-contribution-411138" class="btn" target="_blank" rel="noopener noreferrer">Cadre ministériel IA</a>
-                    <a href="https://www.fun-mooc.fr/fr/cours/intelligence-artificielle-pour-et-par-les-enseignants/" class="btn" target="_blank" rel="noopener noreferrer">MOOC IA pour enseignants</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>© 2025 - Délégation de Région Académique au Numérique Éducatif</p>
-        </div>
-    </div>
-
+        <!-- Brique 5 - IA -->
+        <section id="ia" class="hidden">
+            <h2>Intelligence Artificielle et Éducation</h2>
+            <p>
+                L’émergence de l’IA générative soulève de nouvelles questions pour l’évaluation et l’apprentissage. 
+                Le ministère recommande un <strong>usage raisonné</strong> des outils d’IA à l’école&nbsp;:
+            </p>
+            <ul>
+                <li>Réflexions sur les usages et l’éthique autour de l’IA</li>
+                <li>Ressources pour intégrer l’IA dans les pratiques pédagogiques</li>
+                <li>Veille, ateliers et kits pour s’approprier ces nouveaux outils</li>
+            </ul>
+            <p>Retrouvez les recommandations et ressources sur le site officiel du Ministère ou auprès de la DRANE.</p>
+            <nav><a href="#" onclick="goTo('accueil');return false;">&#8592; Retour</a></nav>
+        </section>
+    </main>
+    <footer style="margin:2em auto 1.5em; text-align:center; color:#888;">
+        Délégation de Région Académique au Numérique Éducatif – Année 2024-2025
+    </footer>
     <script>
-        function toggleCard(card) {
-            const isActive = card.classList.contains('active');
-            
-            // Fermer toutes les autres cartes
-            document.querySelectorAll('.card').forEach(c => {
-                if (c !== card) {
-                    c.classList.remove('active');
-                    c.setAttribute('aria-expanded', 'false');
-                }
-            });
-            
-            // Ouvrir/fermer la carte cliquée
-            if (!isActive) {
-                card.classList.add('active');
-                card.setAttribute('aria-expanded', 'true');
-            } else {
-                card.classList.remove('active');
-                card.setAttribute('aria-expanded', 'false');
-            }
+        // Affichage dynamique d'une "page" (brique) dans le HTML single-page
+        function goTo(id) {
+            // Masquer toutes les sections
+            Array.from(document.querySelectorAll('main > section')).forEach(s => s.classList.add('hidden'));
+            // Montrer la section id
+            document.getElementById(id).classList.remove('hidden');
+            // Remonter en haut
+            window.scrollTo({top: 0});
         }
-
-        // Support clavier
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                if (e.target.classList.contains('card')) {
-                    e.preventDefault();
-                    toggleCard(e.target);
-                }
-            }
-        });
-
-        // Fermer les cartes en cliquant en dehors
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.card')) {
-                document.querySelectorAll('.card').forEach(c => {
-                    c.classList.remove('active');
-                    c.setAttribute('aria-expanded', 'false');
-                });
-            }
-        });
-
-        // Gestion du responsive - fermer les cartes actives lors du redimensionnement
-        window.addEventListener('resize', function() {
-            if (window.innerWidth <= 768) {
-                document.querySelectorAll('.card.active').forEach(card => {
-                    card.classList.remove('active');
-                    card.setAttribute('aria-expanded', 'false');
-                });
-            }
-        });
-
-        // Smooth scroll pour les liens internes
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Lazy loading pour les images (si ajoutées)
-        if ('IntersectionObserver' in window) {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        img.classList.remove('lazy');
-                        imageObserver.unobserve(img);
-                    }
-                });
-            });
-
-            document.querySelectorAll('img[data-src]').forEach(img => {
-                imageObserver.observe(img);
-            });
-        }
-
-        // Performance: Débounce pour le resize
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // Appliquer le debounce au resize
-        window.addEventListener('resize', debounce(function() {
-            // Actions lors du redimensionnement
-        }, 250));
+        // Par défaut : afficher accueil
+        goTo('accueil');
     </script>
 </body>
 </html>
