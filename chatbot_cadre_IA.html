@@ -858,7 +858,31 @@ Sensibiliser les élèves à ces choix technologiques et leurs impacts.`,
             let bestScore = 0;
             let matches = [];
 
-            // Phase 1: Recherche par mots-clés
+            // Mapping direct des mots-clés vers les sections
+            const keywordMapping = {
+                'usages autorisés': 'usages autorisés',
+                'confidentialité des données': 'confidentialité données',
+                'ia et devoirs scolaires': 'devoirs scolaires',
+                'impact environnemental': 'impact environnemental',
+                'principe d\'équité': 'principe équité',
+                'formation des enseignants': 'formation enseignants',
+                'formation enseignants': 'formation enseignants',
+                'fraude et tricherie': 'fraude tricherie',
+                'qu\'est-ce que l\'ia': 'definitions',
+                'esprit critique': 'esprit critique',
+                'hallucinations ia': 'hallucinations ia'
+            };
+
+            // Vérification directe des mots-clés de l'interface
+            for (let [buttonText, sectionKey] of Object.entries(keywordMapping)) {
+                if (normalizeText(question).includes(normalizeText(buttonText))) {
+                    if (knowledgeBase[sectionKey]) {
+                        return knowledgeBase[sectionKey];
+                    }
+                }
+            }
+
+            // Phase 1: Recherche par mots-clés dans la base
             for (let [key, data] of Object.entries(knowledgeBase)) {
                 for (let keyword of data.keywords) {
                     if (normalizedQuestion.includes(normalizeText(keyword))) {
@@ -921,6 +945,11 @@ Sensibiliser les élèves à ces choix technologiques et leurs impacts.`,
             return null;
         }
 
+        // Fonction pour ajouter une référence au cadre à chaque réponse
+        function addFrameworkReference(content) {
+            return content + `<br><br><em>📄 Source : <a href="https://www.education.gouv.fr/cadre-d-usage-de-l-ia-en-education-450647" target="_blank" style="color: #3b82f6; text-decoration: underline;">Cadre d'usage de l'IA en éducation</a> (Ministère de l'Éducation nationale, juin 2025)</em>`;
+        }
+
         // Fonction pour ajouter un message à la conversation
         function addMessage(content, isUser = false) {
             const messagesContainer = document.getElementById('messages');
@@ -972,7 +1001,9 @@ Sensibiliser les élèves à ces choix technologiques et leurs impacts.`,
                 const response = findBestResponse(question);
                 
                 if (response) {
-                    addMessage(response.content);
+                    // Ajouter la référence au cadre à chaque réponse
+                    const responseWithReference = addFrameworkReference(response.content);
+                    addMessage(responseWithReference);
                 } else {
                     // Réponse par défaut si aucune correspondance
                     const defaultResponse = `Je n'ai pas trouvé d'information spécifique sur "${question}" dans le cadre d'usage de l'IA en éducation. 
@@ -1018,11 +1049,29 @@ Reformulez votre question ou utilisez les mots-clés ci-dessous !`;
             }, 1500);
         }
 
-        // Fonction pour gérer les mots-clés
+        // Fonction pour gérer les mots-clés (améliorée)
         function handleKeyword(keyword) {
             const input = document.getElementById('userInput');
             input.value = keyword;
-            sendMessage();
+            
+            // Directement chercher et afficher la réponse
+            const response = findBestResponse(keyword);
+            
+            if (response) {
+                addMessage(keyword, true);
+                showTyping();
+                
+                setTimeout(() => {
+                    hideTyping();
+                    const responseWithReference = addFrameworkReference(response.content);
+                    addMessage(responseWithReference);
+                }, 800);
+            } else {
+                // Fallback au système normal
+                sendMessage();
+            }
+            
+            input.value = '';
         }
 
         // Fonction pour gérer la touche Entrée
