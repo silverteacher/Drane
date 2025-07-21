@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formations Numériques DRANE HDF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            color: #455a64;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-toggle {
+            display: flex;
+            background: linear-gradient(135deg, #8ba4b0 0%, #b8cdd9 100%);
+            border-radius: 50px;
+            padding: 4px;
+            max-width: 300px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 46px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-btn.active {
+            color: #455a64;
+        }
+
+        .nav-slider {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            height: calc(100% - 8px);
+            background: linear-gradient(135deg, #eceff1 0%, #cfd8dc 100%);
+            border-radius: 42px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-slider.moved {
+            transform: translateX(100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .formation-section {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, #90a4ae, #b0bec5);
+            color: #263238;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header .count {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .formation-item {
+            border-bottom: 1px solid #ecf0f1;
+            transition: all 0.3s ease;
+        }
+
+        .formation-item:last-child {
+            border-bottom: none;
+        }
+
+        .formation-header {
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .formation-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(144, 164, 174, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .formation-header:hover::before {
+            left: 100%;
+        }
+
+        .formation-header:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .formation-title {
+            flex: 1;
+            font-weight: 600;
+            color: #455a64;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            position: relative;
+            z-index: 1;
+        }
+
+        .formation-number {
+            background: linear-gradient(135deg, #78909c, #90a4ae);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-right: 1rem;
+            box-shadow: 0 2px 8px rgba(120, 144, 156, 0.3);
+        }
+
+        .expand-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8ba4b0, #90a4ae);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .formation-item.active .expand-icon {
+            transform: rotate(180deg);
+            background: linear-gradient(135deg, #90a4ae, #b0bec5);
+        }
+
+        .formation-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            background: #f8f9fa;
+        }
+
+        .formation-item.active .formation-content {
+            max-height: 800px;
+            padding: 2rem;
+        }
+
+        .formation-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .detail-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #90a4ae;
+            transition: all 0.3s ease;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-value {
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #b0bec5, #cfd8dc);
+            color: #455a64;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.25rem 0.25rem 0.25rem 0;
+        }
+
+        .badge.distanciel {
+            background: linear-gradient(135deg, #78909c, #8ba4b0);
+            color: white;
+        }
+
+        .badge.presentiel {
+            background: linear-gradient(135deg, #90a4ae, #b0bec5);
+            color: white;
+        }
+
+        .badge.magistere {
+            background: linear-gradient(135deg, #8ba4b0, #90a4ae);
+            color: white;
+        }
+
+        .inscription-link {
+            background: linear-gradient(135deg, #e57373, #ef5350);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(229, 115, 115, 0.3);
+        }
+
+        .inscription-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 115, 115, 0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem 0.5rem;
+            }
+
+            .formation-header {
+                padding: 1rem;
+            }
+
+            .formation-item.active .formation-content {
+                padding: 1rem;
+            }
+
+            .formation-details {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .detail-card {
+                padding: 1rem;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+
+        .search-container {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: none;
+            border-radius: 50px;
+            background: white;
+            backdrop-filter: blur(10px);
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: white;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #78909c;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎓 Formations Numériques</h1>
+        <p>Formations proposées par la DRANE de Lille</p>
+        
+        <div class="nav-toggle">
+            <div class="nav-slider"></div>
+            <button class="nav-btn active" data-type="pv">Public Volontaire</button>
+            <button class="nav-btn" data-type="pz">Public Désigné</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="search-container">
+            <svg class="search-icon icon" viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input type="text" class="search-input" placeholder="Rechercher une formation...">
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="total-formations">0</div>
+                <div class="stat-label">Formations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-modules">0</div>
+                <div class="stat-label">Modules</div>
+            </div>
+        </div>
+
+        <!-- Formations Public Volontaire -->
+        <div id="formations-pv" class="formations-container">
+            <!-- Sera rempli par JavaScript -->
+        </div>
+
+        <!-- Formations Public Désigné -->
+        <div id="formations-pz" class="formations-container hidden">
+            <!-- Sera rempli par JavaScript -->
+        </div>
+
+        <div class="inscription-link" style="text-align: center; display: block; margin-top: 2rem;">
+            <a href="https://eduline.ac-lille.fr/sofia-fmo-acad/" target="_blank" class="inscription-link">
+                📝 Inscription via Sofia-FMO
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z"/>
+                </svg>
+            </a>
+        </div>
+
+        <footer style="text-align: center; margin-top: 3rem; padding: 2rem; color: #7f8c8d; border-top: 1px solid #ecf0f1;">
+            <p style="margin-bottom: 1rem; font-size: 0.9rem;">
+                <strong>Délégation de Région Académique pour le Numérique Éducatif</strong>
+            </p>
+            <p style="margin-bottom: 1rem; font-size: 0.8rem; font-style: italic;">
+                Application en partie créée par l'IA et supervisée par un agent
+            </p>
+            <a href="https://www.linkedin.com/feed/" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #78909c, #8ba4b0); color: white; padding: 0.5rem 1rem; border-radius: 25px; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease;">
+                <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24">
+                    <path d="M20.5,2H3.5C2.67,2 2,2.67 2,3.5V20.5C2,21.33 2.67,22 3.5,22H20.5C21.33,22 22,21.33 22,20.5V3.5C22,2.67 21.33,2 20.5,2M8,19H5V10H8V19M6.5,8.25C5.5,8.25 4.75,7.5 4.75,6.5C4.75,5.5 5.5,4.75 6.5,4.75C7.5,4.75 8.25,5.5 8.25,6.5C8.25,7.5 7.5,8.25 6.5,8.25M19,19H16V14.25C16,13.19 15.81,11.81 14.38,11.81C12.88,11.81 12.63,13.25 12.63,14.63V19H9.63V10H12.5V11.5C12.81,10.88 13.75,10.25 15.13,10.25C18.19,10.25 19,12.19 19,14.75V19Z"/>
+                </svg>
+                LinkedIn
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        // Données des formations
+        const formationsPV = [
+            {
+                id: 1,
+                title: "S'emparer des bases du numérique",
+                modules: [
+                    {
+                        name: "Exploiter le potentiel d'Eduline : un portail multi-services sécurisé",
+                        format: "3 distanciels de 1H",
+                        plateforme: "magistère",
+                        groupes: "3 groupes : contractuels, T1 et T2, enseignants",
+                        periode: "à partir de décembre"
+                    },
+                    {
+                        name: "Maîtriser les applications pédagogiques de l'ENT",
+                        format: "2 distanciels par période de 30 minutes",
+                        plateforme: "magistère en auto-inscription",
+                        inscription: "inscription via magistère",
+                        periode: "selon planning mais le midi"
+                    },
+                    {
+                        name: "Découvrir les mille et une astuces de la création pédagogique",
+                        format: "2 distanciels par période de 30 minutes",
+                        plateforme: "magistère en auto-inscription",
+                        groupes: "3 groupes : contractuels, T1 et T2, enseignants",
+                        periode: "selon planning mais le midi"
+                    },
+                    {
+                        name: "Partager, collaborer et publier en toute sécurité grâce à la suite de l'état",
+                        format: "2 distanciels par période de 30 minutes",
+                        plateforme: "magistère en auto-inscription",
+                        inscription: "inscription via magistère",
+                        periode: "selon planning mais le midi"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Éduquer à une citoyenneté numérique critique à l'heure de l'intelligence artificielle",
+                modules: [
+                    {
+                        name: "Présentation et pistes de travail autour de la charte de citoyenneté numérique",
+                        format: "2 distanciels de 2 H",
+                        plateforme: "magistère",
+                        niveau: "Inter degrés",
+                        periode: "à déterminer"
+                    },
+                    {
+                        name: "Développement de la créativité numérique responsable : co-création de ressources en licences libres",
+                        format: "1 présentiel de 3 H au Lycée Bruay",
+                        plateforme: "magistère",
+                        niveau: "Inter degrés",
+                        date: "mercredi 05/11 à 14h00"
+                    },
+                    {
+                        name: "Objectif de débat radio : les écrans et moi (bien être). Se lancer grâce à l'outil de webradio live dans l'ENT",
+                        format: "1 présentiel de 3H dans un établissement",
+                        plateforme: "magistère",
+                        niveau: "Inter degrés",
+                        date: "mercredi 12/11 à 14h00"
+                    },
+                    {
+                        name: "Défi fake news à l'ère de l'IA : comment se prémunir ? Formation des enseignants pour la conception et la réalisation d'une affiche",
+                        format: "1 présentiel de 3 H dans un établissement",
+                        plateforme: "magistère",
+                        niveau: "Inter degrés",
+                        date: "mercredi 26/11 à 14h00"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Valoriser les compétences numériques de chacun",
+                modules: [
+                    {
+                        name: "Préparation à la certification CRCN des enseignants",
+                        format: "3 distanciels de 1 H",
+                        plateforme: "magistère Environnement CRCN",
+                        groupes: "4 groupes interdegré / public / privé",
+                        periode: "à partir de décembre"
+                    },
+                    {
+                        name: "Passation de la certification CRCN des enseignants",
+                        format: "1 présentiel de 2H canopé Arras ou Lille",
+                        plateforme: "magistère Environnement CRCN",
+                        inscription: "à la demande",
+                        periode: "à partir de décembre"
+                    },
+                    {
+                        name: "Stratégies pédagogiques pour engager les élèves vers le CRCN au collège",
+                        format: "1 distanciel de 2 H",
+                        plateforme: "magistère Environnement CRCN",
+                        groupes: "3 groupes : personnel collège",
+                        periode: "à partir de décembre"
+                    },
+                    {
+                        name: "Stratégies pédagogiques pour engager les élèves vers le CRCN au lycée",
+                        format: "1 distanciel de 2 H",
+                        plateforme: "magistère Environnement CRCN",
+                        groupes: "2 groupes : personnel lycée",
+                        periode: "à partir de décembre"
+                    },
+                    {
+                        name: "Monter en compétences avec la Drane Hauts-De-France",
+                        format: "30 distanciels de 1 H max",
+                        plateforme: "magistère DRANE HDF",
+                        inscription: "selon inscription",
+                        periode: "à partir de décembre"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Découvrir les potentiels de l'IA dans l'éducation",
+                modules: [
+                    {
+                        name: "Découvrir le fonctionnement des algorithmes pour comprendre l'IA",
+                        format: "1 distanciel / 1 présentiel de 3H / 1 distanciel de 1 H",
+                        plateforme: "magistère IA Drane",
+                        groupes: "3 groupes",
+                        periode: "à déterminer",
+                        note: "distanciel commun aux 4 modules"
+                    },
+                    {
+                        name: "Tirer parti du potentiel créatif des IA génératives",
+                        format: "1 distanciel / 1 présentiel de 3H / 1 distanciel de 1 H",
+                        plateforme: "magistère IA Drane",
+                        groupes: "3 groupes",
+                        periode: "à déterminer",
+                        note: "distanciel commun aux 4 modules"
+                    },
+                    {
+                        name: "Évolution des compétences numériques à l'ère de l'IA",
+                        format: "1 distanciel / 1 présentiel de 3H / 1 distanciel de 1 H",
+                        plateforme: "magistère IA Drane",
+                        groupes: "3 groupes",
+                        periode: "à déterminer",
+                        note: "distanciel commun aux 4 modules"
+                    },
+                    {
+                        name: "Repenser la place du travail personnel de l'élève à l'ère de l'IA",
+                        format: "1 distanciel / 1 présentiel de 3H / 1 distanciel de 1 H",
+                        plateforme: "magistère IA Drane",
+                        groupes: "3 groupes",
+                        periode: "à déterminer",
+                        note: "distanciel commun aux 4 modules"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Maîtriser l'Environnement Numérique de Travail de l'établissement",
+                modules: [
+                    {
+                        name: "Administrer l'ENT pour les débutants dans la fonction",
+                        format: "1 distanciel de 3 H",
+                        plateforme: "magistère ADML ENT",
+                        groupes: "3 groupes",
+                        periode: "à déterminer mais décembre 25"
+                    },
+                    {
+                        name: "Découvrir les ressources insoupçonnées de l'ENT",
+                        format: "3 distanciels de 1 H",
+                        plateforme: "magistère appli péda ENT",
+                        groupes: "3 groupes de 100 avec profilage",
+                        periode: "à déterminer mais décembre 25"
+                    },
+                    {
+                        name: "Exploiter tout le potentiel pédagogique des ressources présentes dans l'ENT",
+                        format: "3 distanciels de 1 H",
+                        plateforme: "magistère appli péda ENT",
+                        groupes: "3 groupes de 100",
+                        periode: "à déterminer mais décembre 25"
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "Une journée en immersion au coeur des pratiques numériques innovantes",
+                modules: [
+                    {
+                        name: "Journées du numérique",
+                        format: "1 distanciel de 1,5H + 2 présentiels de 6h",
+                        plateforme: "magistère JDN",
+                        lieux: "station de Saint-Omer + serre numérique de Valenciennes",
+                        inscription: "inscription traditionnelle 100 stagiaires",
+                        periode: "décembre 25 et mars 26",
+                        ateliers: [
+                            "La vidéo au service de la pédagogie",
+                            "Coder un objet programmable avec la carte microbit",
+                            "Mettre en place le BIMD et découvrir les vertus du drone Soccer",
+                            "VR et AR pour quels usages (VECOS, DEFFINUM...)",
+                            "Escape game",
+                            "Prendre en main un FabLab (Imprimante 3d, découpeuse laser...)",
+                            "Maîtriser la technique de la webradio du Podcast au direct",
+                            "IA",
+                            "Eléa pour faire apprendre autrement"
+                        ],
+                        planning: "9H-10H découverte des ateliers, 10h-12h30 : formations, 14h-16h30 : formations"
+                    }
+                ]
+            },
+            {
+                id: 7,
+                title: "Les formations expertes",
+                modules: [
+                    {
+                        name: "Escape game : s'échapper de la routine",
+                        format: "1 distanciel de 1H + 1 présentiel de 3 H",
+                        plateforme: "magistère",
+                        groupes: "3 groupes territorialisés",
+                        periode: "à déterminer mais décembre 25"
+                    },
+                    {
+                        name: "Classe inversée, pédagogie renversante",
+                        format: "1 distanciel de 1H + 1 présentiel de 3 H",
+                        plateforme: "magistère",
+                        groupes: "3 groupes territorialisés",
+                        periode: "à déterminer mais décembre 25"
+                    },
+                    {
+                        name: "Créer des capsules vidéos",
+                        format: "1 distanciel de 1H + 1 présentiel de 3 H",
+                        plateforme: "magistère",
+                        groupes: "3 groupes territorialisés",
+                        periode: "à déterminer mais décembre 25"
+                    },
+                    {
+                        name: "TBI VPI : un allié pédagogique",
+                        format: "2 présentiels de 3 H",
+                        plateforme: "magistère",
+                        groupes: "3 groupes territorialisés",
+                        periode: "à déterminer mais décembre 25"
+                    }
+                ]
+            }
+        ];
+
+        const formationsPZ = [
+            {
+                id: 1,
+                title: "Formation des formateurs numériques",
+                modules: [
+                    {
+                        name: "Formation des formateurs numériques à magistère 2",
+                        format: "1 distanciel de 3H",
+                        date: "Mercredi 10/09/25"
+                    },
+                    {
+                        name: "Formation de formateurs numériques à la scénarisation d'une formation à distance",
+                        format: "1 distanciel de 3H",
+                        date: "Mercredi 01/10/25"
+                    },
+                    {
+                        name: "Formation de formateurs numériques mise en place du projet Drane IA",
+                        format: "2 présentiels de 6H",
+                        dates: "vendredi 19/09/25 et vendredi 07/11/25"
+                    },
+                    {
+                        name: "Formation de formateurs numériques : plan de formation, veille pédagogique, actualités",
+                        format: "2 présentiels de 6H",
+                        dates: "vendredi 12/12/25 et vendredi 20/03/26"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Formation PIX - Administrateurs",
+                modules: [
+                    {
+                        name: "Formation des administrateurs PIX des collèges",
+                        format: "1 distanciel de 1,5H",
+                        date: "Mercredi 04/03/26"
+                    },
+                    {
+                        name: "Formation des administrateurs PIX des lycées",
+                        format: "1 distanciel de 1,5H",
+                        date: "Mercredi 05/11/25"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "ELEA expert",
+                modules: [
+                    {
+                        name: "ELEA expert",
+                        format: "2 distanciels de 1,5H + 1 présentiel de 3H",
+                        dates: "mercredi 24/09/25, 10/12/25 et mercredi 15/11/25"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Yes we code - les cartes microbit",
+                modules: [
+                    {
+                        name: "Yes we code - les cartes microbit",
+                        format: "2 présentiels de 3H",
+                        dates: "mercredi 11/01/25 et mercredi 01/04/26"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Formation drone - BIMD",
+                modules: [
+                    {
+                        name: "Mise en place du Brevet d'Initiation aux Métiers Du Drone (BIMD)",
+                        format: "1 présentiel de 3H + 1 distanciel de 2H",
+                        periode: "À déterminer"
+                    },
+                    {
+                        name: "Maîtriser l'usage du drone en établissement scolaire",
+                        format: "1 présentiel de 4H + 1 distanciel de 2H",
+                        periode: "À déterminer"
+                    }
+                ]
+            }
+        ];
+
+        // Variables globales
+        let currentType = 'pv';
+        let currentFormations = formationsPV;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupEventListeners();
+        });
+
+        function initializeApp() {
+            renderFormations();
+            updateStats();
+        }
+
+        function setupEventListeners() {
+            // Navigation entre PV et PZ
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const navSlider = document.querySelector('.nav-slider');
+            
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const type = btn.dataset.type;
+                    switchFormationType(type);
+                    
+                    // Animation du slider
+                    navButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    if (type === 'pz') {
+                        navSlider.classList.add('moved');
+                    } else {
+                        navSlider.classList.remove('moved');
+                    }
+                });
+            });
+
+            // Recherche
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('input', (e) => {
+                filterFormations(e.target.value);
+            });
+        }
+
+        function switchFormationType(type) {
+            currentType = type;
+            currentFormations = type === 'pv' ? formationsPV : formationsPZ;
+            
+            // Cacher/afficher les conteneurs
+            document.getElementById('formations-pv').classList.toggle('hidden', type !== 'pv');
+            document.getElementById('formations-pz').classList.toggle('hidden', type !== 'pz');
+            
+            renderFormations();
+            updateStats();
+        }
+
+        function renderFormations() {
+            const container = document.getElementById(`formations-${currentType}`);
+            container.innerHTML = '';
+
+            currentFormations.forEach(formation => {
+                const formationElement = createFormationElement(formation);
+                container.appendChild(formationElement);
+            });
+        }
+
+        function createFormationElement(formation) {
+            const section = document.createElement('div');
+            section.className = 'formation-section';
+            section.innerHTML = `
+                <div class="section-header">
+                    <h2>${formation.title}</h2>
+                    <div class="count">${formation.modules.length} module(s)</div>
+                </div>
+            `;
+
+            formation.modules.forEach((module, index) => {
+                const moduleElement = createModuleElement(module, index + 1, formation.id);
+                section.appendChild(moduleElement);
+            });
+
+            return section;
+        }
+
+        function createModuleElement(module, moduleNumber, formationId) {
+            const moduleDiv = document.createElement('div');
+            moduleDiv.className = 'formation-item';
+            moduleDiv.innerHTML = `
+                <div class="formation-header" onclick="toggleModule(this)">
+                    <div class="formation-number">${moduleNumber}</div>
+                    <div class="formation-title">${module.name}</div>
+                    <div class="expand-icon">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M7,10L12,15L17,10H7Z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="formation-content">
+                    <div class="formation-details">
+                        ${createModuleDetails(module)}
+                    </div>
+                </div>
+            `;
+            return moduleDiv;
+        }
+
+        function createModuleDetails(module) {
+            let details = '';
+
+            // Format/Durée
+            if (module.format) {
+                const badges = extractBadges(module.format);
+                details += `
+                    <div class="detail-card">
+                        <div class="detail-label">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/>
+                            </svg>
+                            Format
+                        </div>
+                        <div class="detail-value">${badges}</div>
+                    </div>
+                `;
+            }
+
+            // Plateforme
+            if (module.plateforme) {
+                details += `
+                    <div class="detail-card">
+                        <div class="detail-label">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M4,6H20V16H4M20,18A2,2 0 0,0 22,16V6C22,4.89 21.1,4 20,4H4C2.89,4 2,4.89 2,6V16A2,2 0 0,0 4,18H0V20H24V18H20Z"/>
+                            </svg>
+                            Plateforme
+                        </div>
+                        <div class="detail-value">
+                            <span class="badge magistere">${module.plateforme}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Date(s)
+            const dateInfo = getDateInfo(module);
+            if (dateInfo) {
+                details += `
+                    <div class="detail-card">
+                        <div class="detail-label">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,4.89 20.1,4 19,4H18V2M17,12H12V17H17V12Z"/>
+                            </svg>
+                            Dates
+                        </div>
+                        <div class="detail-value">${dateInfo}</div>
+                    </div>
+                `;
+            }
+
+            // Groupes/Public
+            if (module.groupes) {
+                details += `
+                    <div class="detail-card">
+                        <div class="detail-label">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M16,4C18.22,4 20,5.78 20,8C20,10.22 18.22,12 16,12C13.78,12 12,10.22 12,8C12,5.78 13.78,4 16,4M16,14C18.67,14 24,15.33 24,18V20H8V18C8,15.33 13.33,14 16,14M8,4C10.22,4 12,5.78 12,8C12,10.22 10.22,12 8,12C5.78,12 4,10.22 4,8C4,5.78 5.78,4 8,4M8,14C10.67,14 16,15.33 16,18V20H0V18C0,15.33 5.33,14 8,14Z"/>
+                            </svg>
+                            Public cible
+                        </div>
+                        <div class="detail-value">${module.groupes}</div>
+                    </div>
+                `;
+            }
+
+            // Lieu(x)
+            if (module.lieux) {
+                details += `
+                    <div class="detail-card">
+                        <div class="detail-label">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/>
+                            </svg>
+                            Lieux
+                        </div>
+                        <div class="detail-value">${module.lieux}</div>
+                    </div>
+                `;
+            }
+
+            // Ateliers spéciaux
+            if (module.ateliers) {
+                details += `
+                    <div class="detail-card" style="grid-column: 1 / -1;">
+                        <div class="detail-label">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
+                            </svg>
+                            Ateliers disponibles
+                        </div>
+                        <div class="detail-value">
+                            <ul style="margin: 0.5rem 0; padding-left: 1rem;">
+                                ${module.ateliers.map(atelier => `<li>${atelier}</li>`).join('')}
+                            </ul>
+                            ${module.planning ? `<strong>Planning :</strong> ${module.planning}` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Notes spéciales
+            if (module.note) {
+                details += `
+                    <div class="detail-card" style="grid-column: 1 / -1; border-left-color: #8ba4b0;">
+                        <div class="detail-label">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+                            </svg>
+                            Information
+                        </div>
+                        <div class="detail-value">${module.note}</div>
+                    </div>
+                `;
+            }
+
+            return details;
+        }
+
+        function extractBadges(format) {
+            let badges = '';
+            
+            // Détection du type (distanciel/présentiel)
+            if (format.includes('distanciel')) {
+                badges += '<span class="badge distanciel">Distanciel</span>';
+            }
+            if (format.includes('présentiel')) {
+                badges += '<span class="badge presentiel">Présentiel</span>';
+            }
+            
+            badges += `<span style="margin-left: 0.5rem;">${format}</span>`;
+            return badges;
+        }
+
+        function getDateInfo(module) {
+            if (module.date) return module.date;
+            if (module.dates) return module.dates;
+            if (module.periode) return module.periode;
+            return null;
+        }
+
+        function toggleModule(headerElement) {
+            const moduleItem = headerElement.parentElement;
+            moduleItem.classList.toggle('active');
+        }
+
+        function filterFormations(searchTerm) {
+            const formationItems = document.querySelectorAll('.formation-item');
+            const formationSections = document.querySelectorAll('.formation-section');
+            
+            formationItems.forEach(item => {
+                const title = item.querySelector('.formation-title').textContent.toLowerCase();
+                const isVisible = title.includes(searchTerm.toLowerCase());
+                item.style.display = isVisible ? 'block' : 'none';
+            });
+
+            // Cacher les sections qui n'ont aucun module visible
+            formationSections.forEach(section => {
+                const visibleModules = section.querySelectorAll('.formation-item[style="display: block"], .formation-item:not([style*="display: none"])');
+                section.style.display = visibleModules.length > 0 ? 'block' : 'none';
+            });
+        }
+
+        function updateStats() {
+            const totalFormations = currentFormations.length;
+            const totalModules = currentFormations.reduce((sum, formation) => sum + formation.modules.length, 0);
+
+            document.getElementById('total-formations').textContent = totalFormations;
+            document.getElementById('total-modules').textContent = totalModules;
+        }
+    </script>
+</body>
+</html>
+                
