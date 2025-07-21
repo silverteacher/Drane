@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formations Numériques DRANE HDF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            color: #455a64;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .nav-toggle {
+            display: flex;
+            background: linear-gradient(135deg, #8ba4b0 0%, #b8cdd9 100%);
+            border-radius: 50px;
+            padding: 4px;
+            max-width: 300px;
+            margin: 0 auto 2rem auto;
+            position: relative;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 46px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-btn.active {
+            color: #455a64;
+        }
+
+        .nav-slider {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            height: calc(100% - 8px);
+            background: linear-gradient(135deg, #eceff1 0%, #cfd8dc 100%);
+            border-radius: 42px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-slider.moved {
+            transform: translateX(100%);
+        }
+
+        .export-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #78909c, #90a4ae);
+            color: white;
+            box-shadow: 0 4px 15px rgba(120, 144, 156, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #66bb6a, #4caf50);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 187, 106, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e57373, #ef5350);
+            color: white;
+            box-shadow: 0 4px 15px rgba(229, 115, 115, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ff7043, #f4511e);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 112, 67, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: #455a64;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .quiz-container {
+            border-left: 5px solid #78909c;
+        }
+
+        .quiz-progress {
+            background: #ecf0f1;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .quiz-progress-bar {
+            background: linear-gradient(135deg, #78909c, #90a4ae);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .question h3 {
+            color: #455a64;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .quiz-option:hover {
+            border-color: #78909c;
+            background: #eceff1;
+        }
+
+        .quiz-option.selected {
+            border-color: #78909c;
+            background: linear-gradient(135deg, #eceff1, #cfd8dc);
+        }
+
+        .quiz-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #78909c;
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .quiz-option.selected .quiz-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #78909c;
+            border-radius: 50%;
+        }
+
+        .quiz-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-card {
+            background: #f8f9fa;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .profile-card:hover {
+            border-color: #78909c;
+            background: #eceff1;
+        }
+
+        .profile-card.active {
+            border-color: #78909c;
+            background: linear-gradient(135deg, #eceff1, #cfd8dc);
+        }
+
+        .profile-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .profile-name {
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-desc {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .formation-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .formation-item {
+            background: #f8f9fa;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .formation-item:hover {
+            border-color: #78909c;
+            background: #eceff1;
+        }
+
+        .formation-item.selected {
+            border-color: #78909c;
+            background: linear-gradient(135deg, #eceff1, #cfd8dc);
+        }
+
+        .formation-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .formation-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #78909c;
+            border-radius: 4px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .formation-item.selected .formation-checkbox::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #78909c;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .formation-title {
+            font-weight: 600;
+            color: #455a64;
+        }
+
+        .formation-meta {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #eceff1, #cfd8dc);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .result-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-title {
+            color: #455a64;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-desc {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .recommendations {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .recommendation-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            border-left: 4px solid #78909c;
+        }
+
+        .recommendation-item h4 {
+            color: #455a64;
+            margin-bottom: 0.5rem;
+        }
+
+        .modules-list {
+            margin-top: 1rem;
+        }
+
+        .module-tag {
+            background: white;
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            border-radius: 6px;
+            border-left: 3px solid #90a4ae;
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: #7f8c8d;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        footer p {
+            margin-bottom: 1rem;
+        }
+
+        .linkedin-btn {
+            background: linear-gradient(135deg, #42a5f5, #1e88e5);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem 0.5rem;
+            }
+            
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎓 Formations Numériques</h1>
+        <p>Formations proposées par la DRANE de Lille</p>
+    </div>
+
+    <div class="container">
+        <div class="nav-toggle">
+            <div class="nav-slider" id="nav-slider"></div>
+            <button class="nav-btn active" onclick="showSection('catalog')">Catalogue</button>
+            <button class="nav-btn" onclick="showSection('quiz')">Mon Profil</button>
+        </div>
+
+        <div class="export-container">
+            <button class="btn btn-success" onclick="exportAllToExcel()">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+                Exporter tout en Excel
+            </button>
+        </div>
+
+        <!-- Section Catalogue -->
+        <div id="catalog-section">
+            <div id="formations-display">
+                <!-- Les formations seront affichées ici -->
+            </div>
+        </div>
+
+        <!-- Section Quiz et Profil -->
+        <div id="quiz-section" class="hidden">
+            <!-- Quiz -->
+            <div id="quiz-container" class="card quiz-container">
+                <div class="card-header">
+                    <span>🧭</span>
+                    Quiz d'évaluation de niveau
+                </div>
+                
+                <div class="quiz-progress">
+                    <div class="quiz-progress-bar" id="progress-bar"></div>
+                </div>
+                
+                <div id="quiz-content">
+                    <!-- Questions du quiz -->
+                </div>
+                
+                <div class="quiz-buttons">
+                    <button class="btn btn-primary" id="prev-btn" onclick="prevQuestion()" style="display: none;">
+                        ← Précédent
+                    </button>
+                    <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">
+                        Suivant →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Résultat du Quiz -->
+            <div id="quiz-result" class="hidden">
+                <!-- Résultat affiché ici -->
+            </div>
+
+            <!-- Sélection de Profil -->
+            <div id="profile-selector" class="card hidden">
+                <div class="card-header">
+                    <span>👤</span>
+                    Choisir votre profil
+                </div>
+                
+                <div class="profile-grid" id="profile-grid">
+                    <!-- Profils affichés ici -->
+                </div>
+                
+                <button class="btn btn-primary" onclick="generateOffer()">
+                    Générer mon offre personnalisée
+                </button>
+            </div>
+
+            <!-- Offre Personnalisée -->
+            <div id="personal-offer" class="card hidden">
+                <div class="card-header">
+                    <span>🎯</span>
+                    Votre offre personnalisée
+                </div>
+                <div id="offer-content">
+                    <!-- Contenu de l'offre -->
+                </div>
+                <button class="btn btn-danger" onclick="exportOfferToPDF()">
+                    Exporter l'offre en PDF
+                </button>
+            </div>
+
+            <!-- Sélecteur de Formations -->
+            <div id="formation-selector" class="card hidden">
+                <div class="card-header">
+                    <span>✅</span>
+                    Personnaliser votre sélection
+                </div>
+                <div id="formation-list">
+                    <!-- Liste des formations -->
+                </div>
+                <button class="btn btn-warning" onclick="exportCustomSelection()">
+                    Exporter ma sélection personnalisée
+                </button>
+            </div>
+        </div>
+
+        <div class="card" style="text-align: center; margin-top: 2rem;">
+            <a href="https://eduline.ac-lille.fr/sofia-fmo-acad/" target="_blank" class="btn btn-danger">
+                📝 Inscription via Sofia-FMO
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>Délégation de Région Académique pour le Numérique Éducatif</strong></p>
+        <p style="font-style: italic; font-size: 0.9rem;">Application en partie créée par l'IA et supervisée par un agent</p>
+        <a href="https://www.linkedin.com/feed/" target="_blank" class="linkedin-btn">
+            <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24">
+                <path d="M20.5,2H3.5C2.67,2 2,2.67 2,3.5V20.5C2,21.33 2.67,22 3.5,22H20.5C21.33,22 22,21.33 22,20.5V3.5C22,2.67 21.33,2 20.5,2M8,19H5V10H8V19M6.5,8.25C5.5,8.25 4.75,7.5 4.75,6.5C4.75,5.5 5.5,4.75 6.5,4.75C7.5,4.75 8.25,5.5 8.25,6.5C8.25,7.5 7.5,8.25 6.5,8.25M19,19H16V14.25C16,13.19 15.81,11.81 14.38,11.81C12.88,11.81 12.63,13.25 12.63,14.63V19H9.63V10H12.5V11.5C12.81,10.88 13.75,10.25 15.13,10.25C18.19,10.25 19,12.19 19,14.75V19Z"/>
+            </svg>
+            LinkedIn
+        </a>
+    </footer>
+
+    <script>
+        // Données des formations
+        const formationsPV = [
+            {
+                id: 1,
+                title: "S'emparer des bases du numérique",
+                modules: [
+                    { name: "Exploiter le potentiel d'Eduline", format: "3 distanciels de 1H", periode: "à partir de décembre" },
+                    { name: "Maîtriser les applications pédagogiques de l'ENT", format: "2 distanciels de 30min", periode: "selon planning" },
+                    { name: "Découvrir les astuces de création pédagogique", format: "2 distanciels de 30min", periode: "selon planning" },
+                    { name: "Partager et collaborer avec la suite de l'état", format: "2 distanciels de 30min", periode: "selon planning" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Citoyenneté numérique critique à l'ère de l'IA",
+                modules: [
+                    { name: "Charte de citoyenneté numérique", format: "2 distanciels de 2H", periode: "à déterminer" },
+                    { name: "Créativité numérique responsable", format: "1 présentiel de 3H", date: "mercredi 05/11 à 14h00" },
+                    { name: "Débat radio : les écrans et moi", format: "1 présentiel de 3H", date: "mercredi 12/11 à 14h00" },
+                    { name: "Défi fake news à l'ère de l'IA", format: "1 présentiel de 3H", date: "mercredi 26/11 à 14h00" }
+                ]
+            },
+            {
+                id: 3,
+                title: "Valoriser les compétences numériques",
+                modules: [
+                    { name: "Préparation certification CRCN enseignants", format: "3 distanciels de 1H", periode: "à partir de décembre" },
+                    { name: "Passation certification CRCN", format: "1 présentiel de 2H", lieu: "Canopé Arras ou Lille" },
+                    { name: "CRCN au collège", format: "1 distanciel de 2H", periode: "à partir de décembre" },
+                    { name: "CRCN au lycée", format: "1 distanciel de 2H", periode: "à partir de décembre" },
+                    { name: "Monter en compétences DRANE", format: "30 distanciels de 1H max", periode: "à partir de décembre" }
+                ]
+            },
+            {
+                id: 4,
+                title: "Potentiels de l'IA dans l'éducation",
+                modules: [
+                    { name: "Algorithmes pour comprendre l'IA", format: "1 dist + 1 prés 3H + 1 dist 1H", periode: "à déterminer" },
+                    { name: "Potentiel créatif des IA génératives", format: "1 dist + 1 prés 3H + 1 dist 1H", periode: "à déterminer" },
+                    { name: "Évolution compétences numériques IA", format: "1 dist + 1 prés 3H + 1 dist 1H", periode: "à déterminer" },
+                    { name: "Travail personnel élève ère IA", format: "1 dist + 1 prés 3H + 1 dist 1H", periode: "à déterminer" }
+                ]
+            },
+            {
+                id: 5,
+                title: "Maîtriser l'ENT de l'établissement",
+                modules: [
+                    { name: "Administrer l'ENT débutants", format: "1 distanciel de 3H", periode: "décembre 25" },
+                    { name: "Ressources insoupçonnées ENT", format: "3 distanciels de 1H", periode: "décembre 25" },
+                    { name: "Potentiel pédagogique ENT", format: "3 distanciels de 1H", periode: "décembre 25" }
+                ]
+            },
+            {
+                id: 6,
+                title: "Journée immersion pratiques innovantes",
+                modules: [
+                    { 
+                        name: "Journées du numérique", 
+                        format: "1 dist 1.5H + 2 prés 6H", 
+                        lieux: "Saint-Omer + Valenciennes",
+                        periode: "décembre 25 et mars 26",
+                        ateliers: ["Vidéo pédagogie", "Microbit", "Drone BIMD", "VR/AR", "Escape game", "FabLab", "Webradio", "IA", "Eléa"]
+                    }
+                ]
+            },
+            {
+                id: 7,
+                title: "Formations expertes",
+                modules: [
+                    { name: "Escape game : s'échapper de la routine", format: "1 dist 1H + 1 prés 3H", periode: "décembre 25" },
+                    { name: "Classe inversée, pédagogie renversante", format: "1 dist 1H + 1 prés 3H", periode: "décembre 25" },
+                    { name: "Créer des capsules vidéos", format: "1 dist 1H + 1 prés 3H", periode: "décembre 25" },
+                    { name: "TBI VPI : allié pédagogique", format: "2 présentiels de 3H", periode: "décembre 25" }
+                ]
+            }
+        ];
+
+        const formationsPZ = [
+            {
+                id: 8,
+                title: "Formation des formateurs numériques",
+                modules: [
+                    { name: "Formateurs numériques à magistère 2", format: "1 distanciel de 3H", date: "Mercredi 10/09/25" },
+                    { name: "Scénarisation formation à distance", format: "1 distanciel de 3H", date: "Mercredi 01/10/25" },
+                    { name: "Projet Drane IA", format: "2 présentiels de 6H", dates: "19/09/25 et 07/11/25" },
+                    { name: "Plan formation et veille pédagogique", format: "2 présentiels de 6H", dates: "12/12/25 et 20/03/26" }
+                ]
+            },
+            {
+                id: 9,
+                title: "Formation PIX Administrateurs",
+                modules: [
+                    { name: "Administrateurs PIX collèges", format: "1 distanciel de 1,5H", date: "Mercredi 04/03/26" },
+                    { name: "Administrateurs PIX lycées", format: "1 distanciel de 1,5H", date: "Mercredi 05/11/25" }
+                ]
+            },
+            {
+                id: 10,
+                title: "ELEA expert",
+                modules: [
+                    { name: "ELEA expert", format: "2 dist 1.5H + 1 prés 3H", dates: "24/09/25, 10/12/25, 15/11/25" }
+                ]
+            },
+            {
+                id: 11,
+                title: "Yes we code - cartes microbit",
+                modules: [
+                    { name: "Yes we code microbit", format: "2 présentiels de 3H", dates: "11/01/25 et 01/04/26" }
+                ]
+            },
+            {
+                id: 12,
+                title: "Formation drone - BIMD",
+                modules: [
+                    { name: "Brevet Initiation Métiers Drone", format: "1 prés 3H + 1 dist 2H", periode: "À déterminer" },
+                    { name: "Usage drone établissement scolaire", format: "1 prés 4H + 1 dist 2H", periode: "À déterminer" }
+                ]
+            }
+        ];
+
+        // Questions du quiz
+        const quizQuestions = [
+            {
+                question: "Quelle est votre expérience avec les outils numériques en classe ?",
+                options: [
+                    { text: "Je débute complètement", value: "debutant" },
+                    { text: "J'utilise quelques outils basiques", value: "curieux" },
+                    { text: "Je maîtrise plusieurs outils", value: "aventurier" },
+                    { text: "Je forme d'autres enseignants", value: "expert" }
+                ]
+            },
+            {
+                question: "Comment vous sentez-vous face aux nouvelles technologies ?",
+                options: [
+                    { text: "Intimidé(e), j'ai besoin d'aide", value: "debutant" },
+                    { text: "Curieux(se) mais prudent(e)", value: "curieux" },
+                    { text: "Enthousiaste et prêt(e) à expérimenter", value: "aventurier" },
+                    { text: "Très à l'aise, j'aime innover", value: "expert" }
+                ]
+            },
+            {
+                question: "Quel type de formation vous intéresse le plus ?",
+                options: [
+                    { text: "Les bases pour bien commencer", value: "debutant" },
+                    { text: "Approfondir mes connaissances", value: "curieux" },
+                    { text: "Découvrir des outils surprenants", value: "aventurier" },
+                    { text: "Techniques avancées et innovation", value: "expert" }
+                ]
+            },
+            {
+                question: "Comment abordez-vous l'IA en éducation ?",
+                options: [
+                    { text: "Je ne sais pas par où commencer", value: "debutant" },
+                    { text: "J'aimerais comprendre les bases", value: "curieux" },
+                    { text: "Je veux tester son potentiel", value: "aventurier" },
+                    { text: "Je cherche des applications avancées", value: "expert" }
+                ]
+            },
+            {
+                question: "Quel est votre objectif principal ?",
+                options: [
+                    { text: "Apprendre les fondamentaux", value: "debutant" },
+                    { text: "Enrichir ma pratique pédagogique", value: "curieux" },
+                    { text: "Sortir de ma zone de confort", value: "aventurier" },
+                    { text: "Devenir référent numérique", value: "expert" }
+                ]
+            }
+        ];
+
+        // Profils
+        const profiles = {
+            debutant: {
+                name: "Débutant en numérique éducatif",
+                emoji: "🌱",
+                description: "Formations pour découvrir le numérique éducatif",
+                formations: [1, 5, 3]
+            },
+            curieux: {
+                name: "Curieux du numérique",
+                emoji: "🔍",
+                description: "Formations pour approfondir vos connaissances",
+                formations: [2, 4, 7]
+            },
+            aventurier: {
+                name: "Aventurier du numérique",
+                emoji: "🎲",
+                description: "Formations variées et surprenantes",
+                formations: [6, 2, 7, 11, 12]
+            },
+            expert: {
+                name: "Expert en numérique",
+                emoji: "🚀",
+                description: "Formations avancées et innovation",
+                formations: [8, 6, 10, 7]
+            }
+        };
+
+        // Variables globales
+        let currentQuestion = 0;
+        let quizAnswers = [];
+        let selectedProfile = null;
+        let customSelections = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            displayFormations();
+            initQuiz();
+            setupProfileSelector();
+        });
+
+        // Navigation entre sections
+        function showSection(section) {
+            const catalogSection = document.getElementById('catalog-section');
+            const quizSection = document.getElementById('quiz-section');
+            const navSlider = document.getElementById('nav-slider');
+            const navButtons = document.querySelectorAll('.nav-btn');
+
+            navButtons.forEach(btn => btn.classList.remove('active'));
+
+            if (section === 'catalog') {
+                catalogSection.classList.remove('hidden');
+                quizSection.classList.add('hidden');
+                navSlider.classList.remove('moved');
+                navButtons[0].classList.add('active');
+            } else {
+                catalogSection.classList.add('hidden');
+                quizSection.classList.remove('hidden');
+                navSlider.classList.add('moved');
+                navButtons[1].classList.add('active');
+            }
+        }
+
+        // Affichage des formations
+        function displayFormations() {
+            const container = document.getElementById('formations-display');
+            let html = '';
+
+            // Formations PV
+            html += '<h2 style="color: #455a64; margin-bottom: 1rem;">📚 Formations Public Volontaire</h2>';
+            formationsPV.forEach(formation => {
+                html += createFormationCard(formation, 'PV');
+            });
+
+            html += '<h2 style="color: #455a64; margin: 2rem 0 1rem 0;">🎯 Formations Public Désigné</h2>';
+            formationsPZ.forEach(formation => {
+                html += createFormationCard(formation, 'PZ');
+            });
+
+            container.innerHTML = html;
+        }
+
+        function createFormationCard(formation, type) {
+            return `
+                <div class="card">
+                    <h3 style="color: #455a64; margin-bottom: 1rem;">
+                        [${type}] ${formation.title}
+                    </h3>
+                    <div style="display: grid; gap: 0.5rem;">
+                        ${formation.modules.map(module => `
+                            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border-left: 3px solid #90a4ae;">
+                                <div style="font-weight: 600; color: #455a64; margin-bottom: 0.25rem;">
+                                    ${module.name}
+                                </div>
+                                <div style="color: #7f8c8d; font-size: 0.9rem;">
+                                    ${module.format || ''} 
+                                    ${module.date || module.dates || module.periode || ''}
+                                    ${module.lieu ? ` - ${module.lieu}` : ''}
+                                </div>
+                                ${module.ateliers ? `
+                                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #7f8c8d;">
+                                        Ateliers: ${module.ateliers.join(', ')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Quiz
+        function initQuiz() {
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = quizQuestions[currentQuestion];
+            const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
+            
+            document.getElementById('progress-bar').style.width = progress + '%';
+            
+            const content = document.getElementById('quiz-content');
+            content.innerHTML = `
+                <div class="question">
+                    <h3>Question ${currentQuestion + 1}/${quizQuestions.length}</h3>
+                    <p>${question.question}</p>
+                    <div class="quiz-options">
+                        ${question.options.map((option, index) => `
+                            <div class="quiz-option" onclick="selectOption(this, '${option.value}')">
+                                <div class="quiz-radio"></div>
+                                <span>${option.text}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('prev-btn').style.display = currentQuestion > 0 ? 'block' : 'none';
+            document.getElementById('next-btn').textContent = currentQuestion === quizQuestions.length - 1 ? 'Terminer' : 'Suivant →';
+        }
+
+        function selectOption(element, value) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            quizAnswers[currentQuestion] = value;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizQuestions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            // Calculer le profil dominant
+            const counts = {};
+            quizAnswers.forEach(answer => {
+                counts[answer] = (counts[answer] || 0) + 1;
+            });
+
+            const recommendedProfile = Object.keys(counts).reduce((a, b) => 
+                counts[a] > counts[b] ? a : b
+            );
+
+            selectedProfile = recommendedProfile;
+            showQuizResult(recommendedProfile);
+        }
+
+        function showQuizResult(profileKey) {
+            const profile = profiles[profileKey];
+            const resultDiv = document.getElementById('quiz-result');
+            
+            resultDiv.innerHTML = `
+                <div class="result-card">
+                    <div class="result-emoji">${profile.emoji}</div>
+                    <div class="result-title">Votre profil : ${profile.name}</div>
+                    <div class="result-desc">${profile.description}</div>
+                    <button class="btn btn-primary" onclick="retakeQuiz()">
+                        🔄 Refaire le quiz
+                    </button>
+                </div>
+            `;
+            
+            resultDiv.classList.remove('hidden');
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('profile-selector').classList.remove('hidden');
+            
+            // Pré-sélectionner le profil
+            updateProfileSelection(profileKey);
+        }
+
+        function retakeQuiz() {
+            currentQuestion = 0;
+            quizAnswers = [];
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('profile-selector').classList.add('hidden');
+            displayQuestion();
+        }
+
+        // Sélecteur de profil
+        function setupProfileSelector() {
+            const grid = document.getElementById('profile-grid');
+            let html = '';
+            
+            Object.keys(profiles).forEach(key => {
+                const profile = profiles[key];
+                html += `
+                    <div class="profile-card" onclick="selectProfile('${key}')">
+                        <span class="profile-emoji">${profile.emoji}</span>
+                        <div class="profile-name">${profile.name}</div>
+                        <div class="profile-desc">${profile.description}</div>
+                    </div>
+                `;
+            });
+            
+            grid.innerHTML = html;
+        }
+
+        function selectProfile(profileKey) {
+            selectedProfile = profileKey;
+            updateProfileSelection(profileKey);
+        }
+
+        function updateProfileSelection(profileKey) {
+            const cards = document.querySelectorAll('.profile-card');
+            cards.forEach(card => card.classList.remove('active'));
+            cards[Object.keys(profiles).indexOf(profileKey)].classList.add('active');
+        }
+
+        // Génération d'offre
+        function generateOffer() {
+            if (!selectedProfile) {
+                alert('Veuillez sélectionner un profil');
+                return;
+            }
+
+            const profile = profiles[selectedProfile];
+            const offerDiv = document.getElementById('personal-offer');
+            const content = document.getElementById('offer-content');
+            
+            let html = `
+                <div class="result-card">
+                    <div class="result-emoji">${profile.emoji}</div>
+                    <div class="result-title">${profile.name}</div>
+                    <div class="result-desc">Formations recommandées pour votre profil</div>
+                </div>
+                <div class="recommendations">
+            `;
+
+            profile.formations.forEach(formationId => {
+                const formation = [...formationsPV, ...formationsPZ].find(f => f.id === formationId);
+                if (formation) {
+                    html += `
+                        <div class="recommendation-item">
+                            <h4>${formation.title}</h4>
+                            <div class="modules-list">
+                                ${formation.modules.map(module => `
+                                    <div class="module-tag">
+                                        <strong>${module.name}</strong><br>
+                                        ${module.format || ''} ${module.date || module.dates || module.periode || ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            html += '</div>';
+            content.innerHTML = html;
+            offerDiv.classList.remove('hidden');
+            
+            // Afficher aussi le sélecteur de formations
+            setupFormationSelector();
+            document.getElementById('formation-selector').classList.remove('hidden');
+        }
+
+        // Sélecteur de formations personnalisées
+        function setupFormationSelector() {
+            const list = document.getElementById('formation-list');
+            let html = '';
+            
+            [...formationsPV, ...formationsPZ].forEach(formation => {
+                const type = formation.id <= 7 ? 'PV' : 'PZ';
+                html += `
+                    <div class="formation-item" onclick="toggleFormation(${formation.id})">
+                        <div class="formation-header">
+                            <div class="formation-checkbox"></div>
+                            <div>
+                                <div class="formation-title">[${type}] ${formation.title}</div>
+                                <div class="formation-meta">${formation.modules.length} modules</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            list.innerHTML = html;
+        }
+
+        function toggleFormation(formationId) {
+            const items = document.querySelectorAll('.formation-item');
+            const item = items[formationId <= 7 ? formationId - 1 : formationId - 1];
+            
+            item.classList.toggle('selected');
+            
+            const index = customSelections.indexOf(formationId);
+            if (index > -1) {
+                customSelections.splice(index, 1);
+            } else {
+                customSelections.push(formationId);
+            }
+        }
+
+        // Export fonctions
+        function exportAllToExcel() {
+            const data = [];
+            [...formationsPV, ...formationsPZ].forEach(formation => {
+                const type = formation.id <= 7 ? 'Public Volontaire' : 'Public Désigné';
+                formation.modules.forEach(module => {
+                    data.push({
+                        Type: type,
+                        Formation: formation.title,
+                        Module: module.name,
+                        Format: module.format || '',
+                        Date: module.date || module.dates || module.periode || '',
+                        Lieu: module.lieu || module.lieux || ''
+                    });
+                });
+            });
+            
+            downloadCSV(data, 'formations_drane_hdf_complete.csv');
+        }
+
+        function exportOfferToPDF() {
+            if (!selectedProfile) return;
+            
+            const profile = profiles[selectedProfile];
+            const content = document.getElementById('offer-content').innerText;
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `offre_${selectedProfile}.txt`;
+            link.click();
+            
+            alert('Votre offre a été téléchargée !');
+        }
+
+        function exportCustomSelection() {
+            if (customSelections.length === 0) {
+                alert('Veuillez sélectionner au moins une formation');
+                return;
+            }
+            
+            const data = [];
+            customSelections.forEach(formationId => {
+                const formation = [...formationsPV, ...formationsPZ].find(f => f.id === formationId);
+                if (formation) {
+                    const type = formation.id <= 7 ? 'Public Volontaire' : 'Public Désigné';
+                    formation.modules.forEach(module => {
+                        data.push({
+                            Type: type,
+                            Formation: formation.title,
+                            Module: module.name,
+                            Format: module.format || '',
+                            Date: module.date || module.dates || module.periode || '',
+                            Lieu: module.lieu || module.lieux || ''
+                        });
+                    });
+                }
+            });
+            
+            downloadCSV(data, `selection_personnalisee_${selectedProfile || 'custom'}.csv`);
+            alert(`${customSelections.length} formations exportées !`);
+        }
+
+        function downloadCSV(data, filename) {
+            const csv = [
+                Object.keys(data[0]).join(','),
+                ...data.map(row => Object.values(row).map(val => `"${val}"`).join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+    </script>
+</body>
+</html>
