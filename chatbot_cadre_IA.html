@@ -789,6 +789,31 @@ Ces systèmes ne sont pas concernés par les règles d'usage définies pour l'IA
                 keywords: ["système", "expert", "déterministe", "logique", "règle", "symbolique", "transparent", "explicable"]
             },
 
+            "hallucinations ia": {
+                content: `Les "hallucinations" de l'IA sont un risque majeur :
+
+<strong>Qu'est-ce qu'une hallucination :</strong>
+• Réponses fausses ou inexactes générées par l'IA
+• Informations inventées qui semblent plausibles
+• Manque de fiabilité dans les contenus produits
+
+<strong>Pourquoi ça arrive :</strong>
+• L'IA fonctionne de manière statistique
+• Elle prédit le mot suivant le plus probable
+• Aucune compréhension réelle du contexte
+• Pas de vérification des faits
+
+<strong>Comment s'en prémunir :</strong>
+• Toujours vérifier les informations avec d'autres sources
+• Exercer un esprit critique constant
+• Former les utilisateurs à ces risques
+• Ne pas faire confiance aveuglément aux réponses
+
+<strong>Dans l'éducation :</strong>
+Il est essentiel d'enseigner aux élèves que l'IA peut produire des erreurs et qu'il faut toujours vérifier les informations obtenues.`,
+                keywords: ["hallucination", "faux", "inexact", "erreur", "fiabilité", "vérifier", "statistique", "probable", "mensonge"]
+            },
+
             "recherche web": {
                 content: `L'IA doit être comparée à la recherche web classique :
 
@@ -858,7 +883,7 @@ Sensibiliser les élèves à ces choix technologiques et leurs impacts.`,
             let bestScore = 0;
             let matches = [];
 
-            // Mapping direct des mots-clés vers les sections
+            // Mapping direct des mots-clés vers les sections (corrigé)
             const keywordMapping = {
                 'usages autorisés': 'usages autorisés',
                 'confidentialité des données': 'confidentialité données',
@@ -866,16 +891,17 @@ Sensibiliser les élèves à ces choix technologiques et leurs impacts.`,
                 'impact environnemental': 'impact environnemental',
                 'principe d\'équité': 'principe équité',
                 'formation des enseignants': 'formation enseignants',
-                'formation enseignants': 'formation enseignants',
                 'fraude et tricherie': 'fraude tricherie',
                 'qu\'est-ce que l\'ia': 'definitions',
+                'qu\'est-ce que l\'ia ?': 'definitions',
                 'esprit critique': 'esprit critique',
                 'hallucinations ia': 'hallucinations ia'
             };
 
             // Vérification directe des mots-clés de l'interface
+            const normalizedQuestionLower = normalizedQuestion.toLowerCase();
             for (let [buttonText, sectionKey] of Object.entries(keywordMapping)) {
-                if (normalizeText(question).includes(normalizeText(buttonText))) {
+                if (normalizedQuestionLower === normalizeText(buttonText).toLowerCase()) {
                     if (knowledgeBase[sectionKey]) {
                         return knowledgeBase[sectionKey];
                     }
@@ -1049,29 +1075,43 @@ Reformulez votre question ou utilisez les mots-clés ci-dessous !`;
             }, 1500);
         }
 
-        // Fonction pour gérer les mots-clés (améliorée)
+        // Fonction pour gérer les mots-clés (simplifiée et corrigée)
         function handleKeyword(keyword) {
-            const input = document.getElementById('userInput');
-            input.value = keyword;
+            // Mapping direct pour les boutons
+            const directMapping = {
+                'Usages autorisés': knowledgeBase['usages autorisés'],
+                'Confidentialité des données': knowledgeBase['confidentialité données'],
+                'IA et devoirs scolaires': knowledgeBase['devoirs scolaires'],
+                'Impact environnemental': knowledgeBase['impact environnemental'],
+                'Principe d\'équité': knowledgeBase['principe équité'],
+                'Formation des enseignants': knowledgeBase['formation enseignants'],
+                'Fraude et tricherie': knowledgeBase['fraude tricherie'],
+                'Qu\'est-ce que l\'IA ?': knowledgeBase['definitions'],
+                'Esprit critique': knowledgeBase['esprit critique'],
+                'Hallucinations IA': knowledgeBase['hallucinations ia']
+            };
+
+            // Afficher la question
+            addMessage(keyword, true);
             
-            // Directement chercher et afficher la réponse
-            const response = findBestResponse(keyword);
+            // Trouver la réponse directement
+            const response = directMapping[keyword];
             
             if (response) {
-                addMessage(keyword, true);
                 showTyping();
-                
                 setTimeout(() => {
                     hideTyping();
                     const responseWithReference = addFrameworkReference(response.content);
                     addMessage(responseWithReference);
                 }, 800);
             } else {
-                // Fallback au système normal
-                sendMessage();
+                // Fallback si pas trouvé
+                showTyping();
+                setTimeout(() => {
+                    hideTyping();
+                    addMessage("Désolé, je n'ai pas trouvé d'information sur ce sujet. Essayez de reformuler votre question.");
+                }, 800);
             }
-            
-            input.value = '';
         }
 
         // Fonction pour gérer la touche Entrée
