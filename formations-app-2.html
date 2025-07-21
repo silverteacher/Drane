@@ -313,6 +313,109 @@
             background: linear-gradient(135deg, #eceff1, #cfd8dc);
         }
 
+        .catalog-formation {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .catalog-formation-header {
+            background: linear-gradient(135deg, #90a4ae, #b0bec5);
+            color: #263238;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .catalog-formation-header:hover {
+            background: linear-gradient(135deg, #78909c, #90a4ae);
+        }
+
+        .catalog-formation-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .catalog-formation-meta {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.25rem;
+        }
+
+        .catalog-expand-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .catalog-formation.active .catalog-expand-icon {
+            transform: rotate(180deg);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .catalog-formation-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: #f8f9fa;
+        }
+
+        .catalog-formation.active .catalog-formation-content {
+            max-height: 1000px;
+        }
+
+        .catalog-formation-modules {
+            padding: 1.5rem;
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .catalog-module-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #78909c;
+            transition: all 0.3s ease;
+        }
+
+        .catalog-module-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .catalog-module-name {
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 0.5rem;
+        }
+
+        .catalog-module-details {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .catalog-module-ateliers {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
         .formation-header {
             display: flex;
             align-items: center;
@@ -825,45 +928,60 @@
 
             // Formations PV
             html += '<h2 style="color: #455a64; margin-bottom: 1rem;">📚 Formations Public Volontaire</h2>';
-            formationsPV.forEach(formation => {
-                html += createFormationCard(formation, 'PV');
+            formationsPV.forEach((formation, index) => {
+                html += createFormationAccordion(formation, 'PV', `pv-${index}`);
             });
 
             html += '<h2 style="color: #455a64; margin: 2rem 0 1rem 0;">🎯 Formations Public Désigné</h2>';
-            formationsPZ.forEach(formation => {
-                html += createFormationCard(formation, 'PZ');
+            formationsPZ.forEach((formation, index) => {
+                html += createFormationAccordion(formation, 'PZ', `pz-${index}`);
             });
 
             container.innerHTML = html;
         }
 
-        function createFormationCard(formation, type) {
+        function createFormationAccordion(formation, type, id) {
             return `
-                <div class="card">
-                    <h3 style="color: #455a64; margin-bottom: 1rem;">
-                        [${type}] ${formation.title}
-                    </h3>
-                    <div style="display: grid; gap: 0.5rem;">
-                        ${formation.modules.map(module => `
-                            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border-left: 3px solid #90a4ae;">
-                                <div style="font-weight: 600; color: #455a64; margin-bottom: 0.25rem;">
-                                    ${module.name}
-                                </div>
-                                <div style="color: #7f8c8d; font-size: 0.9rem;">
-                                    ${module.format || ''} 
-                                    ${module.date || module.dates || module.periode || ''}
-                                    ${module.lieu ? ` - ${module.lieu}` : ''}
-                                </div>
-                                ${module.ateliers ? `
-                                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #7f8c8d;">
-                                        Ateliers: ${module.ateliers.join(', ')}
+                <div class="catalog-formation" id="${id}">
+                    <div class="catalog-formation-header" onclick="toggleFormationAccordion('${id}')">
+                        <div>
+                            <div class="catalog-formation-title">[${type}] ${formation.title}</div>
+                            <div class="catalog-formation-meta">${formation.modules.length} module(s)</div>
+                        </div>
+                        <div class="catalog-expand-icon">
+                            <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24">
+                                <path d="M7,10L12,15L17,10H7Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="catalog-formation-content">
+                        <div class="catalog-formation-modules">
+                            ${formation.modules.map(module => `
+                                <div class="catalog-module-item">
+                                    <div class="catalog-module-name">${module.name}</div>
+                                    <div class="catalog-module-details">
+                                        ${module.format ? `📅 ${module.format}` : ''}
+                                        ${module.date ? `<br>📆 ${module.date}` : ''}
+                                        ${module.dates ? `<br>📆 ${module.dates}` : ''}
+                                        ${module.periode ? `<br>⏰ ${module.periode}` : ''}
+                                        ${module.lieu || module.lieux ? `<br>📍 ${module.lieu || module.lieux}` : ''}
                                     </div>
-                                ` : ''}
-                            </div>
-                        `).join('')}
+                                    ${module.ateliers ? `
+                                        <div class="catalog-module-ateliers">
+                                            🎯 Ateliers: ${module.ateliers.join(', ')}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
                 </div>
             `;
+        }
+
+        function toggleFormationAccordion(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('active');
         }
 
         // Quiz
