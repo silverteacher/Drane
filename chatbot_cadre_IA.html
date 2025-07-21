@@ -388,7 +388,6 @@
                 <button class="keyword-btn" onclick="handleKeyword('Principe d\'équité')">Principe d'équité</button>
                 <button class="keyword-btn" onclick="handleKeyword('Formation des enseignants')">Formation enseignants</button>
                 <button class="keyword-btn" onclick="handleKeyword('Fraude et tricherie')">Fraude et tricherie</button>
-                <button class="keyword-btn" onclick="handleKeyword('Qu\'est-ce que l\'IA')">Qu'est-ce que l'IA ?</button>
                 <button class="keyword-btn" onclick="handleKeyword('Esprit critique')">Esprit critique</button>
                 <button class="keyword-btn" onclick="handleKeyword('Hallucinations IA')">Hallucinations IA</button>
             </div>
@@ -622,6 +621,34 @@ Pour toute décision s'appuyant sur l'IA ayant un impact significatif sur :
 <strong>Principe :</strong>
 L'IA peut assister les professionnels mais ne doit jamais les remplacer dans les décisions importantes concernant les parcours éducatifs.`,
                 keywords: ["supervision", "humaine", "validation", "autorité", "décision", "impact", "parcours", "remplacer"]
+            },
+
+            "fraude tricherie": {
+                content: `L'usage frauduleux de l'IA constitue une tricherie selon le cadre :
+
+<strong>Définition de la fraude :</strong>
+Utiliser une IA générative pour réaliser tout ou partie d'un devoir scolaire, <strong>sans autorisation explicite de l'enseignant</strong> et <strong>sans travail personnel d'appropriation</strong>.
+
+<strong>Assimilée à :</strong>
+• L'intervention d'une tierce personne
+• La reproduction non signalée de contenus existants
+
+<strong>Détection :</strong>
+❌ Les logiciels de détection de contenus IA ne sont PAS recommandés
+• Peu fiables et risquent de pénaliser injustement des élèves
+• Peuvent créer des faux positifs
+
+<strong>Prévention :</strong>
+• Adapter les modalités d'évaluation
+• Privilégier le raisonnement et la résolution de problèmes
+• Sensibiliser les élèves aux règles d'usage
+• Expliquer clairement ce qui constitue une fraude
+
+<strong>Recommandations pour les enseignants :</strong>
+• Éviter d'utiliser des logiciels de détection (peu fiables)
+• Se concentrer sur l'évaluation des processus de pensée
+• Développer des évaluations créatives et personnalisées`,
+                keywords: ["fraude", "tricherie", "tricher", "copie", "detection", "logiciel", "faux", "positif", "plagiat", "devoir"]
             },
 
             "hallucinations ia": {
@@ -1075,43 +1102,241 @@ Reformulez votre question ou utilisez les mots-clés ci-dessous !`;
             }, 1500);
         }
 
-        // Fonction pour gérer les mots-clés (simplifiée et corrigée)
+        // Fonction pour gérer les mots-clés (REFAITE COMPLÈTEMENT)
         function handleKeyword(keyword) {
-            // Mapping direct pour les boutons
-            const directMapping = {
-                'Usages autorisés': knowledgeBase['usages autorisés'],
-                'Confidentialité des données': knowledgeBase['confidentialité données'],
-                'IA et devoirs scolaires': knowledgeBase['devoirs scolaires'],
-                'Impact environnemental': knowledgeBase['impact environnemental'],
-                'Principe d\'équité': knowledgeBase['principe équité'],
-                'Formation des enseignants': knowledgeBase['formation enseignants'],
-                'Fraude et tricherie': knowledgeBase['fraude tricherie'],
-                'Qu\'est-ce que l\'IA ?': knowledgeBase['definitions'],
-                'Esprit critique': knowledgeBase['esprit critique'],
-                'Hallucinations IA': knowledgeBase['hallucinations ia']
-            };
-
-            // Afficher la question
+            // Afficher la question de l'utilisateur
             addMessage(keyword, true);
-            
-            // Trouver la réponse directement
-            const response = directMapping[keyword];
-            
-            if (response) {
-                showTyping();
-                setTimeout(() => {
-                    hideTyping();
-                    const responseWithReference = addFrameworkReference(response.content);
-                    addMessage(responseWithReference);
-                }, 800);
-            } else {
-                // Fallback si pas trouvé
-                showTyping();
-                setTimeout(() => {
-                    hideTyping();
-                    addMessage("Désolé, je n'ai pas trouvé d'information sur ce sujet. Essayez de reformuler votre question.");
-                }, 800);
+            showTyping();
+
+            // Réponses directes basées sur le cadre d'usage de l'IA
+            let response = "";
+
+            switch(keyword) {
+                case 'Usages autorisés':
+                    response = `L'usage de l'IA en éducation est autorisé sous réserve du respect du cadre défini. Les usages autorisés incluent :
+
+<strong>Pour les enseignants :</strong>
+• Assistance à la préparation de cours, à l'évaluation et à la correction
+• Conception d'évaluations et adaptation des contenus aux besoins des élèves
+• Aide dans la correction et le retour personnalisé
+
+<strong>Pour les cadres et personnels administratifs :</strong>
+• Rédaction de notes, courriers ou réponses
+• Transcription de réunions, synthèse ou compte-rendu
+• Traduction et automatisation de tâches
+
+<strong>Pour les élèves :</strong>
+• Sensibilisation dès le premier degré (sans manipulation directe d'IA générative)
+• Utilisation pédagogique encadrée à partir de la 4e
+• Usage autonome au lycée dans un cadre défini par l'enseignant
+
+⚠️ Important : L'usage doit respecter les valeurs de l'École de la République, le RGPD et la liberté pédagogique.`;
+                    break;
+
+                case 'Confidentialité des données':
+                    response = `La protection des données est un enjeu majeur dans l'usage de l'IA en éducation :
+
+<strong>Obligations RGPD :</strong>
+• Respect du principe de minimisation des données
+• Accord du responsable de traitement requis
+• Aucune donnée confidentielle ou personnelle dans les outils grand public
+
+<strong>Données autorisées :</strong>
+✅ Textes et programmes officiels
+✅ Ressources éducatives libres
+✅ Données statistiques anonymisées
+✅ Œuvres du domaine public
+
+<strong>Données interdites :</strong>
+❌ Données personnelles des élèves
+❌ Informations confidentielles
+❌ Données protégées par le droit d'auteur
+
+<strong>Règle importante :</strong> Ne jamais demander aux élèves de créer un compte personnel sur des services d'IA grand public.`;
+                    break;
+
+                case 'IA et devoirs scolaires':
+                    response = `L'IA et les devoirs scolaires : un encadrement strict est nécessaire.
+
+<strong>Règle fondamentale :</strong>
+L'utilisation d'une IA générative pour réaliser tout ou partie d'un devoir scolaire, <strong>sans autorisation explicite de l'enseignant</strong> et <strong>sans travail personnel d'appropriation</strong>, constitue une <strong>fraude</strong>.
+
+<strong>Recommandations pour l'évaluation :</strong>
+• Adapter les devoirs et modalités d'évaluation
+• Mettre au premier plan le raisonnement et la résolution de problème
+• Expliquer clairement aux élèves les règles d'usage
+• Éviter les logiciels de détection (peu fiables)
+
+<strong>Par niveau :</strong>
+• <strong>Primaire :</strong> Sensibilisation sans manipulation d'IA
+• <strong>4e et plus :</strong> Usage encadré et accompagné par l'enseignant
+• <strong>Lycée :</strong> Usage autonome dans un cadre défini
+
+Les établissements doivent adapter leur politique d'évaluation pour maintenir l'équité.`;
+                    break;
+
+                case 'Impact environnemental':
+                    response = `L'IA a un impact environnemental significatif qu'il faut prendre en compte :
+
+<strong>Consommation énergétique :</strong>
+• Une réponse d'IA générative est 10x plus énergivore qu'une recherche web
+• Forte consommation en ressources matérielles, eau et énergie
+
+<strong>Principe de frugalité :</strong>
+🌱 <strong>Usage frugal recommandé</strong> : utiliser l'IA seulement si aucune autre solution moins coûteuse écologiquement ne répond au besoin
+
+<strong>Bonnes pratiques :</strong>
+• Questionner la nécessité avant d'utiliser l'IA
+• Privilégier une simple recherche web quand c'est suffisant
+• Sensibiliser dans le cadre de l'éducation au développement durable (EDD)
+• S'inscrire dans la stratégie nationale bas-carbone
+
+<strong>Éducation :</strong>
+Sensibiliser les élèves aux enjeux environnementaux des IA dans le cadre de l'enseignement moral et civique.`;
+                    break;
+
+                case 'Principe d\'équité':
+                    response = `L'équité est un principe fondamental dans l'usage de l'IA en éducation :
+
+<strong>Garanties d'équité :</strong>
+• Garantir l'inclusion, l'accessibilité et l'équité pour tous les élèves
+• Éviter la reproduction des biais et discriminations
+• Assurer une supervision humaine pour les décisions importantes
+
+<strong>Vigilance sur les biais :</strong>
+⚠️ Risques de reproduction voire d'amplification des stéréotypes
+⚠️ Risques d'inexactitudes ou de "hallucinations"
+⚠️ Nécessité d'exercer un esprit critique
+
+<strong>Transparence obligatoire :</strong>
+• Signaler toute utilisation d'IA dans une prise de décision
+• Expliquer clairement comment l'IA a été utilisée
+• Permettre aux personnes concernées d'agir en cas de désaccord
+
+<strong>Au lycée :</strong> Tenir compte des usages d'IA dans le projet d'évaluation pour conserver une parfaite équité dans l'orientation des élèves.`;
+                    break;
+
+                case 'Formation des enseignants':
+                    response = `La formation des enseignants à l'IA est essentielle :
+
+<strong>Objectifs de formation :</strong>
+• Compréhension des enjeux et potentialités de l'IA
+• Maîtrise des risques et impacts (biais, fiabilité, protection des données)
+• Usage éclairé et progressif des outils
+
+<strong>Modalités proposées :</strong>
+• Formations en établissement
+• Programmes EAFC (École académique de formation continue)
+• Ressources Réseau Canopé et CLÉMI
+• Parcours M@gistère et MOOC AI4T
+• Groupes thématiques numériques (GTnum)
+
+<strong>Accompagnement :</strong>
+Avec le directeur d'école, le chef d'établissement et les corps d'inspection, chaque enseignant peut :
+• Sensibiliser aux enjeux éthiques et environnementaux
+• Proposer des séquences pédagogiques intégrant l'IA
+• Développer l'esprit critique des élèves
+
+L'usage doit être <strong>assisté</strong> et non en <strong>substitution</strong> des apprentissages.`;
+                    break;
+
+                case 'Fraude et tricherie':
+                    response = `L'usage frauduleux de l'IA constitue une tricherie selon le cadre :
+
+<strong>Définition de la fraude :</strong>
+Utiliser une IA générative pour réaliser tout ou partie d'un devoir scolaire, <strong>sans autorisation explicite de l'enseignant</strong> et <strong>sans travail personnel d'appropriation</strong>.
+
+<strong>Assimilée à :</strong>
+• L'intervention d'une tierce personne
+• La reproduction non signalée de contenus existants
+
+<strong>Détection :</strong>
+❌ Les logiciels de détection de contenus IA ne sont PAS recommandés
+• Peu fiables et risquent de pénaliser injustement des élèves
+• Peuvent créer des faux positifs
+
+<strong>Prévention :</strong>
+• Adapter les modalités d'évaluation
+• Privilégier le raisonnement et la résolution de problèmes
+• Sensibiliser les élèves aux règles d'usage
+• Expliquer clairement ce qui constitue une fraude`;
+                    break;
+
+                case 'Qu\'est-ce que l\'IA ?':
+                    response = `<strong>Qu'est-ce que l'IA ?</strong>
+
+L'IA est définie comme tout service numérique fondé sur des algorithmes probabilistes, s'appuyant sur le traitement statistique de vastes ensembles de données.
+
+<strong>Types d'IA :</strong>
+• <strong>IA prédictive :</strong> Modèles permettant de classifier des données ou d'anticiper des événements
+• <strong>IA générative :</strong> Modèles capables de produire des contenus (texte, image, son, vidéo)
+
+<strong>Caractéristiques de l'IA générative :</strong>
+• Interrogeable en langage naturel ("prompt" ou "invite")
+• Fonctionne en apprenant sur de très grands volumes d'exemples
+• Basée sur une conception statistique du langage
+• Détermine le mot suivant le plus probable
+• <strong>N'est pas "intelligente"</strong> - pas de conscience ni de compréhension
+
+<strong>Important :</strong> Les "systèmes experts" (algorithmes déterministes) ne sont pas concernés par ce cadre d'usage.`;
+                    break;
+
+                case 'Esprit critique':
+                    response = `L'esprit critique est essentiel face à l'IA :
+
+<strong>Vigilance nécessaire :</strong>
+🔍 <strong>Examiner d'un œil critique</strong> toutes les propositions de l'IA
+🔍 <strong>Vérifier l'exactitude</strong> en comparant avec d'autres sources
+🔍 <strong>Être conscient des biais</strong> possibles pour les corriger
+
+<strong>Quand renoncer à l'IA :</strong>
+❌ Si vous ne pouvez pas évaluer l'exactitude factuelle
+❌ Si vous ne pouvez pas vérifier la pertinence des références
+❌ Si vous ne pouvez pas juger de l'impartialité du point de vue
+
+<strong>Recommandations :</strong>
+• Privilégier les solutions libres (contrôle des corpus et procédures)
+• Croiser systématiquement avec d'autres sources
+• Former les élèves à l'analyse critique des contenus IA
+
+<strong>Limites à rappeler :</strong> L'IA n'est pas "intelligente" - elle fonctionne de manière statistique sans compréhension du contexte.`;
+                    break;
+
+                case 'Hallucinations IA':
+                    response = `Les "hallucinations" de l'IA sont un risque majeur :
+
+<strong>Qu'est-ce qu'une hallucination :</strong>
+• Réponses fausses ou inexactes générées par l'IA
+• Informations inventées qui semblent plausibles
+• Manque de fiabilité dans les contenus produits
+
+<strong>Pourquoi ça arrive :</strong>
+• L'IA fonctionne de manière statistique
+• Elle prédit le mot suivant le plus probable
+• Aucune compréhension réelle du contexte
+• Pas de vérification des faits
+
+<strong>Comment s'en prémunir :</strong>
+• Toujours vérifier les informations avec d'autres sources
+• Exercer un esprit critique constant
+• Former les utilisateurs à ces risques
+• Ne pas faire confiance aveuglément aux réponses
+
+<strong>Dans l'éducation :</strong>
+Il est essentiel d'enseigner aux élèves que l'IA peut produire des erreurs et qu'il faut toujours vérifier les informations obtenues.`;
+                    break;
+
+                default:
+                    response = `Désolé, je n'ai pas trouvé d'information sur "${keyword}".`;
             }
+
+            // Ajouter la référence au cadre officiel
+            const responseWithReference = addFrameworkReference(response);
+
+            setTimeout(() => {
+                hideTyping();
+                addMessage(responseWithReference);
+            }, 800);
         }
 
         // Fonction pour gérer la touche Entrée
