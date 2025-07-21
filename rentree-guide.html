@@ -11,6 +11,40 @@
             box-sizing: border-box;
         }
 
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px 20px;
+            color: #94a3b8;
+            font-size: 0.9em;
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .footer-line {
+            margin: 8px 0;
+        }
+
+        .linkedin-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #0077b5;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .linkedin-icon:hover {
+            background: #005885;
+            transform: scale(1.1);
+        }
+
         body {
             font-family: 'Inter', 'Segoe UI', sans-serif;
             line-height: 1.6;
@@ -119,8 +153,26 @@
             box-shadow: 0 4px 20px rgba(71, 85, 105, 0.3);
             transition: all 0.3s ease;
         }
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #475569, #64748b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(71, 85, 105, 0.3);
+            transition: all 0.3s ease;
+        }
 
         .menu-card:hover .menu-card-icon {
+            transform: rotate(10deg) scale(1.1);
+            box-shadow: 0 6px 25px rgba(71, 85, 105, 0.4);
+        }
+            transform: rotate(10deg) scale(1.1);
+            box-shadow: 0 6px 25px rgba(71, 85, 105, 0.4);
+        }
             transform: rotate(10deg) scale(1.1);
             box-shadow: 0 6px 25px rgba(71, 85, 105, 0.4);
         }
@@ -447,7 +499,7 @@
     <div class="container">
         <!-- En-tête -->
         <div class="header">
-            <h1>📚 Guide de la Rentrée Numérique</h1>
+            <h1>Guide de la Rentrée Numérique</h1>
             <p>Votre accompagnement pour une rentrée numérique réussie</p>
         </div>
 
@@ -484,7 +536,7 @@
             </div>
 
             <div class="menu-card" onclick="showSection('ia')">
-                <div class="menu-card-icon">🤖</div>
+                <div class="menu-card-icon text-icon">IA</div>
                 <h3>Intelligence Artificielle</h3>
                 <p>Réflexions et ressources sur l'IA dans l'éducation, usages et enjeux</p>
             </div>
@@ -496,7 +548,7 @@
             </div>
 
             <div class="menu-card" onclick="showSection('tedi')">
-                <div class="menu-card-icon">📡</div>
+                <div class="menu-card-icon">🤖</div>
                 <h3>TED-i Robot</h3>
                 <p>Robot de téléprésence pour maintenir le lien avec les élèves empêchés</p>
             </div>
@@ -947,6 +999,13 @@
             </div>
 
             <a href="https://dane.site.ac-lille.fr/les-prestations/les-equipements-en-pret/" class="cta-button">Découvrir tous les équipements</a>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-line">Délégation de Région Académique au Numérique Éducatif</div>
+            <div class="footer-line">Guide partiellement créé grâce à l'IA et vérifié par un agent</div>
+            <a href="https://www.linkedin.com/in/amélie-silvert-2359b576/" class="linkedin-icon" target="_blank" rel="noopener">in</a>
         </div>
     </div>
 
