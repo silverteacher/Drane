@@ -123,6 +123,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: transform 0.2s ease;
         }
 
         .hours-number {
@@ -148,22 +149,36 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
         .settings-btn:hover {
             background: rgba(255, 255, 255, 0.25);
             color: white;
-            transform: rotate(90deg);
         }
 
         .settings-btn i {
             font-size: 16px;
             display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .settings-btn:hover i {
+            transform: rotate(90deg);
         }
 
         .settings-btn i::before {
             content: "⚙";
             font-style: normal;
+        }
+
+        /* Tooltip spécifique pour le bouton settings */
+        .settings-btn.tooltip::before {
+            transform: none !important;
+        }
+
+        .settings-btn.tooltip::after {
+            transform: translateX(-50%) !important;
         }
 
         /* Navigation */
@@ -290,7 +305,7 @@
         }
 
         .btn-magistere:hover {
-            background: linear-gradient(135deg, #ea580c, #dc2626);
+            background: linear-gradient(135deg, #ea580c, #d97706);
         }
 
         .btn-async {
@@ -830,7 +845,7 @@
                 <div class="logo">
                     <h1>Décompte des heures de formations</h1>
                 </div>
-                <div class="hours-counter tooltip" data-tooltip="Total des heures de formation et séances asynchrones">
+                <div class="hours-counter tooltip" data-tooltip="Total des heures de formation et séances asynchrones • Sauvegarde automatique">
                     <span class="hours-number" id="totalHours">0</span>
                     <span>heures</span>
                 </div>
@@ -1089,8 +1104,13 @@
     <!-- Settings Panel -->
     <div id="settingsPanel" class="settings-panel">
         <div class="settings-header">
-            <h3>Paramètres</h3>
+            <h3>Paramètres & Export</h3>
             <button class="close-btn" onclick="toggleSettings()">&times;</button>
+        </div>
+        
+        <div style="background: var(--success-bg); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; color: var(--text-primary);">
+            <i class="fas fa-check-circle" style="color: #10b981; margin-right: 8px;"></i>
+            Vos données sont sauvegardées automatiquement
         </div>
         
         <div class="form-group">
@@ -1174,6 +1194,15 @@
                 localStorage.setItem('formateurs_magisteres', JSON.stringify(magisteres));
                 localStorage.setItem('formateurs_async', JSON.stringify(asyncSessions));
                 localStorage.setItem('formateurs_notes', JSON.stringify(notes));
+                
+                // Animation subtile pour indiquer la sauvegarde
+                const counter = document.querySelector('.hours-counter');
+                if (counter) {
+                    counter.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        counter.style.transform = 'scale(1)';
+                    }, 200);
+                }
             } catch (error) {
                 console.log('Erreur lors de la sauvegarde des données:', error);
             }
@@ -1820,6 +1849,7 @@
                 asyncSessions = [];
                 notes = [];
                 
+                saveDataToStorage();
                 loadData();
                 showToast('Toutes les données ont été effacées');
             }
