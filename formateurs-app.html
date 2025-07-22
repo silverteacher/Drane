@@ -1577,7 +1577,7 @@
                 });
             }
             
-            content += `\nRapport généré par Formateurs Claude.ai le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}`;
+            content += `\nRapport généré le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}`;
             
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
@@ -1745,7 +1745,7 @@
             for (let i = 1; i <= pageCount; i++) {
                 doc.setPage(i);
                 doc.setFontSize(8);
-                doc.text(`Page ${i}/${pageCount} - Généré par Formateurs Claude.ai`, 20, 290);
+                doc.text(`Page ${i}/${pageCount} - Généré par décompte formations`, 20, 290);
             }
             
             doc.save(`rapport-formations-${new Date().toISOString().split('T')[0]}.pdf`);
