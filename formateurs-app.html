@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Décompte formations</title>
+    <title>Formateurs Claude.ai</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -19,7 +19,20 @@
             --border-color: #e5e7eb;
             --border-radius: 12px;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            
+            /* Système typographique harmonisé */
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
             --font-size-base: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+            --font-size-2xl: 24px;
+            --font-size-3xl: 28px;
+            
+            /* Line heights */
+            --line-height-tight: 1.25;
+            --line-height-normal: 1.5;
+            --line-height-relaxed: 1.75;
         }
 
         * {
@@ -33,9 +46,10 @@
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             color: var(--text-primary);
             font-size: var(--font-size-base);
-            line-height: 1.6;
+            line-height: var(--line-height-normal);
             min-height: 100vh;
             padding: 20px;
+            font-weight: 400;
         }
 
         .container {
@@ -95,13 +109,15 @@
         }
 
         .logo h1 {
-            font-size: 24px;
+            font-size: var(--font-size-3xl);
             font-weight: 600;
+            line-height: var(--line-height-tight);
+            margin: 0;
         }
 
         .hours-counter {
             background: rgba(255, 255, 255, 0.2);
-            padding: 12px 20px;
+            padding: 14px 24px;
             border-radius: 50px;
             backdrop-filter: blur(10px);
             display: flex;
@@ -110,8 +126,14 @@
         }
 
         .hours-number {
-            font-size: 28px;
+            font-size: var(--font-size-3xl);
             font-weight: 700;
+            line-height: var(--line-height-tight);
+        }
+
+        .hours-counter span:last-child {
+            font-size: var(--font-size-base);
+            font-weight: 500;
         }
 
         .settings-btn {
@@ -155,14 +177,16 @@
         .nav-btn {
             background: var(--secondary-bg);
             border: none;
-            padding: 12px 20px;
+            padding: 14px 20px;
             border-radius: var(--border-radius);
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-normal);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             color: var(--text-primary);
         }
 
@@ -299,18 +323,21 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 16px;
+            font-size: var(--font-size-sm);
         }
 
         .table th,
         .table td {
             text-align: left;
-            padding: 12px 16px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--border-color);
+            line-height: var(--line-height-normal);
         }
 
         .table th {
             background: var(--secondary-bg);
             font-weight: 600;
+            font-size: var(--font-size-sm);
             color: var(--text-primary);
         }
 
@@ -510,74 +537,78 @@
         /* Icons colors for sections - Round style without icons */
         .icon-formations { 
             background: #3b82f6; 
-            width: 32px; 
-            height: 32px; 
+            width: 36px; 
+            height: 36px; 
             border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
             justify-content: center;
             position: relative;
+            flex-shrink: 0;
         }
         
         .icon-formations::before {
             content: 'F';
             color: white;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
         }
         
         .icon-magistere { 
             background: #f59e0b; 
-            width: 32px; 
-            height: 32px; 
+            width: 36px; 
+            height: 36px; 
             border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
             justify-content: center;
             position: relative;
+            flex-shrink: 0;
         }
         
         .icon-magistere::before {
             content: 'M';
             color: white;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
         }
         
         .icon-async { 
             background: #10b981; 
-            width: 32px; 
-            height: 32px; 
+            width: 36px; 
+            height: 36px; 
             border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
             justify-content: center;
             position: relative;
+            flex-shrink: 0;
         }
         
         .icon-async::before {
             content: 'S';
             color: white;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
         }
         
         .icon-notes { 
             background: #8b5cf6; 
-            width: 32px; 
-            height: 32px; 
+            width: 36px; 
+            height: 36px; 
             border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
             justify-content: center;
             position: relative;
+            flex-shrink: 0;
         }
         
         .icon-notes::before {
             content: 'N';
             color: white;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         /* Navigation icons - smaller round style */
@@ -585,14 +616,14 @@
         .nav-btn .icon-magistere,
         .nav-btn .icon-async,
         .nav-btn .icon-notes { 
-            width: 24px; 
-            height: 24px;
+            width: 26px; 
+            height: 26px;
         }
 
-        .nav-btn .icon-formations::before { font-size: 10px; }
-        .nav-btn .icon-magistere::before { font-size: 10px; }
-        .nav-btn .icon-async::before { font-size: 10px; }
-        .nav-btn .icon-notes::before { font-size: 10px; }
+        .nav-btn .icon-formations::before { font-size: 11px; }
+        .nav-btn .icon-magistere::before { font-size: 11px; }
+        .nav-btn .icon-async::before { font-size: 11px; }
+        .nav-btn .icon-notes::before { font-size: 11px; }
 
         .nav-btn.active .icon-formations,
         .nav-btn.active .icon-magistere,
@@ -797,13 +828,13 @@
         <div class="header">
             <div class="header-content">
                 <div class="logo">
-                    <h1>Décompte heures de formations</h1>
+                    <h1>Décompte des heures de formations</h1>
                 </div>
                 <div class="hours-counter tooltip" data-tooltip="Total des heures de formation et séances asynchrones">
                     <span class="hours-number" id="totalHours">0</span>
                     <span>heures</span>
                 </div>
-                <button class="settings-btn" onclick="toggleSettings()" title="Paramètres">
+                <button class="settings-btn tooltip" data-tooltip="Export" onclick="toggleSettings()">
                     <i class="fas fa-cog"></i>
                 </button>
             </div>
@@ -1577,7 +1608,7 @@
                 });
             }
             
-            content += `\nRapport généré le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}`;
+            content += `\nRapport généré par Formateurs Claude.ai le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}`;
             
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
@@ -1745,7 +1776,7 @@
             for (let i = 1; i <= pageCount; i++) {
                 doc.setPage(i);
                 doc.setFontSize(8);
-                doc.text(`Page ${i}/${pageCount} - Généré par décompte formations`, 20, 290);
+                doc.text(`Page ${i}/${pageCount} - Généré par Formateurs Claude.ai`, 20, 290);
             }
             
             doc.save(`rapport-formations-${new Date().toISOString().split('T')[0]}.pdf`);
