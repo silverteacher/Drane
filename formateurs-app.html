@@ -204,27 +204,6 @@
             background: #e5e7eb;
         }
 
-        .fab {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 8px 25px -5px rgba(53, 207, 195, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 35px -5px rgba(53, 207, 195, 0.6);
-        }
-
         /* Tables */
         .table {
             width: 100%;
@@ -561,11 +540,6 @@
             .table-responsive {
                 overflow-x: auto;
             }
-
-            .fab {
-                bottom: 16px;
-                right: 16px;
-            }
         }
 
         .section {
@@ -816,11 +790,6 @@
         </div>
     </div>
 
-    <!-- FAB -->
-    <button class="fab" onclick="openQuickAdd()">
-        <i class="fas fa-plus"></i>
-    </button>
-
     <!-- Modals -->
     <div id="formationModal" class="modal">
         <div class="modal-content">
@@ -1021,11 +990,6 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
-        }
-
-        // Quick add function
-        function openQuickAdd() {
-            openModal('formationModal');
         }
 
         // Formation functions
