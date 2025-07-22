@@ -198,11 +198,11 @@
 
         /* Dégradés subtils pour chaque section */
         .nav-btn:nth-child(1).active {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
         }
 
         .nav-btn:nth-child(2).active {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
         }
 
         .nav-btn:nth-child(3).active {
@@ -278,19 +278,19 @@
 
         /* Boutons coordonnés aux sections */
         .btn-formations {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
         }
 
         .btn-formations:hover {
-            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
         }
 
         .btn-magistere {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
         }
 
         .btn-magistere:hover {
-            background: linear-gradient(135deg, #d97706, #b45309);
+            background: linear-gradient(135deg, #ea580c, #dc2626);
         }
 
         .btn-async {
@@ -1143,15 +1143,45 @@
     <div id="toast" class="toast"></div>
 
     <script>
-        // Data storage
+        // Data storage with persistence
         let formations = [];
         let magisteres = [];
         let asyncSessions = [];
         let notes = [];
         let selectedNoteColor = '#fef3c7';
 
+        // Load data from localStorage
+        function loadDataFromStorage() {
+            try {
+                const savedFormations = localStorage.getItem('formateurs_formations');
+                const savedMagisteres = localStorage.getItem('formateurs_magisteres');
+                const savedAsyncSessions = localStorage.getItem('formateurs_async');
+                const savedNotes = localStorage.getItem('formateurs_notes');
+                
+                if (savedFormations) formations = JSON.parse(savedFormations);
+                if (savedMagisteres) magisteres = JSON.parse(savedMagisteres);
+                if (savedAsyncSessions) asyncSessions = JSON.parse(savedAsyncSessions);
+                if (savedNotes) notes = JSON.parse(savedNotes);
+            } catch (error) {
+                console.log('Erreur lors du chargement des données:', error);
+            }
+        }
+
+        // Save data to localStorage
+        function saveDataToStorage() {
+            try {
+                localStorage.setItem('formateurs_formations', JSON.stringify(formations));
+                localStorage.setItem('formateurs_magisteres', JSON.stringify(magisteres));
+                localStorage.setItem('formateurs_async', JSON.stringify(asyncSessions));
+                localStorage.setItem('formateurs_notes', JSON.stringify(notes));
+            } catch (error) {
+                console.log('Erreur lors de la sauvegarde des données:', error);
+            }
+        }
+
         // Load data from memory variables
         function loadData() {
+            loadDataFromStorage();
             updateTotalHours();
             renderFormations();
             renderMagisteres();
