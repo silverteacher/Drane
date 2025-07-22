@@ -77,12 +77,11 @@
             padding: 20px;
         }
 
-        /* Header */
         .header {
             background: linear-gradient(135deg, var(--accent-color), var(--secondary-accent));
             color: white;
-            padding: 24px 0;
-            margin: -20px -20px 32px -20px;
+            padding: 20px 0;
+            margin: -20px -20px 24px -20px;
             border-radius: 20px 20px 0 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
@@ -109,7 +108,7 @@
         }
 
         .logo h1 {
-            font-size: var(--font-size-3xl);
+            font-size: var(--font-size-2xl);
             font-weight: 600;
             line-height: var(--line-height-tight);
             margin: 0;
@@ -117,7 +116,7 @@
 
         .hours-counter {
             background: rgba(255, 255, 255, 0.2);
-            padding: 14px 24px;
+            padding: 12px 20px;
             border-radius: 50px;
             backdrop-filter: blur(10px);
             display: flex;
@@ -127,13 +126,13 @@
         }
 
         .hours-number {
-            font-size: var(--font-size-3xl);
+            font-size: var(--font-size-2xl);
             font-weight: 700;
             line-height: var(--line-height-tight);
         }
 
         .hours-counter span:last-child {
-            font-size: var(--font-size-base);
+            font-size: var(--font-size-sm);
             font-weight: 500;
         }
 
@@ -141,7 +140,7 @@
             background: rgba(255, 255, 255, 0.15);
             border: none;
             color: rgba(255, 255, 255, 0.9);
-            padding: 12px;
+            padding: 10px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -150,6 +149,8 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            width: 40px;
+            height: 40px;
         }
 
         .settings-btn:hover {
@@ -158,7 +159,7 @@
         }
 
         .settings-btn i {
-            font-size: 16px;
+            font-size: 14px;
             display: block;
             transition: transform 0.3s ease;
         }
@@ -172,36 +173,61 @@
             font-style: normal;
         }
 
-        /* Tooltip spécifique pour le bouton settings */
-        .settings-btn.tooltip::before {
-            transform: none !important;
+        /* Infobulle pour settings - approche simplifiée */
+        .settings-tooltip {
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
         }
 
-        .settings-btn.tooltip::after {
-            transform: translateX(-50%) !important;
+        .settings-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .settings-btn:hover .settings-tooltip {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Navigation */
         .nav {
             display: flex;
-            gap: 8px;
-            margin-bottom: 32px;
+            gap: 6px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
         }
 
         .nav-btn {
             background: var(--secondary-bg);
             border: none;
-            padding: 14px 20px;
+            padding: 12px 18px;
             border-radius: var(--border-radius);
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
-            font-size: var(--font-size-base);
+            font-size: var(--font-size-sm);
             line-height: var(--line-height-normal);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             color: var(--text-primary);
         }
 
@@ -552,8 +578,8 @@
         /* Icons colors for sections - Round style without icons */
         .icon-formations { 
             background: #3b82f6; 
-            width: 36px; 
-            height: 36px; 
+            width: 32px; 
+            height: 32px; 
             border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
@@ -566,13 +592,13 @@
             content: 'F';
             color: white;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .icon-magistere { 
             background: #f59e0b; 
-            width: 36px; 
-            height: 36px; 
+            width: 32px; 
+            height: 32px; 
             border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
@@ -585,13 +611,13 @@
             content: 'M';
             color: white;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .icon-async { 
             background: #10b981; 
-            width: 36px; 
-            height: 36px; 
+            width: 32px; 
+            height: 32px; 
             border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
@@ -604,13 +630,13 @@
             content: 'S';
             color: white;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .icon-notes { 
             background: #8b5cf6; 
-            width: 36px; 
-            height: 36px; 
+            width: 32px; 
+            height: 32px; 
             border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
@@ -623,7 +649,7 @@
             content: 'N';
             color: white;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         /* Navigation icons - smaller round style */
@@ -631,14 +657,14 @@
         .nav-btn .icon-magistere,
         .nav-btn .icon-async,
         .nav-btn .icon-notes { 
-            width: 26px; 
-            height: 26px;
+            width: 24px; 
+            height: 24px;
         }
 
-        .nav-btn .icon-formations::before { font-size: 11px; }
-        .nav-btn .icon-magistere::before { font-size: 11px; }
-        .nav-btn .icon-async::before { font-size: 11px; }
-        .nav-btn .icon-notes::before { font-size: 11px; }
+        .nav-btn .icon-formations::before { font-size: 10px; }
+        .nav-btn .icon-magistere::before { font-size: 10px; }
+        .nav-btn .icon-async::before { font-size: 10px; }
+        .nav-btn .icon-notes::before { font-size: 10px; }
 
         .nav-btn.active .icon-formations,
         .nav-btn.active .icon-magistere,
@@ -845,12 +871,13 @@
                 <div class="logo">
                     <h1>Décompte des heures de formations</h1>
                 </div>
-                <div class="hours-counter tooltip" data-tooltip="Total des heures de formation et séances asynchrones • Sauvegarde automatique">
+                <div class="hours-counter tooltip" data-tooltip="Total heures • Sauvegarde auto">
                     <span class="hours-number" id="totalHours">0</span>
                     <span>heures</span>
                 </div>
-                <button class="settings-btn tooltip" data-tooltip="Export" onclick="toggleSettings()">
+                <button class="settings-btn" onclick="toggleSettings()">
                     <i class="fas fa-cog"></i>
+                    <div class="settings-tooltip">Export</div>
                 </button>
             </div>
         </div>
