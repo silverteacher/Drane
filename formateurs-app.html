@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formateurs Claude.ai</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #ffffff;
+            --accent-color: #35cfc3;
+            --secondary-accent: #3761e4;
+            --secondary-bg: #f8fafb;
+            --text-primary: #23395d;
+            --text-secondary: #666;
+            --success-bg: #e9f7ef;
+            --warning-bg: #fbeee6;
+            --border-color: #e5e7eb;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --font-size-base: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-accent));
+            color: white;
+            padding: 24px 0;
+            margin-bottom: 32px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 32px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .hours-counter {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hours-number {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .settings-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: var(--secondary-bg);
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .nav-btn:hover:not(.active) {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #2bb8ad;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px -5px rgba(53, 207, 195, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px -5px rgba(53, 207, 195, 0.6);
+        }
+
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .table th,
+        .table td {
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th {
+            background: var(--secondary-bg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .table tr:hover {
+            background: #f9fafb;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-base);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(53, 207, 195, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: var(--success-bg);
+            color: var(--text-primary);
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* List items */
+        .list-item {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .list-item:hover {
+            border-color: var(--accent-color);
+            transform: translateX(4px);
+        }
+
+        .list-item-content {
+            flex: 1;
+        }
+
+        .list-item-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .list-item-meta {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .list-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 350px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .settings-panel.active {
+            display: block;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-option.active {
+            border-color: var(--text-primary);
+            transform: scale(1.1);
+        }
+
+        /* Icons colors for sections - Round style */
+        .icon-formations { 
+            color: white; 
+            background: #3b82f6; 
+            padding: 8px; 
+            border-radius: 50%; 
+            width: 32px; 
+            height: 32px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        
+        .icon-magistere { 
+            color: white; 
+            background: #f59e0b; 
+            padding: 8px; 
+            border-radius: 50%; 
+            width: 32px; 
+            height: 32px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        
+        .icon-async { 
+            color: white; 
+            background: #10b981; 
+            padding: 8px; 
+            border-radius: 50%; 
+            width: 32px; 
+            height: 32px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        
+        .icon-notes { 
+            color: white; 
+            background: #8b5cf6; 
+            padding: 8px; 
+            border-radius: 50%; 
+            width: 32px; 
+            height: 32px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        
+        .icon-settings { 
+            color: white; 
+            background: #6b7280; 
+            padding: 8px; 
+            border-radius: 50%; 
+            width: 32px; 
+            height: 32px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        
+        .icon-hours { 
+            color: #ffffff; 
+        }
+
+        /* Navigation icons - smaller round style */
+        .nav-btn .icon-formations,
+        .nav-btn .icon-magistere,
+        .nav-btn .icon-async,
+        .nav-btn .icon-notes { 
+            width: 24px; 
+            height: 24px; 
+            padding: 6px;
+            font-size: 12px;
+        }
+
+        .nav-btn.active .icon-formations,
+        .nav-btn.active .icon-magistere,
+        .nav-btn.active .icon-async,
+        .nav-btn.active .icon-notes { 
+            background: rgba(255, 255, 255, 0.2);
+            color: white; 
+        }
+
+        /* Empty state icons - larger round style */
+        .empty-state .icon-formations,
+        .empty-state .icon-magistere,
+        .empty-state .icon-async,
+        .empty-state .icon-notes { 
+            width: 64px; 
+            height: 64px; 
+            padding: 16px;
+            font-size: 24px;
+            margin: 0 auto 16px auto;
+            opacity: 0.7;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .header-content {
+                text-align: center;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav {
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+
+            .nav-btn {
+                white-space: nowrap;
+            }
+
+            .settings-panel {
+                width: 100%;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .fab {
+                bottom: 16px;
+                right: 16px;
+            }
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-state i {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        /* Notes styles */
+        .note-item {
+            background: #fef3c7;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .note-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .note-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .note-content {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+        }
+
+        .note-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(0,0,0,0.1);
+            padding-top: 8px;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .note-color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .note-color-option.active {
+            border-color: var(--text-primary);
+            transform: scale(1.1);
+        }
+
+        .note-color-option:hover {
+            transform: scale(1.05);
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .notes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-graduation-cap icon-hours"></i>
+                <h1>Formateurs Claude.ai</h1>
+            </div>
+            <div class="hours-counter">
+                <i class="fas fa-clock icon-hours"></i>
+                <span class="hours-number" id="totalHours">0</span>
+                <span>heures</span>
+            </div>
+            <button class="settings-btn" onclick="toggleSettings()">
+                <i class="fas fa-cog icon-hours"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Navigation -->
+        <div class="nav">
+            <button class="nav-btn active" onclick="switchSection('formations')">
+                <i class="fas fa-book icon-formations"></i>
+                Formations
+            </button>
+            <button class="nav-btn" onclick="switchSection('magistere')">
+                <i class="fas fa-award icon-magistere"></i>
+                Magistère
+            </button>
+            <button class="nav-btn" onclick="switchSection('async')">
+                <i class="fas fa-play-circle icon-async"></i>
+                Séances Async
+            </button>
+            <button class="nav-btn" onclick="switchSection('notes')">
+                <i class="fas fa-sticky-note icon-notes"></i>
+                Notes & Mémos
+            </button>
+        </div>
+
+        <!-- Formations Section -->
+        <div id="formations" class="section active">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-book icon-formations"></i>
+                        Suivi des Formations
+                    </h2>
+                    <button class="btn" onclick="openModal('formationModal')">
+                        <i class="fas fa-plus"></i>
+                        Ajouter une formation
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nom de la formation</th>
+                                    <th>Date réalisée</th>
+                                    <th>Nombre d'heures</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="formationsTable">
+                                <tr>
+                                    <td colspan="4" class="empty-state">
+                                        <i class="fas fa-book icon-formations"></i>
+                                        <p>Aucune formation enregistrée</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Magistère Section -->
+        <div id="magistere" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-award icon-magistere"></i>
+                        Magistère Réalisés
+                    </h2>
+                    <button class="btn" onclick="openModal('magistereModal')">
+                        <i class="fas fa-plus"></i>
+                        Ajouter un Magistère
+                    </button>
+                </div>
+                <div class="card-content" id="magistereList">
+                    <div class="empty-state">
+                        <i class="fas fa-award icon-magistere"></i>
+                        <p>Aucun Magistère enregistré</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Séances Async Section -->
+        <div id="async" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-play-circle icon-async"></i>
+                        Séances Asynchrones
+                    </h2>
+                    <button class="btn" onclick="openModal('asyncModal')">
+                        <i class="fas fa-plus"></i>
+                        Ajouter une séance
+                    </button>
+                </div>
+                <div class="card-content" id="asyncList">
+                    <div class="empty-state">
+                        <i class="fas fa-play-circle icon-async"></i>
+                        <p>Aucune séance asynchrone enregistrée</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Section -->
+        <div id="notes" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-sticky-note icon-notes"></i>
+                        Notes & Mémos
+                    </h2>
+                    <button class="btn" onclick="openModal('noteModal')">
+                        <i class="fas fa-plus"></i>
+                        Ajouter une note
+                    </button>
+                </div>
+                <div class="card-content" id="notesList">
+                    <div class="empty-state">
+                        <i class="fas fa-sticky-note icon-notes"></i>
+                        <p>Aucune note enregistrée</p>
+                        <button class="btn" onclick="openModal('noteModal')" style="margin-top: 16px;">
+                            <i class="fas fa-plus"></i>
+                            Créer votre première note
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAB -->
+    <button class="fab" onclick="openQuickAdd()">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Modals -->
+    <div id="formationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter une formation</h3>
+                <button class="close-btn" onclick="closeModal('formationModal')">&times;</button>
+            </div>
+            <form onsubmit="addFormation(event)">
+                <div class="form-group">
+                    <label class="form-label">Nom de la formation</label>
+                    <input type="text" class="form-input" id="formationName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date réalisée</label>
+                    <input type="date" class="form-input" id="formationDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nombre d'heures</label>
+                    <input type="number" class="form-input" id="formationHours" min="0" step="0.5" required>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-plus"></i>
+                    Ajouter
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="magistereModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter un Magistère</h3>
+                <button class="close-btn" onclick="closeModal('magistereModal')">&times;</button>
+            </div>
+            <form onsubmit="addMagistere(event)">
+                <div class="form-group">
+                    <label class="form-label">Intitulé du Magistère</label>
+                    <input type="text" class="form-input" id="magistereTitle" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nom de la personne</label>
+                    <input type="text" class="form-input" id="magisterePerson" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-input" id="magistereDate" required>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-plus"></i>
+                    Ajouter
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="asyncModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter une séance asynchrone</h3>
+                <button class="close-btn" onclick="closeModal('asyncModal')">&times;</button>
+            </div>
+            <form onsubmit="addAsync(event)">
+                <div class="form-group">
+                    <label class="form-label">Intitulé de la séance</label>
+                    <input type="text" class="form-input" id="asyncTitle" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nombre d'heures</label>
+                    <input type="number" class="form-input" id="asyncHours" min="0" step="0.5" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-input" id="asyncDate" required>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-plus"></i>
+                    Ajouter
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="noteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter une note</h3>
+                <button class="close-btn" onclick="closeModal('noteModal')">&times;</button>
+            </div>
+            <form onsubmit="addNote(event)">
+                <div class="form-group">
+                    <label class="form-label">Titre de la note</label>
+                    <input type="text" class="form-input" id="noteTitle" required placeholder="Ex: Idées pour la prochaine formation">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Contenu</label>
+                    <textarea class="form-input form-textarea" id="noteContent" required placeholder="Saisissez le contenu de votre note..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Couleur</label>
+                    <div style="display: flex; gap: 8px; margin-top: 8px;">
+                        <div class="note-color-option active" style="background: #fef3c7" onclick="selectNoteColor('#fef3c7', this)"></div>
+                        <div class="note-color-option" style="background: #dbeafe" onclick="selectNoteColor('#dbeafe', this)"></div>
+                        <div class="note-color-option" style="background: #dcfce7" onclick="selectNoteColor('#dcfce7', this)"></div>
+                        <div class="note-color-option" style="background: #fecaca" onclick="selectNoteColor('#fecaca', this)"></div>
+                        <div class="note-color-option" style="background: #e9d5ff" onclick="selectNoteColor('#e9d5ff', this)"></div>
+                    </div>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-plus"></i>
+                    Ajouter la note
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settingsPanel" class="settings-panel">
+        <div class="settings-header">
+            <h3>Paramètres</h3>
+            <button class="close-btn" onclick="toggleSettings()">&times;</button>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Couleur d'accent</label>
+            <div class="color-picker">
+                <div class="color-option active" style="background: #35cfc3" onclick="changeAccentColor('#35cfc3')"></div>
+                <div class="color-option" style="background: #3761e4" onclick="changeAccentColor('#3761e4')"></div>
+                <div class="color-option" style="background: #f59e0b" onclick="changeAccentColor('#f59e0b')"></div>
+                <div class="color-option" style="background: #ef4444" onclick="changeAccentColor('#ef4444')"></div>
+                <div class="color-option" style="background: #8b5cf6" onclick="changeAccentColor('#8b5cf6')"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Taille de la police</label>
+            <input type="range" class="form-input" min="14" max="20" value="16" oninput="changeFontSize(this.value)">
+            <small>Taille actuelle: <span id="fontSizeValue">16px</span></small>
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-secondary" onclick="exportData()">
+                <i class="fas fa-download"></i>
+                Exporter les données
+            </button>
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-secondary" onclick="clearAllData()">
+                <i class="fas fa-trash"></i>
+                Effacer toutes les données
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Data storage
+        let formations = [];
+        let magisteres = [];
+        let asyncSessions = [];
+        let notes = [];
+        let selectedNoteColor = '#fef3c7';
+
+        // Load data from memory variables
+        function loadData() {
+            updateTotalHours();
+            renderFormations();
+            renderMagisteres();
+            renderAsyncSessions();
+            renderNotes();
+        }
+
+        // Section switching
+        function switchSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Add active class to clicked nav button
+            event.target.classList.add('active');
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Quick add function
+        function openQuickAdd() {
+            openModal('formationModal');
+        }
+
+        // Formation functions
+        function addFormation(event) {
+            event.preventDefault();
+            
+            const formation = {
+                id: Date.now(),
+                name: document.getElementById('formationName').value,
+                date: document.getElementById('formationDate').value,
+                hours: parseFloat(document.getElementById('formationHours').value)
+            };
+            
+            formations.push(formation);
+            renderFormations();
+            updateTotalHours();
+            closeModal('formationModal');
+            showToast('Formation ajoutée avec succès !');
+            
+            // Reset form
+            event.target.reset();
+        }
+
+        function renderFormations() {
+            const tbody = document.getElementById('formationsTable');
+            
+            if (formations.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="empty-state">
+                            <i class="fas fa-book"></i>
+                            <p>Aucune formation enregistrée</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = formations.map(formation => `
+                <tr>
+                    <td>${formation.name}</td>
+                    <td>${new Date(formation.date).toLocaleDateString('fr-FR')}</td>
+                    <td>${formation.hours}h</td>
+                    <td>
+                        <button class="btn btn-small btn-secondary" onclick="deleteFormation(${formation.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteFormation(id) {
+            formations = formations.filter(f => f.id !== id);
+            renderFormations();
+            updateTotalHours();
+            showToast('Formation supprimée');
+        }
+
+        // Magistère functions
+        function addMagistere(event) {
+            event.preventDefault();
+            
+            const magistere = {
+                id: Date.now(),
+                title: document.getElementById('magistereTitle').value,
+                person: document.getElementById('magisterePerson').value,
+                date: document.getElementById('magistereDate').value
+            };
+            
+            magisteres.push(magistere);
+            renderMagisteres();
+            closeModal('magistereModal');
+            showToast('Magistère ajouté avec succès !');
+            
+            event.target.reset();
+        }
+
+        function renderMagisteres() {
+            const container = document.getElementById('magistereList');
+            
+            if (magisteres.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-award icon-magistere"></i>
+                        <p>Aucun Magistère enregistré</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = magisteres.map(magistere => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-title">${magistere.title}</div>
+                        <div class="list-item-meta">Par ${magistere.person} - ${new Date(magistere.date).toLocaleDateString('fr-FR')}</div>
+                    </div>
+                    <div class="list-item-actions">
+                        <button class="btn btn-small btn-secondary" onclick="deleteMagistere(${magistere.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteMagistere(id) {
+            magisteres = magisteres.filter(m => m.id !== id);
+            renderMagisteres();
+            showToast('Magistère supprimé');
+        }
+
+        // Async sessions functions
+        function addAsync(event) {
+            event.preventDefault();
+            
+            const async = {
+                id: Date.now(),
+                title: document.getElementById('asyncTitle').value,
+                hours: parseFloat(document.getElementById('asyncHours').value),
+                date: document.getElementById('asyncDate').value
+            };
+            
+            asyncSessions.push(async);
+            renderAsyncSessions();
+            updateTotalHours();
+            closeModal('asyncModal');
+            showToast('Séance asynchrone ajoutée avec succès !');
+            
+            event.target.reset();
+        }
+
+        function renderAsyncSessions() {
+            const container = document.getElementById('asyncList');
+            
+            if (asyncSessions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-play-circle icon-async"></i>
+                        <p>Aucune séance asynchrone enregistrée</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = asyncSessions.map(session => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-title">${session.title}</div>
+                        <div class="list-item-meta">${session.hours}h - ${new Date(session.date).toLocaleDateString('fr-FR')}</div>
+                    </div>
+                    <div class="list-item-actions">
+                        <button class="btn btn-small btn-secondary" onclick="deleteAsync(${session.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteAsync(id) {
+            asyncSessions = asyncSessions.filter(a => a.id !== id);
+            renderAsyncSessions();
+            updateTotalHours();
+            showToast('Séance supprimée');
+        }
+
+        // Notes functions - Système de notes multiples
+        function addNote(event) {
+            event.preventDefault();
+            
+            const note = {
+                id: Date.now(),
+                title: document.getElementById('noteTitle').value,
+                content: document.getElementById('noteContent').value,
+                color: selectedNoteColor,
+                date: new Date().toLocaleDateString('fr-FR'),
+                time: new Date().toLocaleTimeString('fr-FR')
+            };
+            
+            notes.push(note);
+            renderNotes();
+            closeModal('noteModal');
+            showToast('Note ajoutée avec succès !');
+            
+            // Reset form
+            event.target.reset();
+            selectedNoteColor = '#fef3c7';
+            updateSelectedColor();
+        }
+
+        function renderNotes() {
+            const container = document.getElementById('notesList');
+            
+            if (notes.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-sticky-note icon-notes"></i>
+                        <p>Aucune note enregistrée</p>
+                        <button class="btn" onclick="openModal('noteModal')" style="margin-top: 16px;">
+                            <i class="fas fa-plus"></i>
+                            Créer votre première note
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="notes-grid">
+                    ${notes.map(note => `
+                        <div class="note-item" style="background: ${note.color}">
+                            <div class="note-title">${note.title}</div>
+                            <div class="note-content">${note.content}</div>
+                            <div class="note-meta">
+                                <span>Créé le ${note.date} à ${note.time}</span>
+                                <div class="note-actions">
+                                    <button class="btn btn-small btn-secondary" onclick="editNote(${note.id})" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-small btn-secondary" onclick="deleteNote(${note.id})" title="Supprimer">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function selectNoteColor(color, element) {
+            selectedNoteColor = color;
+            
+            // Update visual selection
+            document.querySelectorAll('.note-color-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        function updateSelectedColor() {
+            document.querySelectorAll('.note-color-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector('.note-color-option').classList.add('active');
+        }
+
+        function editNote(id) {
+            const note = notes.find(n => n.id === id);
+            if (note) {
+                document.getElementById('noteTitle').value = note.title;
+                document.getElementById('noteContent').value = note.content;
+                selectedNoteColor = note.color;
+                
+                // Update color selection
+                document.querySelectorAll('.note-color-option').forEach(option => {
+                    option.classList.remove('active');
+                    if (option.style.background === note.color) {
+                        option.classList.add('active');
+                    }
+                });
+                
+                // Change modal title and form action
+                document.querySelector('#noteModal .modal-title').textContent = 'Modifier la note';
+                const form = document.querySelector('#noteModal form');
+                form.onsubmit = function(event) {
+                    event.preventDefault();
+                    updateNote(id);
+                };
+                
+                openModal('noteModal');
+            }
+        }
+
+        function updateNote(id) {
+            const noteIndex = notes.findIndex(n => n.id === id);
+            if (noteIndex !== -1) {
+                notes[noteIndex] = {
+                    ...notes[noteIndex],
+                    title: document.getElementById('noteTitle').value,
+                    content: document.getElementById('noteContent').value,
+                    color: selectedNoteColor,
+                    date: new Date().toLocaleDateString('fr-FR'),
+                    time: new Date().toLocaleTimeString('fr-FR')
+                };
+                
+                renderNotes();
+                closeModal('noteModal');
+                showToast('Note modifiée avec succès !');
+                
+                // Reset form
+                document.querySelector('#noteModal form').reset();
+                document.querySelector('#noteModal .modal-title').textContent = 'Ajouter une note';
+                document.querySelector('#noteModal form').onsubmit = addNote;
+                selectedNoteColor = '#fef3c7';
+                updateSelectedColor();
+            }
+        }
+
+        function deleteNote(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette note ?')) {
+                notes = notes.filter(n => n.id !== id);
+                renderNotes();
+                showToast('Note supprimée');
+            }
+        }
+
+        // Utility functions
+        function updateTotalHours() {
+            const formationHours = formations.reduce((total, f) => total + f.hours, 0);
+            const asyncHours = asyncSessions.reduce((total, a) => total + a.hours, 0);
+            const totalHours = formationHours + asyncHours;
+            
+            document.getElementById('totalHours').textContent = totalHours;
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Settings functions
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('active');
+        }
+
+        function changeAccentColor(color) {
+            document.documentElement.style.setProperty('--accent-color', color);
+            
+            // Update active color option
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            showToast('Couleur d\'accent modifiée !');
+        }
+
+        function changeFontSize(size) {
+            document.documentElement.style.setProperty('--font-size-base', size + 'px');
+            document.getElementById('fontSizeValue').textContent = size + 'px';
+        }
+
+        function exportData() {
+            const data = {
+                formations,
+                magisteres,
+                asyncSessions,
+                notes,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'formateurs-data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('Données exportées !');
+        }
+
+        function clearAllData() {
+            if (confirm('Êtes-vous sûr de vouloir effacer toutes les données ? Cette action est irréversible.')) {
+                formations = [];
+                magisteres = [];
+                asyncSessions = [];
+                notes = [];
+                
+                loadData();
+                showToast('Toutes les données ont été effacées');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+        });
+    </script>
+</body>
+</html>
