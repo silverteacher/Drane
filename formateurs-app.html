@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application de suivi formateurs</title>
+    <title>Décompte formations</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             --primary-bg: #ffffff;
@@ -29,15 +30,36 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--primary-bg);
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             color: var(--text-primary);
             font-size: var(--font-size-base);
             line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+        }
+
+        .app-content {
             padding: 20px;
         }
 
@@ -46,9 +68,9 @@
             background: linear-gradient(135deg, var(--accent-color), var(--secondary-accent));
             color: white;
             padding: 24px 0;
-            margin-bottom: 32px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            margin: -20px -20px 32px -20px;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .header-content {
@@ -93,18 +115,33 @@
         }
 
         .settings-btn {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             border: none;
-            color: white;
+            color: rgba(255, 255, 255, 0.9);
             padding: 12px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .settings-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
             transform: rotate(90deg);
+        }
+
+        .settings-btn i {
+            font-size: 16px;
+            display: block;
+        }
+
+        .settings-btn i::before {
+            content: "⚙";
+            font-style: normal;
         }
 
         /* Navigation */
@@ -126,11 +163,30 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            color: var(--text-primary);
         }
 
         .nav-btn.active {
-            background: var(--accent-color);
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Dégradés subtils pour chaque section */
+        .nav-btn:nth-child(1).active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .nav-btn:nth-child(2).active {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .nav-btn:nth-child(3).active {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .nav-btn:nth-child(4).active {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
         }
 
         .nav-btn:hover:not(.active) {
@@ -142,15 +198,16 @@
         .card {
             background: white;
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             margin-bottom: 24px;
             overflow: hidden;
             transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
         }
 
         .card-header {
@@ -191,8 +248,41 @@
         }
 
         .btn:hover {
-            background: #2bb8ad;
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Boutons coordonnés aux sections */
+        .btn-formations {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .btn-formations:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        }
+
+        .btn-magistere {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .btn-magistere:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+        }
+
+        .btn-async {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .btn-async:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .btn-notes {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .btn-notes:hover {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
         }
 
         .btn-secondary {
@@ -417,69 +507,77 @@
             transform: scale(1.1);
         }
 
-        /* Icons colors for sections - Round style */
+        /* Icons colors for sections - Round style without icons */
         .icon-formations { 
-            color: white; 
             background: #3b82f6; 
-            padding: 8px; 
-            border-radius: 50%; 
             width: 32px; 
             height: 32px; 
+            border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
             justify-content: center;
+            position: relative;
+        }
+        
+        .icon-formations::before {
+            content: 'F';
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
         }
         
         .icon-magistere { 
-            color: white; 
             background: #f59e0b; 
-            padding: 8px; 
-            border-radius: 50%; 
             width: 32px; 
             height: 32px; 
+            border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
             justify-content: center;
+            position: relative;
+        }
+        
+        .icon-magistere::before {
+            content: 'M';
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
         }
         
         .icon-async { 
-            color: white; 
             background: #10b981; 
-            padding: 8px; 
-            border-radius: 50%; 
             width: 32px; 
             height: 32px; 
+            border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
             justify-content: center;
+            position: relative;
+        }
+        
+        .icon-async::before {
+            content: 'S';
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
         }
         
         .icon-notes { 
-            color: white; 
             background: #8b5cf6; 
-            padding: 8px; 
-            border-radius: 50%; 
             width: 32px; 
             height: 32px; 
+            border-radius: 50%; 
             display: inline-flex; 
             align-items: center; 
             justify-content: center;
+            position: relative;
         }
         
-        .icon-settings { 
-            color: white; 
-            background: #6b7280; 
-            padding: 8px; 
-            border-radius: 50%; 
-            width: 32px; 
-            height: 32px; 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center;
-        }
-        
-        .icon-hours { 
-            color: #ffffff; 
+        .icon-notes::before {
+            content: 'N';
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
         }
 
         /* Navigation icons - smaller round style */
@@ -488,17 +586,20 @@
         .nav-btn .icon-async,
         .nav-btn .icon-notes { 
             width: 24px; 
-            height: 24px; 
-            padding: 6px;
-            font-size: 12px;
+            height: 24px;
         }
+
+        .nav-btn .icon-formations::before { font-size: 10px; }
+        .nav-btn .icon-magistere::before { font-size: 10px; }
+        .nav-btn .icon-async::before { font-size: 10px; }
+        .nav-btn .icon-notes::before { font-size: 10px; }
 
         .nav-btn.active .icon-formations,
         .nav-btn.active .icon-magistere,
         .nav-btn.active .icon-async,
         .nav-btn.active .icon-notes { 
-            background: rgba(255, 255, 255, 0.2);
-            color: white; 
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
         }
 
         /* Empty state icons - larger round style */
@@ -508,10 +609,58 @@
         .empty-state .icon-notes { 
             width: 64px; 
             height: 64px; 
-            padding: 16px;
-            font-size: 24px;
             margin: 0 auto 16px auto;
             opacity: 0.7;
+        }
+
+        .empty-state .icon-formations::before { font-size: 24px; }
+        .empty-state .icon-magistere::before { font-size: 24px; }
+        .empty-state .icon-async::before { font-size: 24px; }
+        .empty-state .icon-notes::before { font-size: 24px; }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+            z-index: 1000;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 3px;
+        }
+
+        .tooltip:hover::before,
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
         }
         @media (max-width: 768px) {
             .container {
@@ -571,14 +720,15 @@
             border-radius: var(--border-radius);
             padding: 16px;
             margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
             position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
         .note-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
 
         .note-title {
@@ -643,40 +793,39 @@
 </head>
 <body>
     <!-- Header -->
-    <div class="header">
-        <div class="header-content">
-            <div class="logo">
-                <i class="fas fa-graduation-cap icon-hours"></i>
-                <h1>Formateurs Claude.ai</h1>
-            </div>
-            <div class="hours-counter">
-                <i class="fas fa-clock icon-hours"></i>
-                <span class="hours-number" id="totalHours">0</span>
-                <span>heures</span>
-            </div>
-            <button class="settings-btn" onclick="toggleSettings()">
-                <i class="fas fa-cog icon-hours"></i>
-            </button>
-        </div>
-    </div>
-
     <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Formateurs Claude.ai</h1>
+                </div>
+                <div class="hours-counter tooltip" data-tooltip="Total des heures de formation et séances asynchrones">
+                    <span class="hours-number" id="totalHours">0</span>
+                    <span>heures</span>
+                </div>
+                <button class="settings-btn" onclick="toggleSettings()" title="Paramètres">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="app-content">
         <!-- Navigation -->
         <div class="nav">
             <button class="nav-btn active" onclick="switchSection('formations')">
-                <i class="fas fa-book icon-formations"></i>
+                <span class="icon-formations"></span>
                 Formations
             </button>
             <button class="nav-btn" onclick="switchSection('magistere')">
-                <i class="fas fa-award icon-magistere"></i>
+                <span class="icon-magistere"></span>
                 Magistère
             </button>
             <button class="nav-btn" onclick="switchSection('async')">
-                <i class="fas fa-play-circle icon-async"></i>
+                <span class="icon-async"></span>
                 Séances Async
             </button>
             <button class="nav-btn" onclick="switchSection('notes')">
-                <i class="fas fa-sticky-note icon-notes"></i>
+                <span class="icon-notes"></span>
                 Notes & Mémos
             </button>
         </div>
@@ -686,10 +835,10 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">
-                        <i class="fas fa-book icon-formations"></i>
+                        <span class="icon-formations"></span>
                         Suivi des Formations
                     </h2>
-                    <button class="btn" onclick="openModal('formationModal')">
+                    <button class="btn btn-formations" onclick="openModal('formationModal')">
                         <i class="fas fa-plus"></i>
                         Ajouter une formation
                     </button>
@@ -708,7 +857,7 @@
                             <tbody id="formationsTable">
                                 <tr>
                                     <td colspan="4" class="empty-state">
-                                        <i class="fas fa-book icon-formations"></i>
+                                        <span class="icon-formations"></span>
                                         <p>Aucune formation enregistrée</p>
                                     </td>
                                 </tr>
@@ -724,17 +873,17 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">
-                        <i class="fas fa-award icon-magistere"></i>
+                        <span class="icon-magistere"></span>
                         Magistère Réalisés
                     </h2>
-                    <button class="btn" onclick="openModal('magistereModal')">
+                    <button class="btn btn-magistere" onclick="openModal('magistereModal')">
                         <i class="fas fa-plus"></i>
                         Ajouter un Magistère
                     </button>
                 </div>
                 <div class="card-content" id="magistereList">
                     <div class="empty-state">
-                        <i class="fas fa-award icon-magistere"></i>
+                        <span class="icon-magistere"></span>
                         <p>Aucun Magistère enregistré</p>
                     </div>
                 </div>
@@ -746,17 +895,17 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">
-                        <i class="fas fa-play-circle icon-async"></i>
+                        <span class="icon-async"></span>
                         Séances Asynchrones
                     </h2>
-                    <button class="btn" onclick="openModal('asyncModal')">
+                    <button class="btn btn-async" onclick="openModal('asyncModal')">
                         <i class="fas fa-plus"></i>
                         Ajouter une séance
                     </button>
                 </div>
                 <div class="card-content" id="asyncList">
                     <div class="empty-state">
-                        <i class="fas fa-play-circle icon-async"></i>
+                        <span class="icon-async"></span>
                         <p>Aucune séance asynchrone enregistrée</p>
                     </div>
                 </div>
@@ -768,24 +917,25 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">
-                        <i class="fas fa-sticky-note icon-notes"></i>
+                        <span class="icon-notes"></span>
                         Notes & Mémos
                     </h2>
-                    <button class="btn" onclick="openModal('noteModal')">
+                    <button class="btn btn-notes" onclick="openModal('noteModal')">
                         <i class="fas fa-plus"></i>
                         Ajouter une note
                     </button>
                 </div>
                 <div class="card-content" id="notesList">
                     <div class="empty-state">
-                        <i class="fas fa-sticky-note icon-notes"></i>
+                        <span class="icon-notes"></span>
                         <p>Aucune note enregistrée</p>
-                        <button class="btn" onclick="openModal('noteModal')" style="margin-top: 16px;">
+                        <button class="btn btn-notes" onclick="openModal('noteModal')" style="margin-top: 16px;">
                             <i class="fas fa-plus"></i>
                             Créer votre première note
                         </button>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -930,9 +1080,23 @@
         </div>
 
         <div class="form-group">
+            <label class="form-label">Export des données</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-secondary" onclick="exportToTxt()">
+                    <i class="fas fa-file-alt"></i>
+                    Export TXT
+                </button>
+                <button class="btn btn-secondary" onclick="exportToPdf()">
+                    <i class="fas fa-file-pdf"></i>
+                    Export PDF
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
             <button class="btn btn-secondary" onclick="exportData()">
                 <i class="fas fa-download"></i>
-                Exporter les données
+                Export JSON (sauvegarde)
             </button>
         </div>
 
@@ -1074,7 +1238,7 @@
             if (magisteres.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-award icon-magistere"></i>
+                        <span class="icon-magistere"></span>
                         <p>Aucun Magistère enregistré</p>
                     </div>
                 `;
@@ -1128,7 +1292,7 @@
             if (asyncSessions.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-play-circle icon-async"></i>
+                        <span class="icon-async"></span>
                         <p>Aucune séance asynchrone enregistrée</p>
                     </div>
                 `;
@@ -1187,9 +1351,9 @@
             if (notes.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-sticky-note icon-notes"></i>
+                        <span class="icon-notes"></span>
                         <p>Aucune note enregistrée</p>
-                        <button class="btn" onclick="openModal('noteModal')" style="margin-top: 16px;">
+                        <button class="btn btn-notes" onclick="openModal('noteModal')" style="margin-top: 16px;">
                             <i class="fas fa-plus"></i>
                             Créer votre première note
                         </button>
@@ -1357,7 +1521,235 @@
             a.click();
             URL.revokeObjectURL(url);
             
-            showToast('Données exportées !');
+            showToast('Sauvegarde JSON exportée !');
+        }
+
+        function exportToTxt() {
+            const totalHours = formations.reduce((sum, f) => sum + f.hours, 0) + 
+                              asyncSessions.reduce((sum, a) => sum + a.hours, 0);
+            
+            let content = `RAPPORT DE FORMATIONS - ${new Date().toLocaleDateString('fr-FR')}\n`;
+            content += `============================================\n\n`;
+            content += `RÉSUMÉ :\n`;
+            content += `Total d'heures de formation : ${totalHours}h\n`;
+            content += `Nombre de formations : ${formations.length}\n`;
+            content += `Nombre de Magistère : ${magisteres.length}\n`;
+            content += `Nombre de séances asynchrones : ${asyncSessions.length}\n`;
+            content += `Nombre de notes : ${notes.length}\n\n`;
+            
+            if (formations.length > 0) {
+                content += `FORMATIONS RÉALISÉES :\n`;
+                content += `=====================\n`;
+                formations.forEach((formation, index) => {
+                    content += `${index + 1}. ${formation.name}\n`;
+                    content += `   Date : ${new Date(formation.date).toLocaleDateString('fr-FR')}\n`;
+                    content += `   Durée : ${formation.hours}h\n\n`;
+                });
+            }
+            
+            if (magisteres.length > 0) {
+                content += `MAGISTÈRE RÉALISÉS :\n`;
+                content += `===================\n`;
+                magisteres.forEach((magistere, index) => {
+                    content += `${index + 1}. ${magistere.title}\n`;
+                    content += `   Personne : ${magistere.person}\n`;
+                    content += `   Date : ${new Date(magistere.date).toLocaleDateString('fr-FR')}\n\n`;
+                });
+            }
+            
+            if (asyncSessions.length > 0) {
+                content += `SÉANCES ASYNCHRONES :\n`;
+                content += `====================\n`;
+                asyncSessions.forEach((session, index) => {
+                    content += `${index + 1}. ${session.title}\n`;
+                    content += `   Date : ${new Date(session.date).toLocaleDateString('fr-FR')}\n`;
+                    content += `   Durée : ${session.hours}h\n\n`;
+                });
+            }
+            
+            if (notes.length > 0) {
+                content += `NOTES ET MÉMOS :\n`;
+                content += `===============\n`;
+                notes.forEach((note, index) => {
+                    content += `${index + 1}. ${note.title}\n`;
+                    content += `   ${note.content.replace(/\n/g, '\n   ')}\n`;
+                    content += `   Créé le : ${note.date} à ${note.time}\n\n`;
+                });
+            }
+            
+            content += `\nRapport généré par Formateurs Claude.ai le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR')}`;
+            
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `rapport-formations-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('Rapport TXT exporté !');
+        }
+
+        function exportToPdf() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const totalHours = formations.reduce((sum, f) => sum + f.hours, 0) + 
+                              asyncSessions.reduce((sum, a) => sum + a.hours, 0);
+            
+            let yPosition = 20;
+            
+            // Titre
+            doc.setFontSize(20);
+            doc.setFont(undefined, 'bold');
+            doc.text('RAPPORT DE FORMATIONS', 20, yPosition);
+            yPosition += 10;
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'normal');
+            doc.text(`Généré le ${new Date().toLocaleDateString('fr-FR')}`, 20, yPosition);
+            yPosition += 20;
+            
+            // Résumé
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text('RÉSUMÉ', 20, yPosition);
+            yPosition += 10;
+            
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'normal');
+            doc.text(`Total d'heures de formation : ${totalHours}h`, 25, yPosition);
+            yPosition += 6;
+            doc.text(`Nombre de formations : ${formations.length}`, 25, yPosition);
+            yPosition += 6;
+            doc.text(`Nombre de Magistère : ${magisteres.length}`, 25, yPosition);
+            yPosition += 6;
+            doc.text(`Nombre de séances asynchrones : ${asyncSessions.length}`, 25, yPosition);
+            yPosition += 6;
+            doc.text(`Nombre de notes : ${notes.length}`, 25, yPosition);
+            yPosition += 15;
+            
+            // Formations
+            if (formations.length > 0) {
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('FORMATIONS RÉALISÉES', 20, yPosition);
+                yPosition += 10;
+                
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                formations.forEach((formation, index) => {
+                    if (yPosition > 270) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    doc.text(`${index + 1}. ${formation.name}`, 25, yPosition);
+                    yPosition += 5;
+                    doc.text(`   Date : ${new Date(formation.date).toLocaleDateString('fr-FR')} | Durée : ${formation.hours}h`, 25, yPosition);
+                    yPosition += 8;
+                });
+                yPosition += 5;
+            }
+            
+            // Magistère
+            if (magisteres.length > 0) {
+                if (yPosition > 240) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('MAGISTÈRE RÉALISÉS', 20, yPosition);
+                yPosition += 10;
+                
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                magisteres.forEach((magistere, index) => {
+                    if (yPosition > 270) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    doc.text(`${index + 1}. ${magistere.title}`, 25, yPosition);
+                    yPosition += 5;
+                    doc.text(`   Personne : ${magistere.person} | Date : ${new Date(magistere.date).toLocaleDateString('fr-FR')}`, 25, yPosition);
+                    yPosition += 8;
+                });
+                yPosition += 5;
+            }
+            
+            // Séances asynchrones
+            if (asyncSessions.length > 0) {
+                if (yPosition > 240) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('SÉANCES ASYNCHRONES', 20, yPosition);
+                yPosition += 10;
+                
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                asyncSessions.forEach((session, index) => {
+                    if (yPosition > 270) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    doc.text(`${index + 1}. ${session.title}`, 25, yPosition);
+                    yPosition += 5;
+                    doc.text(`   Date : ${new Date(session.date).toLocaleDateString('fr-FR')} | Durée : ${session.hours}h`, 25, yPosition);
+                    yPosition += 8;
+                });
+                yPosition += 5;
+            }
+            
+            // Notes
+            if (notes.length > 0) {
+                if (yPosition > 200) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('NOTES ET MÉMOS', 20, yPosition);
+                yPosition += 10;
+                
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                notes.forEach((note, index) => {
+                    if (yPosition > 250) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    doc.setFont(undefined, 'bold');
+                    doc.text(`${index + 1}. ${note.title}`, 25, yPosition);
+                    yPosition += 5;
+                    
+                    doc.setFont(undefined, 'normal');
+                    const lines = doc.splitTextToSize(note.content, 160);
+                    lines.forEach(line => {
+                        if (yPosition > 280) {
+                            doc.addPage();
+                            yPosition = 20;
+                        }
+                        doc.text(line, 30, yPosition);
+                        yPosition += 4;
+                    });
+                    doc.text(`Créé le : ${note.date} à ${note.time}`, 30, yPosition);
+                    yPosition += 10;
+                });
+            }
+            
+            // Footer
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.text(`Page ${i}/${pageCount} - Généré par Formateurs Claude.ai`, 20, 290);
+            }
+            
+            doc.save(`rapport-formations-${new Date().toISOString().split('T')[0]}.pdf`);
+            showToast('Rapport PDF exporté !');
         }
 
         function clearAllData() {
