@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tirage de Wild Cards – IA & Éthique</title>
   <style>
     * {
@@ -30,13 +30,19 @@
       padding: 2em;
       max-width: 900px;
       width: 100%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
       animation: fadeIn 0.8s ease-out;
     }
     
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     
     h1 {
@@ -67,7 +73,7 @@
       padding: 2.5em;
       font-size: 1.1em;
       line-height: 1.6;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
       transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       transform-style: preserve-3d;
       min-height: 300px;
@@ -133,6 +139,7 @@
       padding: 1.5em;
       border-radius: 10px;
       border: 2px solid rgba(102, 126, 234, 0.2);
+      margin-top: 2em;
     }
     
     .voting-title {
@@ -274,7 +281,7 @@
       overflow-y: auto;
       margin-top: 1em;
       padding: 1em;
-      background: rgba(0,0,0,0.02);
+      background: rgba(0, 0, 0, 0.02);
       border-radius: 10px;
     }
     
@@ -298,4 +305,223 @@
       }
       
       #card {
-        
+        min-height: 250px;
+        padding: 2em;
+        font-size: 1em;
+      }
+      
+      .controls {
+        flex-direction: column;
+        gap: 0.8em;
+      }
+      
+      button {
+        width: 100%;
+        padding: 0.8em 0;
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tirage de Wild Cards – IA &amp; Éthique</h1>
+    <div class="subtitle">Explorez des dilemmes et questions pour réfléchir à l'IA responsable</div>
+
+    <div id="card-container">
+      <div id="card">
+        <div class="card-question">Appuyez sur "Nouvelle carte" pour commencer</div>
+      </div>
+    </div>
+
+    <div class="voting-section" style="display:none;">
+      <div class="voting-title">Votez pour votre opinion</div>
+      <form id="voting-form">
+        <label class="vote-option" for="option1">
+          <input class="vote-radio" type="radio" name="vote" id="option1" value="oui" />
+          <div class="vote-content">
+            <div class="vote-text">Oui</div>
+            <div class="vote-desc">Je suis d'accord</div>
+          </div>
+          <div class="vote-count" id="count-oui">0</div>
+        </label>
+        <label class="vote-option" for="option2">
+          <input class="vote-radio" type="radio" name="vote" id="option2" value="pas sûr" />
+          <div class="vote-content">
+            <div class="vote-text">Pas sûr</div>
+            <div class="vote-desc">Je ne sais pas encore</div>
+          </div>
+          <div class="vote-count" id="count-pas sûr">0</div>
+        </label>
+        <label class="vote-option" for="option3">
+          <input class="vote-radio" type="radio" name="vote" id="option3" value="non" />
+          <div class="vote-content">
+            <div class="vote-text">Non</div>
+            <div class="vote-desc">Je ne suis pas d'accord</div>
+          </div>
+          <div class="vote-count" id="count-non">0</div>
+        </label>
+        <button type="submit">Voter</button>
+      </form>
+    </div>
+
+    <div class="controls">
+      <button id="new-card-btn">Nouvelle carte</button>
+      <button id="reset-votes-btn" class="secondary-btn" disabled>Réinitialiser les votes</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-number" id="total-cards">0</span>
+        <span class="stat-label">Cartes tirées</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number" id="total-votes">0</span>
+        <span class="stat-label">Votes totaux</span>
+      </div>
+    </div>
+
+    <div class="card-history" id="card-history" aria-label="Historique des cartes tirées">
+      <!-- Historique des tirages -->
+    </div>
+  </div>
+
+  <script>
+    const cards = [
+      {
+        question: "L'IA peut-elle remplacer les décisions humaines dans la justice ?",
+        dilemma: "L'IA est-elle toujours juste et impartiale ?",
+        guidance: "Réfléchissez à l'importance des biais algorithmiques et à la responsabilité humaine."
+      },
+      {
+        question: "Faut-il rendre les algorithmes d'IA transparents ?",
+        dilemma: "La transparence garantit-elle la confiance ?",
+        guidance: "Essayez d’équilibrer confidentialité, sécurité et accessibilité."
+      },
+      {
+        question: "L'IA doit-elle avoir des limites éthiques imposées par la loi ?",
+        dilemma: "Comment légiférer sur des systèmes évolutifs et complexes ?",
+        guidance: "Explorez les cadres légaux actuels et leurs limites."
+      }
+      // Tu peux ajouter autant de cartes que tu veux ici
+    ];
+
+    let currentCardIndex = null;
+    let totalCardsDrawn = 0;
+    let voteCounts = { oui: 0, "pas sûr": 0, non: 0 };
+
+    const cardEl = document.getElementById('card');
+    const newCardBtn = document.getElementById('new-card-btn');
+    const resetVotesBtn = document.getElementById('reset-votes-btn');
+    const votingSection = document.querySelector('.voting-section');
+    const votingForm = document.getElementById('voting-form');
+    const totalCardsEl = document.getElementById('total-cards');
+    const totalVotesEl = document.getElementById('total-votes');
+    const cardHistoryEl = document.getElementById('card-history');
+
+    function renderCard(index) {
+      const card = cards[index];
+      cardEl.innerHTML = `
+        <div class="card-question">${card.question}</div>
+        <div class="card-dilemma">${card.dilemma}</div>
+        <div class="card-guidance">
+          <div class="guidance-title">Conseil de réflexion</div>
+          <div class="guidance-text">${card.guidance}</div>
+        </div>
+      `;
+      cardEl.classList.add('new-card');
+      setTimeout(() => {
+        cardEl.classList.remove('new-card');
+      }, 600);
+
+      votingSection.style.display = 'block';
+      updateStats();
+    }
+
+    newCardBtn.addEventListener('click', () => {
+      // Tirage aléatoire différent de la carte courante
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * cards.length);
+      } while (cards.length > 1 && newIndex === currentCardIndex);
+
+      currentCardIndex = newIndex;
+      renderCard(currentCardIndex);
+
+      // Ajouter à l'historique
+      addToHistory(cards[currentCardIndex].question);
+
+      totalCardsDrawn++;
+      updateStats();
+
+      // Reset votes UI
+      resetVotes();
+      resetVotesBtn.disabled = false;
+    });
+
+    function updateStats() {
+      totalCardsEl.textContent = totalCardsDrawn;
+      const totalVotes = voteCounts.oui + voteCounts["pas sûr"] + voteCounts.non;
+      totalVotesEl.textContent = totalVotes;
+      
+      // Mettre à jour les compteurs de chaque vote
+      document.getElementById('count-oui').textContent = voteCounts.oui;
+      document.getElementById('count-pas sûr').textContent = voteCounts["pas sûr"];
+      document.getElementById('count-non').textContent = voteCounts.non;
+    }
+
+    votingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!currentCardIndex === null) return;
+
+      const formData = new FormData(votingForm);
+      const vote = formData.get('vote');
+      if (!vote) {
+        alert('Veuillez sélectionner une option de vote.');
+        return;
+      }
+
+      // Augmenter le compteur et verrouiller les votes
+      voteCounts[vote]++;
+      updateStats();
+      // Marquer la sélection comme votée pour changer le style
+      Array.from(votingForm.elements).forEach(el => {
+        if (el.name === "vote") {
+          el.parentElement.classList.remove('voted');
+          if (el.checked) {
+            el.parentElement.classList.add('voted');
+          }
+          el.disabled = true;
+        }
+      });
+      votingForm.querySelector('button[type="submit"]').disabled = true;
+    });
+
+    resetVotesBtn.addEventListener('click', () => {
+      resetVotes();
+      votingForm.querySelector('button[type="submit"]').disabled = false;
+    });
+
+    function resetVotes() {
+      // Réactive tous les boutons et retire les styles votés
+      voteCounts = { oui: 0, "pas sûr": 0, non: 0 };
+      updateStats();
+      Array.from(votingForm.elements).forEach(el => {
+        if (el.name === "vote") {
+          el.checked = false;
+          el.disabled = false;
+          el.parentElement.classList.remove('voted');
+        }
+      });
+      resetVotesBtn.disabled = true;
+    }
+
+    function addToHistory(question) {
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.textContent = question;
+      cardHistoryEl.prepend(item);
+    }
+  </script>
+</body>
+</html>
