@@ -1,0 +1,889 @@
+    .mascot-icon::before {
+      content: '✨';
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 1.5rem;
+      animation: sparkle 2s ease-in-out infinite;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+      50% { opacity: 0.7; transform: scale(1.2) rotate(180deg); }
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(45deg, #667eea, #f093fb, #f5576c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 200%;
+      animation: textGradient 3s ease-in-out infinite;
+    }
+
+    @keyframes textGradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .mission-progress {
+      background: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .cards-collected {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+
+    .collection-counter {
+      font-size: 3rem;
+      font-weight: bold;
+      background: linear-gradient(45deg, #f093fb, #f5576c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .game-area {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .card-showcase {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .showcase-title {
+      color: #2c3e50;
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      border-bottom: 3px solid #f093fb;
+      padding-bottom: 0.5rem;
+    }
+
+    .power-card {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      transform-style: preserve-3d;
+    }
+
+    .power-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+
+    .power-card:hover::before {
+      transform: translateX(100%);
+    }
+
+    .power-card:hover {
+      transform: translateY(-10px) rotateY(5deg);
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .power-card.collected {
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
+      animation: cardCollected 0.8s ease-out;
+    }
+
+    @keyframes cardCollected {
+      0% { transform: scale(1) rotateY(0deg); }
+      50% { transform: scale(1.1) rotateY(180deg); }
+      100% { transform: scale(1) rotateY(0deg); }
+    }
+
+    .power-card.locked {
+      background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .card-description {
+      font-size: 1rem;
+      line-height: 1.5;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .collection-sidebar {
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      height: fit-content;
+    }
+
+    .sidebar-title {
+      color: #2c3e50;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      border-bottom: 2px solid #f5576c;
+      padding-bottom: 0.5rem;
+    }
+
+    .mini-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .mini-card {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .mini-card.collected {
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
+      color: white;
+      animation: miniPulse 2s ease-in-out infinite;
+    }
+
+    .mini-card.locked {
+      background: #ecf0f1;
+      color: #bdc3c7;
+    }
+
+    @keyframes miniPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .quiz-section {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .quiz-question {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .quiz-option {
+      background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+      border: 3px solid transparent;
+      border-radius: 15px;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .quiz-option:hover {
+      border-color: #3498db;
+      background: linear-gradient(135deg, #3498db20, #2980b920);
+      transform: translateY(-2px);
+    }
+
+    .quiz-option.selected {
+      border-color: #f093fb;
+      background: linear-gradient(135deg, #f093fb20, #f5576c20);
+    }
+
+    .quiz-option.correct {
+      border-color: #27ae60;
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
+      color: white;
+    }
+
+    .quiz-option.incorrect {
+      border-color: #e74c3c;
+      background: linear-gradient(135deg, #e74c3c20, #c0392b20);
+    }
+
+    .controls {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 0 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(240, 147, 251, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn.secondary {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+
+    .final-results {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-radius: 25px;
+      padding: 3rem;
+      margin-top: 2rem;
+      text-align: center;
+      display: none;
+      animation: finalReveal 1s ease-out;
+    }
+
+    @keyframes finalReveal {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .achievement-title {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .collected-cards-display {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .final-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .download-certificate {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      border: none;
+      border-radius: 15px;
+      padding: 1.5rem 3rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      margin-top: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .download-certificate:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(243, 156, 18, 0.4);
+    }
+
+    @media (max-width: 968px) {
+      .game-area {
+        grid-template-columns: 1fr;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .mini-cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="mascot-icon">🦸</div>
+      <h1>Super-Pouvoirs IA Éthiques</h1>
+      <p class="subtitle">Collectionnez vos cartes de bonnes pratiques professionnelles</p>
+    </div>
+
+    <div class="mission-progress">
+      <div class="cards-collected">Cartes collectées</div>
+      <div class="collection-counter" id="collectionCounter">0/8</div>
+    </div>
+
+    <div class="game-area">
+      <div class="card-showcase">
+        <h3 class="showcase-title">🎯 Carte à débloquer</h3>
+        <div id="currentCard">
+          <!-- La carte actuelle sera affichée ici -->
+        </div>
+      </div>
+
+      <div class="collection-sidebar">
+        <h4 class="sidebar-title">📚 Ma Collection</h4>
+        <div class="mini-cards" id="miniCards">
+          <!-- Les mini-cartes seront générées ici -->
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-section" id="quizSection">
+      <div class="quiz-question" id="quizQuestion"></div>
+      <div class="quiz-options" id="quizOptions"></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="startQuizBtn" onclick="startQuiz()">🎯 Débloquer cette carte</button>
+      <button class="btn secondary" id="nextCardBtn" onclick="nextCard()" style="display: none;">➡️ Carte suivante</button>
+      <button class="btn secondary" onclick="resetCollection()">🔄 Recommencer</button>
+    </div>
+
+    <div class="final-results" id="finalResults">
+      <!-- Résultats finaux -->
+    </div>
+  </div>
+
+  <script>
+    const powerCards = [
+      {
+        id: 'transparency',
+        icon: '🔍',
+        title: 'Transparence Totale',
+        description: 'Toujours informer les élèves et parents quand une IA traite leurs données personnelles.',
+        quiz: {
+          question: 'Vous utilisez une IA pour personnaliser les exercices. Que devez-vous faire ?',
+          options: [
+            'Rien, c\'est transparent pour l\'utilisateur',
+            'Informer uniquement si on vous le demande',
+            'Informer proactivement élèves et parents',
+            'Demander l\'autorisation au directeur seulement'
+          ],
+          correct: 2,
+          explanation: 'La transparence est un droit fondamental du RGPD. Les personnes doivent être informées de l\'usage d\'IA.'
+        }
+      },
+      {
+        id: 'data-minimization',
+        icon: '🎯',
+        title: 'Minimisation des Données',
+        description: 'Ne collecter que les données strictement nécessaires à l\'objectif pédagogique.',
+        quiz: {
+          question: 'Pour un quiz en ligne, quelles données pouvez-vous collecter ?',
+          options: [
+            'Nom, prénom, réponses, temps passé, adresse IP, géolocalisation',
+            'Nom, prénom, réponses aux questions',
+            'Toutes les données disponibles pour améliorer l\'IA',
+            'Données anonymes uniquement'
+          ],
+          correct: 1,
+          explanation: 'Le principe de minimisation impose de ne collecter que ce qui est nécessaire à la finalité.'
+        }
+      },
+      {
+        id: 'consent-management',
+        icon: '✋',
+        title: 'Gestion du Consentement',
+        description: 'Respecter le droit d\'opposition et gérer les consentements de manière éthique.',
+        quiz: {
+          question: 'Un élève refuse que ses données soient traitées par l\'IA. Vous devez :',
+          options: [
+            'Ignorer sa demande, c\'est obligatoire pour l\'école',
+            'Examiner si l\'intérêt légitime justifie le maintien',
+            'Accepter immédiatement sans condition',
+            'Convaincre l\'élève que c\'est pour son bien'
+          ],
+          correct: 1,
+          explanation: 'L\'opposition doit être examinée en équilibrant droits individuels et mission éducative.'
+        }
+      },
+      {
+        id: 'security-first',
+        icon: '🛡️',
+        title: 'Sécurité Prioritaire',
+        description: 'Garantir la sécurité et la confidentialité des données élèves dans tous les outils IA.',
+        quiz: {
+          question: 'Quelle pratique sécurise le mieux l\'usage d\'IA ?',
+          options: [
+            'Utiliser n\'importe quel outil gratuit en ligne',
+            'Privilégier les outils certifiés et vérifier la localisation des serveurs',
+            'Faire confiance aux grandes entreprises technologiques',
+            'Anonymiser toutes les données avant traitement'
+          ],
+          correct: 1,
+          explanation: 'La sécurité passe par le choix d\'outils conformes et la vérification des garanties.'
+        }
+      },
+      {
+        id: 'bias-awareness',
+        icon: '⚖️',
+        title: 'Vigilance aux Biais',
+        description: 'Identifier et corriger les biais potentiels des IA pour garantir l\'équité.',
+        quiz: {
+          question: 'Comment détecter un biais dans une IA d\'orientation scolaire ?',
+          options: [
+            'Faire confiance à l\'algorithme, il est objectif',
+            'Analyser les résultats par genre, origine sociale, etc.',
+            'Utiliser l\'IA uniquement pour des recommandations',
+            'Laisser les élèves décider seuls'
+          ],
+          correct: 1,
+          explanation: 'L\'analyse des résultats par catégories révèle les biais potentiels à corriger.'
+        }
+      },
+      {
+        id: 'human-control',
+        icon: '👥',
+        title: 'Contrôle Humain',
+        description: 'Maintenir une supervision humaine sur toutes les décisions importantes prises par l\'IA.',
+        quiz: {
+          question: 'L\'IA propose d\'exclure un élève pour absentéisme. Vous devez :',
+          options: [
+            'Appliquer automatiquement la recommandation',
+            'Examiner le cas individuellement avec l\'équipe éducative',
+            'Demander à l\'IA plus de détails',
+            'Ignorer complètement la recommandation'
+          ],
+          correct: 1,
+          explanation: 'Les décisions importantes nécessitent toujours une analyse humaine approfondie.'
+        }
+      },
+      {
+        id: 'continuous-learning',
+        icon: '📚',
+        title: 'Formation Continue',
+        description: 'Se tenir informé des évolutions de l\'IA et du cadre réglementaire.',
+        quiz: {
+          question: 'Comment rester à jour sur l\'IA en éducation ?',
+          options: [
+            'Se contenter de sa formation initiale',
+            'Suivre les actualités, formations et recommandations officielles',
+            'Apprendre uniquement par l\'expérience',
+            'Demander aux élèves qui connaissent bien'
+          ],
+          correct: 1,
+          explanation: 'La formation continue est essentielle dans un domaine en évolution rapide.'
+        }
+      },
+      {
+        id: 'ethical-reflection',
+        icon: '🤔',
+        title: 'Réflexion Éthique',
+        description: 'Questionner systématiquement l\'impact éthique et pédagogique de chaque usage d\'IA.',
+        quiz: {
+          question: 'Avant d\'adopter un nouvel outil IA, quelle question est prioritaire ?',
+          options: [
+            'Est-ce que cela va me faire gagner du temps ?',
+            'Cet outil respecte-t-il les valeurs éducatives et les droits des élèves ?',
+            'Est-ce que c\'est gratuit ?',
+            'Est-ce que les autres écoles l\'utilisent ?'
+          ],
+          correct: 1,
+          explanation: 'La réflexion éthique doit guider tout choix technologique en éducation.'
+        }
+      }
+    ];
+
+    let currentCardIndex = 0;
+    let collectedCards = [];
+    let currentQuiz = null;
+
+    function initGame() {
+      currentCardIndex = 0;
+      collectedCards = [];
+      updateCollectionCounter();
+      generateMiniCards();
+      loadCurrentCard();
+      document.getElementById('finalResults').style.display = 'none';
+    }
+
+    function generateMiniCards() {
+      const container = document.getElementById('miniCards');
+      container.innerHTML = '';
+      
+      powerCards.forEach((card, index) => {
+        const miniCard = document.createElement('div');
+        miniCard.className = `mini-card ${collectedCards.includes(card.id) ? 'collected' : 'locked'}`;
+        miniCard.innerHTML = collectedCards.includes(card.id) ? card.icon : '🔒';
+        miniCard.title = card.title;
+        container.appendChild(miniCard);
+      });
+    }
+
+    function loadCurrentCard() {
+      if (currentCardIndex >= powerCards.length) {
+        showFinalResults();
+        return;
+      }
+
+      const card = powerCards[currentCardIndex];
+      const isCollected = collectedCards.includes(card.id);
+      
+      document.getElementById('currentCard').innerHTML = `
+        <div class="power-card ${isCollected ? 'collected' : ''}">
+          <div class="card-badge">${currentCardIndex + 1}/8</div>
+          <div class="card-icon">${card.icon}</div>
+          <div class="card-title">${card.title}</div>
+          <div class="card-description">${card.description}</div>
+        </div>
+      `;
+      
+      const startBtn = document.getElementById('startQuizBtn');
+      const nextBtn = document.getElementById('nextCardBtn');
+      
+      if (isCollected) {
+        startBtn.style.display = 'none';
+        nextBtn.style.display = 'inline-block';
+        document.getElementById('quizSection').style.display = 'none';
+      } else {
+        startBtn.style.display = 'inline-block';
+        nextBtn.style.display = 'none';
+        document.getElementById('quizSection').style.display = 'none';
+      }
+    }
+
+    function startQuiz() {
+      const card = powerCards[currentCardIndex];
+      currentQuiz = card.quiz;
+      
+      document.getElementById('quizQuestion').textContent = currentQuiz.question;
+      
+      const optionsContainer = document.getElementById('quizOptions');
+      optionsContainer.innerHTML = '';
+      
+      currentQuiz.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'quiz-option';
+        optionElement.textContent = option;
+        optionElement.onclick = () => selectQuizOption(index, optionElement);
+        optionsContainer.appendChild(optionElement);
+      });
+      
+      document.getElementById('quizSection').style.display = 'block';
+      document.getElementById('startQuizBtn').style.display = 'none';
+    }
+
+    function selectQuizOption(selectedIndex, selectedElement) {
+      // Désactiver tous les clics
+      const options = document.querySelectorAll('.quiz-option');
+      options.forEach(option => option.onclick = null);
+      
+      // Marquer la sélection
+      selectedElement.classList.add('selected');
+      
+      setTimeout(() => {
+        // Révéler les bonnes/mauvaises réponses
+        options.forEach((option, index) => {
+          if (index === currentQuiz.correct) {
+            option.classList.add('correct');
+          } else if (index === selectedIndex && index !== currentQuiz.correct) {
+            option.classList.add('incorrect');
+          }
+        });
+        
+        // Afficher l'explication
+        const explanation = document.createElement('div');
+        explanation.style.cssText = `
+          background: linear-gradient(135deg, #3498db20, #2980b920);
+          border-radius: 10px;
+          padding: 1rem;
+          margin-top: 1rem;
+          border-left: 4px solid #3498db;
+        `;
+        explanation.innerHTML = `<strong>💡 Explication :</strong> ${currentQuiz.explanation}`;
+        document.getElementById('quizSection').appendChild(explanation);
+        
+        // Déverrouiller la carte si bonne réponse
+        if (selectedIndex === currentQuiz.correct) {
+          setTimeout(() => {
+            collectCard();
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            // Permettre de réessayer
+            document.getElementById('startQuizBtn').style.display = 'inline-block';
+            document.getElementById('quizSection').style.display = 'none';
+          }, 3000);
+        }
+      }, 1000);
+    }
+
+    function collectCard() {
+      const card = powerCards[currentCardIndex];
+      collectedCards.push(card.id);
+      
+      // Animation de collection
+      const cardElement = document.querySelector('.power-card');
+      cardElement.classList.add('collected');
+      
+      // Mettre à jour l'interface
+      updateCollectionCounter();
+      generateMiniCards();
+      
+      // Afficher le bouton suivant
+      setTimeout(() => {
+        document.getElementById('nextCardBtn').style.display = 'inline-block';
+        document.getElementById('quizSection').style.display = 'none';
+      }, 1000);
+    }
+
+    function nextCard() {
+      currentCardIndex++;
+      loadCurrentCard();
+    }
+
+    function updateCollectionCounter() {
+      document.getElementById('collectionCounter').textContent = `${collectedCards.length}/8`;
+    }
+
+    function showFinalResults() {
+      const completionRate = Math.round((collectedCards.length / powerCards.length) * 100);
+      let title = '';
+      
+      if (completionRate === 100) {
+        title = '🏆 Maître IA Éthique !';
+      } else if (completionRate >= 75) {
+        title = '🎓 Expert IA Responsable';
+      } else if (completionRate >= 50) {
+        title = '📚 Praticien IA Conscient';
+      } else {
+        title = '🌱 Apprenti IA Éthique';
+      }
+      
+      const finalResults = document.getElementById('finalResults');
+      finalResults.innerHTML = `
+        <div class="achievement-title">${title}</div>
+        <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">
+          Vous avez collecté ${collectedCards.length} cartes sur 8 !<br>
+          Vous possédez maintenant les super-pouvoirs pour utiliser l'IA de manière éthique et responsable.
+        </p>
+        
+        <div class="collected-cards-display">
+          ${collectedCards.map(cardId => {
+            const card = powerCards.find(c => c.id === cardId);
+            return `
+              <div class="final-card">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">${card.icon}</div>
+                <div style="font-weight: bold; margin-bottom: 0.5rem;">${card.title}</div>
+                <div style="font-size: 0.9rem; opacity: 0.8;">${card.description}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        
+        <button class="download-certificate" onclick="downloadCertificate()">
+          📜 Télécharger mon certificat
+        </button>
+        
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid rgba(255,255,255,0.2);">
+          <h3 style="margin-bottom: 1rem;">🎯 Mission I-A Terminée !</h3>
+          <p style="font-size: 1.1rem; opacity: 0.9;">
+            Félicitations ! Vous avez terminé toutes les missions et développé vos réflexes professionnels 
+            pour une utilisation éthique et responsable de l'intelligence artificielle en éducation.
+          </p>
+        </div>
+      `;
+      
+      finalResults.style.display = 'block';
+      document.querySelector('.game-area').style.display = 'none';
+      document.querySelector('.controls').style.display = 'none';
+    }
+
+    function downloadCertificate() {
+      const date = new Date().toLocaleDateString('fr-FR');
+      const completionRate = Math.round((collectedCards.length / powerCards.length) * 100);
+      
+      const certificate = `
+════════════════════════════════════════════════════════════════
+                    🏆 CERTIFICAT DE RÉUSSITE 🏆
+                     MISSION I-A : DÉCRYPTEZ L'IA
+════════════════════════════════════════════════════════════════
+
+🎓 FÉLICITATIONS !
+
+Vous avez terminé avec succès la Mission I-A et démontré votre maîtrise 
+des enjeux éthiques et réglementaires de l'intelligence artificielle 
+en milieu éducatif.
+
+📊 RÉSULTATS :
+• Super-Pouvoirs collectés : ${collectedCards.length}/8 (${completionRate}%)
+• Niveau atteint : ${completionRate === 100 ? 'Maître IA Éthique' : 
+                     completionRate >= 75 ? 'Expert IA Responsable' :
+                     completionRate >= 50 ? 'Praticien IA Conscient' : 
+                     'Apprenti IA Éthique'}
+
+🦸 SUPER-POUVOIRS ACQUIS :
+${collectedCards.map(cardId => {
+  const<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mission I-A : Super-Pouvoirs IA Éthiques</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      padding: 1rem;
+      animation: gradientShift 10s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+      50% { background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      padding: 2rem;
+      border-radius: 25px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .mascot-icon {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(45deg, #f093fb, #f5576c);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      animation: superHero 3s ease-in-out infinite;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+    }
+
+    @keyframes superHero {
+      0%, 100% { 
+        transform: scale(1) rotate(0deg);
+        box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+      }
+      25% { 
+        transform: scale(1.1) rotate(2deg);
+        box-shadow: 0 15px 35px rgba(245, 87, 108, 0.5);
+      }
+      75% { 
+        transform: scale(1.05) rotate(-2deg);
+        box-shadow: 0 12px 32px rgba(79, 172, 254, 0.4);
+      }
+    }
+
+    .mascot-icon::before {
+      content: '✨';
+      position: absolute;
+      top: -
