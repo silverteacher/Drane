@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Jeu de cartes IA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 { color: #2c3e50; }
+    .board {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    .zone {
+      border: 2px dashed #aaa;
+      border-radius: 10px;
+      width: 200px;
+      min-height: 200px;
+      padding: 10px;
+      margin: 10px;
+      background: #fff;
+    }
+    .zone h3 { margin-top: 0; color: #34495e; }
+    .card {
+      padding: 10px;
+      margin: 5px;
+      background: #3498db;
+      color: white;
+      border-radius: 8px;
+      cursor: grab;
+    }
+    .card.dragging { opacity: 0.5; }
+    .feedback {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #2c3e50;
+    }
+    #score {
+      margin-top: 30px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎲 Jeu interactif : IA du quotidien</h1>
+  <p>Glissez chaque usage dans la bonne catégorie d'IA. Apprenez en jouant !</p>
+
+  <div id="cards">
+    <div class="card" draggable="true" data-type="expert">Parcoursup (classement des dossiers)</div>
+    <div class="card" draggable="true" data-type="symbolique">Chatbot simple (FAQ scolaire)</div>
+    <div class="card" draggable="true" data-type="ml">YouTube (recommandations)</div>
+    <div class="card" draggable="true" data-type="ml">Spotify (playlists personnalisées)</div>
+    <div class="card" draggable="true" data-type="dl">Quick, Draw! (dessin deviné par IA)</div>
+    <div class="card" draggable="true" data-type="dl">Reconnaissance vocale (Siri, Alexa)</div>
+    <div class="card" draggable="true" data-type="symbolique">GPS (itinéraire fixe par règles)</div>
+    <div class="card" draggable="true" data-type="none">Classeur papier de notes</div>
+    <div class="card" draggable="true" data-type="expert">PIX (évaluations numériques)</div>
+    <div class="card" draggable="true" data-type="ml">Instagram (fil d’actualité)</div>
+  </div>
+
+  <div class="board">
+    <div class="zone" data-accept="symbolique">
+      <h3>IA symbolique</h3>
+      <p>Basée sur des règles fixes (SI... ALORS...)</p>
+    </div>
+    <div class="zone" data-accept="expert">
+      <h3>Systèmes experts</h3>
+      <p>Imitent un raisonnement d’expert avec une base de connaissances</p>
+    </div>
+    <div class="zone" data-accept="ml">
+      <h3>Machine Learning</h3>
+      <p>Apprend à partir de données pour s’améliorer</p>
+    </div>
+    <div class="zone" data-accept="dl">
+      <h3>Deep Learning</h3>
+      <p>Réseaux de neurones, analyse d’images/sons</p>
+    </div>
+    <div class="zone" data-accept="none">
+      <h3>Pas d’IA</h3>
+      <p>Outils classiques, sans intelligence artificielle</p>
+    </div>
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+  <div id="score">Score : 0 / 10</div>
+
+  <script>
+    const cards = document.querySelectorAll('.card');
+    const zones = document.querySelectorAll('.zone');
+    const feedback = document.getElementById('feedback');
+    const scoreDisplay = document.getElementById('score');
+    let score = 0;
+
+    let dragged = null;
+
+    cards.forEach(card => {
+      card.addEventListener('dragstart', () => {
+        dragged = card;
+        card.classList.add('dragging');
+      });
+      card.addEventListener('dragend', () => {
+        dragged = null;
+        card.classList.remove('dragging');
+      });
+    });
+
+    zones.forEach(zone => {
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+      });
+
+      zone.addEventListener('drop', () => {
+        if (dragged) {
+          const type = dragged.getAttribute('data-type');
+          const accept = zone.getAttribute('data-accept');
+          if (type === accept) {
+            zone.appendChild(dragged);
+            feedback.innerHTML = "✅ Bien joué ! " + explications(type);
+            score++;
+            scoreDisplay.innerHTML = "Score : " + score + " / 10";
+            dragged.setAttribute('draggable', 'false');
+            dragged.style.background = "#2ecc71";
+          } else {
+            feedback.innerHTML = "❌ Mauvais choix. Réessaie !";
+          }
+        }
+      });
+    });
+
+    function explications(type) {
+      switch(type) {
+        case "symbolique":
+          return "Les IA symboliques suivent des règles programmées. Exemple : un GPS basique calcule un itinéraire avec SI... ALORS...";
+        case "expert":
+          return "Les systèmes experts imitent un spécialiste avec des règles et une base de connaissances. Exemple : Parcoursup ou PIX.";
+        case "ml":
+          return "Le machine learning apprend à partir de données pour prédire ou recommander. Exemple : YouTube, Spotify, Instagram.";
+        case "dl":
+          return "Le deep learning utilise des réseaux de neurones à plusieurs couches pour traiter images, sons ou textes. Exemple : Siri, Quick Draw!.";
+        case "none":
+          return "Pas d’IA ici ! Exemple : un classeur papier reste un outil statique.";
+        default:
+          return "";
+      }
+    }
+  </script>
+</body>
+</html>
