@@ -2,111 +2,567 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Jeu de cartes IA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Découvrir l'IA en s'amusant</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
+    * {
       margin: 0;
-      padding: 20px;
-      text-align: center;
+      padding: 0;
+      box-sizing: border-box;
     }
-    h1 { color: #2c3e50; }
-    .board {
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(15px);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .title {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: #666;
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
+
+    .game-info {
       display: flex;
-      justify-content: space-around;
-      margin-top: 30px;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 40px;
       flex-wrap: wrap;
     }
-    .zone {
-      border: 2px dashed #aaa;
-      border-radius: 10px;
-      width: 200px;
-      min-height: 200px;
-      padding: 10px;
-      margin: 10px;
-      background: #fff;
-    }
-    .zone h3 { margin-top: 0; color: #34495e; }
-    .card {
-      padding: 10px;
-      margin: 5px;
-      background: #3498db;
+
+    .info-card {
+      background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
-      border-radius: 8px;
-      cursor: grab;
+      padding: 20px 30px;
+      border-radius: 20px;
+      text-align: center;
+      min-width: 150px;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      transition: transform 0.3s ease;
     }
-    .card.dragging { opacity: 0.5; }
-    .feedback {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #2c3e50;
+
+    .info-card:hover {
+      transform: translateY(-5px);
     }
-    #score {
-      margin-top: 30px;
-      font-size: 18px;
+
+    .info-number {
+      font-size: 2.5rem;
       font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .info-label {
+      font-size: 1rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+
+    .cards-section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      cursor: grab;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+      border: 3px solid transparent;
+      font-weight: 500;
+      text-align: center;
+      font-size: 1.1rem;
+      line-height: 1.4;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(79, 172, 254, 0.4);
+    }
+
+    .card:active {
+      cursor: grabbing;
+    }
+
+    .card.dragging {
+      opacity: 0.6;
+      transform: rotate(5deg) scale(0.95);
+    }
+
+    .card.placed {
+      background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+      cursor: default;
+      box-shadow: 0 8px 25px rgba(86, 171, 47, 0.3);
+    }
+
+    .card.placed:hover {
+      transform: none;
+    }
+
+    .zones-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .zone {
+      background: white;
+      border: 3px dashed #ddd;
+      border-radius: 20px;
+      padding: 25px;
+      min-height: 200px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .zone::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--zone-color);
+      border-radius: 20px 20px 0 0;
+    }
+
+    .zone[data-accept="symbolique"] {
+      --zone-color: linear-gradient(45deg, #ff9a9e, #fecfef);
+    }
+
+    .zone[data-accept="expert"] {
+      --zone-color: linear-gradient(45deg, #a8edea, #fed6e3);
+    }
+
+    .zone[data-accept="ml"] {
+      --zone-color: linear-gradient(45deg, #ffecd2, #fcb69f);
+    }
+
+    .zone[data-accept="dl"] {
+      --zone-color: linear-gradient(45deg, #a8caba, #5d4e75);
+    }
+
+    .zone[data-accept="none"] {
+      --zone-color: linear-gradient(45deg, #d299c2, #fef9d7);
+    }
+
+    .zone:hover {
+      border-color: #667eea;
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .zone.drag-over {
+      border-color: #667eea;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+      transform: scale(1.02);
+    }
+
+    .zone-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .zone-icon {
+      font-size: 2.5rem;
+      margin-right: 15px;
+    }
+
+    .zone[data-accept="symbolique"] .zone-icon::before { content: "🔧"; }
+    .zone[data-accept="expert"] .zone-icon::before { content: "🎓"; }
+    .zone[data-accept="ml"] .zone-icon::before { content: "📊"; }
+    .zone[data-accept="dl"] .zone-icon::before { content: "🧠"; }
+    .zone[data-accept="none"] .zone-icon::before { content: "📁"; }
+
+    .zone-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .zone-description {
+      font-size: 1rem;
+      color: #666;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    .feedback {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .feedback.success {
+      background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+      color: white;
+      animation: successPulse 0.6s ease;
+    }
+
+    .feedback.error {
+      background: linear-gradient(135deg, #ff6b6b, #ffa8a8);
+      color: white;
+      animation: errorShake 0.6s ease;
+    }
+
+    @keyframes successPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes errorShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .progress-section {
+      text-align: center;
+    }
+
+    .progress-bar {
+      background: #e0e0e0;
+      border-radius: 25px;
+      height: 20px;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 20px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      height: 100%;
+      width: 0%;
+      border-radius: 25px;
+      transition: width 0.5s ease;
+    }
+
+    .score-display {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .reset-btn {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .reset-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+      background: #5a6268;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 8px;
+        border-radius: 8px;
+      }
+      
+      .title {
+        font-size: 2.2rem;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+      }
+      
+      .cards-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+
+      .card {
+        padding: 15px 12px;
+        font-size: 0.95rem;
+      }
+      
+      .zones-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .zone {
+        padding: 20px;
+        min-height: 160px;
+      }
+      
+      .game-info {
+        gap: 15px;
+      }
+
+      .info-card {
+        padding: 15px 20px;
+        min-width: 110px;
+      }
+
+      .info-number {
+        font-size: 2rem;
+      }
+
+      .info-label {
+        font-size: 0.9rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+      }
+
+      .zone-title {
+        font-size: 1.2rem;
+      }
+
+      .zone-description {
+        font-size: 0.9rem;
+      }
+
+      .feedback {
+        padding: 20px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+        margin: 5px;
+      }
+
+      .title {
+        font-size: 1.8rem;
+      }
+
+      .cards-container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .card {
+        padding: 18px;
+        font-size: 1rem;
+      }
+
+      .game-info {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .info-card {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto;
+      }
+
+      .zone {
+        padding: 15px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <div class="header">
+      <h1 class="title">🤖 Découvrir l'IA en s'amusant</h1>
+      <p class="subtitle">Glissez chaque usage dans la bonne catégorie d'IA. Apprenez les concepts en jouant !</p>
+    </div>
 
-  <h1>🎲 Jeu interactif : IA du quotidien</h1>
-  <p>Glissez chaque usage dans la bonne catégorie d'IA. Apprenez en jouant !</p>
+    <div class="game-info">
+      <div class="info-card">
+        <span class="info-number" id="score-number">0</span>
+        <span class="info-label">Score</span>
+      </div>
+      <div class="info-card">
+        <span class="info-number">10</span>
+        <span class="info-label">Cartes totales</span>
+      </div>
+      <div class="info-card">
+        <span class="info-number">5</span>
+        <span class="info-label">Catégories</span>
+      </div>
+    </div>
 
-  <div id="cards">
-    <div class="card" draggable="true" data-type="expert">Parcoursup (classement des dossiers)</div>
-    <div class="card" draggable="true" data-type="symbolique">Chatbot simple (FAQ scolaire)</div>
-    <div class="card" draggable="true" data-type="ml">YouTube (recommandations)</div>
-    <div class="card" draggable="true" data-type="ml">Spotify (playlists personnalisées)</div>
-    <div class="card" draggable="true" data-type="dl">Quick, Draw! (dessin deviné par IA)</div>
-    <div class="card" draggable="true" data-type="dl">Reconnaissance vocale (Siri, Alexa)</div>
-    <div class="card" draggable="true" data-type="symbolique">GPS (itinéraire fixe par règles)</div>
-    <div class="card" draggable="true" data-type="none">Classeur papiers</div>
-    <div class="card" draggable="true" data-type="expert">PIX (évaluations numériques)</div>
-    <div class="card" draggable="true" data-type="ml">Instagram (fil d’actualité)</div>
+    <div class="cards-section">
+      <h2 class="section-title">📚 Usages à classer</h2>
+      <div class="cards-container" id="cards">
+        <div class="card" draggable="true" data-type="expert">Parcoursup (classement des dossiers)</div>
+        <div class="card" draggable="true" data-type="symbolique">Chatbot simple (FAQ scolaire)</div>
+        <div class="card" draggable="true" data-type="ml">YouTube (recommandations)</div>
+        <div class="card" draggable="true" data-type="ml">Spotify (playlists personnalisées)</div>
+        <div class="card" draggable="true" data-type="dl">Quick, Draw! (dessin deviné par IA)</div>
+        <div class="card" draggable="true" data-type="dl">Reconnaissance vocale (Siri, Alexa)</div>
+        <div class="card" draggable="true" data-type="symbolique">GPS (itinéraire fixe par règles)</div>
+        <div class="card" draggable="true" data-type="none">Classeur papiers</div>
+        <div class="card" draggable="true" data-type="expert">PIX (évaluations numériques)</div>
+        <div class="card" draggable="true" data-type="ml">Instagram (fil d'actualité)</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">🎯 Catégories d'IA</h2>
+    <div class="zones-container">
+      <div class="zone" data-accept="symbolique">
+        <div class="zone-header">
+          <div class="zone-icon"></div>
+          <div>
+            <div class="zone-title">IA symbolique</div>
+          </div>
+        </div>
+        <div class="zone-description">Basée sur des règles fixes (SI... ALORS...)</div>
+      </div>
+
+      <div class="zone" data-accept="expert">
+        <div class="zone-header">
+          <div class="zone-icon"></div>
+          <div>
+            <div class="zone-title">Systèmes experts</div>
+          </div>
+        </div>
+        <div class="zone-description">Imitent un raisonnement d'expert avec une base de connaissances</div>
+      </div>
+
+      <div class="zone" data-accept="ml">
+        <div class="zone-header">
+          <div class="zone-icon"></div>
+          <div>
+            <div class="zone-title">Machine Learning</div>
+          </div>
+        </div>
+        <div class="zone-description">Apprend à partir de données pour s'améliorer</div>
+      </div>
+
+      <div class="zone" data-accept="dl">
+        <div class="zone-header">
+          <div class="zone-icon"></div>
+          <div>
+            <div class="zone-title">Deep Learning</div>
+          </div>
+        </div>
+        <div class="zone-description">Réseaux de neurones, analyse d'images/sons</div>
+      </div>
+
+      <div class="zone" data-accept="none">
+        <div class="zone-header">
+          <div class="zone-icon"></div>
+          <div>
+            <div class="zone-title">Pas d'IA</div>
+          </div>
+        </div>
+        <div class="zone-description">Outils classiques, sans intelligence artificielle</div>
+      </div>
+    </div>
+
+    <div class="feedback" id="feedback">
+      Commencez par glisser une carte vers sa catégorie ! 🚀
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="score-display" id="score">Progression : 0 / 10</div>
+      <button class="reset-btn" onclick="resetGame()">🔄 Recommencer</button>
+    </div>
   </div>
-
-  <div class="board">
-    <div class="zone" data-accept="symbolique">
-      <h3>IA symbolique</h3>
-      <p>Basée sur des règles fixes (SI... ALORS...)</p>
-    </div>
-    <div class="zone" data-accept="expert">
-      <h3>Systèmes experts</h3>
-      <p>Imitent un raisonnement d’expert avec une base de connaissances</p>
-    </div>
-    <div class="zone" data-accept="ml">
-      <h3>Machine Learning</h3>
-      <p>Apprend à partir de données pour s’améliorer</p>
-    </div>
-    <div class="zone" data-accept="dl">
-      <h3>Deep Learning</h3>
-      <p>Réseaux de neurones, analyse d’images/sons</p>
-    </div>
-    <div class="zone" data-accept="none">
-      <h3>Pas d’IA</h3>
-      <p>Outils classiques, sans intelligence artificielle</p>
-    </div>
-  </div>
-
-  <div class="feedback" id="feedback"></div>
-  <div id="score">Score : 0 / 10</div>
 
   <script>
     const cards = document.querySelectorAll('.card');
     const zones = document.querySelectorAll('.zone');
     const feedback = document.getElementById('feedback');
     const scoreDisplay = document.getElementById('score');
+    const scoreNumber = document.getElementById('score-number');
+    const progressFill = document.getElementById('progress-fill');
     let score = 0;
+    let totalCards = cards.length;
 
     let dragged = null;
+
+    // Mélanger les cartes au chargement
+    function shuffleCards() {
+      const cardsContainer = document.getElementById('cards');
+      const cardsArray = Array.from(cards);
+      for (let i = cardsArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        cardsContainer.appendChild(cardsArray[j]);
+      }
+    }
 
     cards.forEach(card => {
       card.addEventListener('dragstart', () => {
         dragged = card;
         card.classList.add('dragging');
       });
+
       card.addEventListener('dragend', () => {
         dragged = null;
         card.classList.remove('dragging');
@@ -116,42 +572,100 @@
     zones.forEach(zone => {
       zone.addEventListener('dragover', e => {
         e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('drag-over');
       });
 
       zone.addEventListener('drop', () => {
-        if (dragged) {
+        zone.classList.remove('drag-over');
+        if (dragged && !dragged.classList.contains('placed')) {
           const type = dragged.getAttribute('data-type');
           const accept = zone.getAttribute('data-accept');
+          
           if (type === accept) {
             zone.appendChild(dragged);
-            feedback.innerHTML = "✅ Bien joué ! " + explications(type);
-            score++;
-            scoreDisplay.innerHTML = "Score : " + score + " / 10";
+            dragged.classList.add('placed');
             dragged.setAttribute('draggable', 'false');
-            dragged.style.background = "#2ecc71";
+            
+            score++;
+            updateUI(true, type);
           } else {
-            feedback.innerHTML = "❌ Mauvais choix. Réessaie !";
+            updateUI(false);
           }
         }
       });
     });
 
+    function updateUI(success, type = null) {
+      if (success) {
+        feedback.innerHTML = "✅ Excellent ! " + explications(type);
+        feedback.className = "feedback success";
+        scoreNumber.textContent = score;
+        scoreDisplay.innerHTML = `Progression : ${score} / ${totalCards}`;
+        
+        const progressPercent = (score / totalCards) * 100;
+        progressFill.style.width = progressPercent + '%';
+        
+        if (score === totalCards) {
+          setTimeout(() => {
+            feedback.innerHTML = "🎉 Bravo ! Vous maîtrisez maintenant les différents types d'IA !";
+            feedback.className = "feedback success";
+          }, 2000);
+        }
+      } else {
+        feedback.innerHTML = "❌ Pas tout à fait ! Réfléchissez au type de technologie utilisée et réessayez.";
+        feedback.className = "feedback error";
+        setTimeout(() => {
+          feedback.className = "feedback";
+        }, 3000);
+      }
+    }
+
     function explications(type) {
       switch(type) {
         case "symbolique":
-          return "Les IA symboliques suivent des règles programmées. Exemple : un GPS basique calcule un itinéraire avec SI... ALORS...";
+          return "Les IA symboliques suivent des règles programmées. Exemple : un GPS basique calcule un itinéraire avec des règles fixes.";
         case "expert":
-          return "Les systèmes experts imitent un spécialiste avec des règles et une base de connaissances. Exemple : Parcoursup ou PIX.";
+          return "Les systèmes experts imitent un spécialiste avec des règles et une base de connaissances structurée.";
         case "ml":
-          return "Le machine learning apprend à partir de données pour prédire ou recommander. Exemple : YouTube, Spotify, Instagram.";
+          return "Le machine learning apprend à partir de données pour prédire ou recommander du contenu personnalisé.";
         case "dl":
-          return "Le deep learning utilise des réseaux de neurones à plusieurs couches pour traiter images, sons ou textes. Exemple : Siri, Quick Draw!.";
+          return "Le deep learning utilise des réseaux de neurones complexes pour traiter images, sons ou textes naturels.";
         case "none":
-          return "Pas d’IA ici ! Exemple : un classeur papier reste un outil statique.";
+          return "Pas d'IA ici ! Certains outils restent purement mécaniques ou statiques.";
         default:
           return "";
       }
     }
+
+    function resetGame() {
+      // Remettre toutes les cartes dans le conteneur original
+      const cardsContainer = document.getElementById('cards');
+      cards.forEach(card => {
+        card.classList.remove('placed');
+        card.setAttribute('draggable', 'true');
+        cardsContainer.appendChild(card);
+      });
+      
+      // Réinitialiser le score
+      score = 0;
+      scoreNumber.textContent = '0';
+      scoreDisplay.innerHTML = 'Progression : 0 / 10';
+      progressFill.style.width = '0%';
+      
+      // Réinitialiser le feedback
+      feedback.innerHTML = "Commencez par glisser une carte vers sa catégorie ! 🚀";
+      feedback.className = "feedback";
+      
+      // Mélanger à nouveau
+      shuffleCards();
+    }
+
+    // Mélanger au chargement de la page
+    shuffleCards();
   </script>
 </body>
 </html>
