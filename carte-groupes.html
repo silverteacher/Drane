@@ -9,18 +9,17 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        .container { display: flex; height: 100vh; }
-        .map-container { flex: 1; display: flex; flex-direction: column; }
+        .container { display: flex; height: 100vh; flex-direction: column; }
+        .map-container { flex: 1; display: flex; flex-direction: column; min-height: 0; }
         .header { background: white; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .header h1 { font-size: 24px; color: #1f2937; margin-bottom: 4px; }
         .header p { font-size: 14px; color: #6b7280; }
-        #map { flex: 1; }
-        .sidebar { width: 384px; background: white; overflow-y: auto; border-left: 1px solid #e5e7eb; }
+        #map { flex: 1; min-height: 400px; }
+        .sidebar { width: 100%; background: white; overflow-y: auto; border-top: 1px solid #e5e7eb; max-height: 50vh; }
         .sidebar-content { padding: 16px; }
         .sidebar h2 { font-size: 20px; color: #1f2937; margin-bottom: 16px; }
         .formation-block { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e5e7eb; }
         .formation-header { display: flex; align-items: start; margin-bottom: 8px; }
-        .color-dot { width: 16px; height: 16px; border-radius: 50%; margin-top: 4px; margin-right: 8px; flex-shrink: 0; }
         .formation-title { font-weight: bold; color: #1f2937; font-size: 16px; }
         .formation-desc { font-size: 14px; color: #6b7280; font-style: italic; margin-top: 4px; }
         .sessions { margin-left: 24px; margin-top: 12px; }
@@ -30,9 +29,28 @@
         .session-link { display: inline-block; margin-top: 8px; padding: 6px 12px; color: white; text-decoration: none; border-radius: 4px; font-size: 12px; transition: opacity 0.2s; }
         .session-link:hover { opacity: 0.8; }
         .custom-marker { background: transparent !important; border: none !important; }
-        @media (max-width: 768px) {
-            .container { flex-direction: column; }
-            .sidebar { width: 100%; height: 50vh; border-left: none; border-top: 1px solid #e5e7eb; }
+        .footer { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            padding: 16px 20px; 
+            text-align: center; 
+            font-size: 14px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .footer::before {
+            content: "🤖 ";
+        }
+        @media (min-width: 768px) {
+            .container { flex-direction: row; }
+            .map-container { flex: 1; }
+            .sidebar { 
+                width: 384px; 
+                border-top: none; 
+                border-left: 1px solid #e5e7eb;
+                max-height: calc(100vh - 46px);
+            }
         }
     </style>
 </head>
@@ -41,7 +59,7 @@
         <div class="map-container">
             <div class="header">
                 <h1>Formations - Académie de Lille</h1>
-                <p>Cliquez sur les marqueurs pour voir les détails et vous inscrire - 10 sessions au total</p>
+                <p>Cliquez sur les marqueurs pour voir les détails et vous inscrire - 12 sessions au total</p>
             </div>
             <div id="map"></div>
         </div>
@@ -53,15 +71,29 @@
             </div>
         </div>
     </div>
+    
+    <div class="footer">
+        Application créée en partie avec l'intelligence artificielle et vérifiée par un agent
+    </div>
 
     <script>
         const formations = [
             {
+                titre: "Master Class Citoyenneté Numérique",
+                descriptif: "Formation approfondie sur la citoyenneté numérique avec Canopé",
+                sessions: [
+                    { groupe: "Session visio", date: "Mardi 19 novembre 2025 (14h-16h)", lieu: "En ligne", lat: 50.6292, lon: 3.0573, dateSort: "2025-11-19", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/display/sessionId/30181/tab/management" },
+                    { groupe: "Session présentiel", date: "Mercredi 3 décembre 2025 (13h30-17h30)", lieu: "Atelier Canopé, Villeneuve d'Ascq", lat: 50.6204, lon: 3.1374, dateSort: "2025-12-03", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/display/sessionId/30183/tab/management" }
+                ],
+                color: "#3B82F6",
+                icon: "🎓"
+            },
+            {
                 titre: "Ressources libres pour créer",
                 descriptif: "Formation sur l'utilisation et la création de ressources éducatives libres",
                 sessions: [
-                    { groupe: "Groupe 1", date: "Mercredi 26 novembre 2025", lieu: "Arras", lat: 50.2919, lon: 2.7772, lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30332/tab/trainee/pill/individualTrainingPlan/infos/101723%7C01%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" },
-                    { groupe: "Groupe 2", date: "Mercredi 14 janvier 2026", lieu: "Collège Verlaine, Lille", lat: 50.6292, lon: 3.0573, lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30339/tab/trainee/pill/individualTrainingPlan/infos/101723%7C02%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" }
+                    { groupe: "Groupe 1", date: "Mercredi 26 novembre 2025", lieu: "Arras", lat: 50.2919, lon: 2.7772, dateSort: "2025-11-26", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30332/tab/trainee/pill/individualTrainingPlan/infos/101723%7C01%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" },
+                    { groupe: "Groupe 2", date: "Mercredi 14 janvier 2026", lieu: "Collège Verlaine, Lille", lat: 50.6292, lon: 3.0573, dateSort: "2026-01-14", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30339/tab/trainee/pill/individualTrainingPlan/infos/101723%7C02%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" }
                 ],
                 color: "#8B5CF6",
                 icon: "🎨"
@@ -70,9 +102,9 @@
                 titre: "Débat radio",
                 descriptif: "Apprendre à animer et organiser des débats radiophoniques avec les élèves",
                 sessions: [
-                    { groupe: "Groupe 1", date: "Mercredi 12 novembre 2025", lieu: "Lycée des Pays de Saint-Omer", lat: 50.7500, lon: 2.2500, lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30001/tab/trainee/pill/individualTrainingPlan/infos/101724%7C01%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" },
-                    { groupe: "Groupe 2", date: "Mercredi 3 décembre 2025", lieu: "Lycée Sannier, Boulogne-sur-Mer", lat: 50.7264, lon: 1.6147, lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30005/tab/trainee/pill/individualTrainingPlan/infos/101724%7C02%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" },
-                    { groupe: "Groupe 3", date: "Mercredi 07 janvier ", lieu: "Lycée Paul Hazard, Armentières", lat: 50.6878, lon: 2.8814, lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30006/tab/trainee/pill/individualTrainingPlan/infos/101724%7C03%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" }
+                    { groupe: "Groupe 1", date: "Mercredi 12 novembre 2025", lieu: "Lycée des Pays de Saint-Omer", lat: 50.7500, lon: 2.2500, dateSort: "2025-11-12", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30001/tab/trainee/pill/individualTrainingPlan/infos/101724%7C01%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" },
+                    { groupe: "Groupe 2", date: "Mercredi 3 décembre 2025", lieu: "Lycée Sannier, Boulogne-sur-Mer", lat: 50.7264, lon: 1.6147, dateSort: "2025-12-03", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30005/tab/trainee/pill/individualTrainingPlan/infos/101724%7C02%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" },
+                    { groupe: "Groupe 3", date: "Mercredi 07 janvier 2026", lieu: "Lycée Paul Hazard, Armentières", lat: 50.6878, lon: 2.8814, dateSort: "2026-01-07", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30006/tab/trainee/pill/individualTrainingPlan/infos/101724%7C03%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" }
                 ],
                 color: "#10B981",
                 icon: "🎙️"
@@ -81,8 +113,8 @@
                 titre: "Vidéo et image de soi",
                 descriptif: "Maîtriser les outils vidéo et travailler sur l'image de soi avec les élèves",
                 sessions: [
-                    { groupe: "Groupe 1", date: "Mercredi 17 décembre 2025", lieu: "Lycée Guy Mollet, Arras", lat: 50.2919, lon: 2.7772, lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30344/tab/trainee/pill/individualTrainingPlan/infos/101725%7C01%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" },
-                    { groupe: "Groupe 2", date: "Mercredi 19 novembre 2025", lieu: "Collège Verlaine, Lille", lat: 50.6292, lon: 3.0573, lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30348/tab/trainee/pill/individualTrainingPlan/infos/101725%7C02%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" }
+                    { groupe: "Groupe 1", date: "Mercredi 17 décembre 2025", lieu: "Lycée Guy Mollet, Arras", lat: 50.2919, lon: 2.7772, dateSort: "2025-12-17", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30344/tab/trainee/pill/individualTrainingPlan/infos/101725%7C01%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" },
+                    { groupe: "Groupe 2", date: "Mercredi 19 novembre 2025", lieu: "Collège Verlaine, Lille", lat: 50.6292, lon: 3.0573, dateSort: "2025-11-19", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30348/tab/trainee/pill/individualTrainingPlan/infos/101725%7C02%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" }
                 ],
                 color: "#F59E0B",
                 icon: "🎬"
@@ -91,14 +123,31 @@
                 titre: "L'esprit critique à l'ère de l'IA",
                 descriptif: "Développer l'esprit critique des élèves face à l'intelligence artificielle",
                 sessions: [
-                    { groupe: "Groupe 1", date: "Mercredi 10 décembre 2025", lieu: "Lycée Wallon, Valenciennes", lat: 50.3592, lon: 3.5238, lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30182/tab/trainee/pill/individualTrainingPlan/infos/101726%7C01%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" },
-                    { groupe: "Groupe 2", date: "Mercredi 17 décembre 2025", lieu: "Lycée Giraux Sannier, Boulogne", lat: 50.7264, lon: 1.6147, lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30180/tab/trainee/pill/individualTrainingPlan/infos/101726%7C02%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" },
-                    { groupe: "Groupe 3", date: "Mercredi 14 janvier 2026", lieu: "Collège Verlaine, Lille", lat: 50.6292, lon: 3.0573, lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30179/tab/trainee/pill/individualTrainingPlan/infos/101726%7C03%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" }
+                    { groupe: "Groupe 1", date: "Mercredi 10 décembre 2025", lieu: "Lycée Wallon, Valenciennes", lat: 50.3592, lon: 3.5238, dateSort: "2025-12-10", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30182/tab/trainee/pill/individualTrainingPlan/infos/101726%7C01%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" },
+                    { groupe: "Groupe 2", date: "Mercredi 17 décembre 2025", lieu: "Lycée Giraux Sannier, Boulogne", lat: 50.7264, lon: 1.6147, dateSort: "2025-12-17", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30180/tab/trainee/pill/individualTrainingPlan/infos/101726%7C02%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" },
+                    { groupe: "Groupe 3", date: "Mercredi 14 janvier 2026", lieu: "Collège Verlaine, Lille", lat: 50.6292, lon: 3.0573, dateSort: "2026-01-14", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30179/tab/trainee/pill/individualTrainingPlan/infos/101726%7C03%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" }
                 ],
                 color: "#EF4444",
                 icon: "🤖"
             }
         ];
+
+        // Créer un tableau plat de toutes les sessions avec leur formation
+        const allSessions = [];
+        formations.forEach(formation => {
+            formation.sessions.forEach(session => {
+                allSessions.push({
+                    ...session,
+                    formationTitre: formation.titre,
+                    formationDesc: formation.descriptif,
+                    formationColor: formation.color,
+                    formationIcon: formation.icon
+                });
+            });
+        });
+
+        // Trier par date
+        allSessions.sort((a, b) => new Date(a.dateSort) - new Date(b.dateSort));
 
         // Initialiser la carte
         const map = L.map('map').setView([50.5, 2.7], 9);
@@ -127,112 +176,113 @@
             };
         }
 
-        let markerCount = 0;
-
-        // Créer les marqueurs
-        formations.forEach(formation => {
-            formation.sessions.forEach(session => {
-                markerCount++;
-                const pos = getOffset(session.lat, session.lon);
-                
-                const icon = L.divIcon({
-                    className: 'custom-marker',
-                    html: `
-                        <div style="position: relative;">
-                            <div style="
-                                background: linear-gradient(135deg, ${formation.color} 0%, ${formation.color}dd 100%);
-                                width: 40px; 
-                                height: 40px; 
-                                border-radius: 50% 50% 50% 0; 
-                                border: 3px solid white; 
-                                box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-                                transform: rotate(-45deg);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                            ">
-                                <span style="transform: rotate(45deg); font-size: 18px;">${formation.icon}</span>
-                            </div>
-                            <div style="
-                                position: absolute;
-                                top: -8px;
-                                right: -8px;
-                                background: white;
-                                border: 2px solid ${formation.color};
-                                border-radius: 50%;
-                                width: 20px;
-                                height: 20px;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                font-size: 10px;
-                                font-weight: bold;
-                                color: ${formation.color};
-                                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                            ">${markerCount}</div>
+        // Créer les marqueurs pour chaque session triée
+        allSessions.forEach((session, index) => {
+            const markerNumber = index + 1;
+            const pos = getOffset(session.lat, session.lon);
+            
+            const icon = L.divIcon({
+                className: 'custom-marker',
+                html: `
+                    <div style="position: relative;">
+                        <div style="
+                            background: linear-gradient(135deg, ${session.formationColor} 0%, ${session.formationColor}dd 100%);
+                            width: 40px; 
+                            height: 40px; 
+                            border-radius: 50% 50% 50% 0; 
+                            border: 3px solid white; 
+                            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+                            transform: rotate(-45deg);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        ">
+                            <span style="transform: rotate(45deg); font-size: 18px;">${session.formationIcon}</span>
                         </div>
-                    `,
-                    iconSize: [40, 40],
-                    iconAnchor: [12, 40],
-                    popupAnchor: [8, -40]
-                });
-
-                const marker = L.marker([pos.lat, pos.lon], { icon }).addTo(map);
-
-                const popupContent = `
-                    <div style="font-family: system-ui; max-width: 280px;">
-                        <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                            <span style="font-size: 24px; margin-right: 8px;">${formation.icon}</span>
-                            <strong style="color: ${formation.color}; font-size: 16px;">${formation.titre}</strong>
-                        </div>
-                        <div style="background: ${formation.color}22; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
-                            <strong style="font-size: 14px; color: ${formation.color};">${session.groupe}</strong>
-                        </div>
-                        <div style="font-size: 13px; line-height: 1.6; margin-bottom: 8px;">
-                            📍 ${session.lieu}<br/>
-                            📅 ${session.date}
-                        </div>
-                        <a href="${session.lien}" target="_blank" style="
-                            display: block; 
-                            background: linear-gradient(135deg, ${formation.color} 0%, ${formation.color}dd 100%); 
-                            color: white; 
-                            padding: 10px 16px; 
-                            text-decoration: none; 
-                            border-radius: 6px; 
-                            font-size: 13px; 
-                            font-weight: 600;
-                            text-align: center;
+                        <div style="
+                            position: absolute;
+                            top: -8px;
+                            right: -8px;
+                            background: white;
+                            border: 2px solid ${session.formationColor};
+                            border-radius: 50%;
+                            width: 20px;
+                            height: 20px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 10px;
+                            font-weight: bold;
+                            color: ${session.formationColor};
                             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                            transition: transform 0.2s;
-                        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                            ✓ S'inscrire maintenant
-                        </a>
+                        ">${markerNumber}</div>
                     </div>
-                `;
+                `,
+                iconSize: [40, 40],
+                iconAnchor: [12, 40],
+                popupAnchor: [8, -40]
+            });
 
-                marker.bindPopup(popupContent, {
-                    maxWidth: 300,
-                    className: 'custom-popup'
-                });
+            const marker = L.marker([pos.lat, pos.lon], { icon }).addTo(map);
+
+            const popupContent = `
+                <div style="font-family: system-ui; max-width: 280px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                        <span style="font-size: 24px; margin-right: 8px;">${session.formationIcon}</span>
+                        <strong style="color: ${session.formationColor}; font-size: 16px;">${session.formationTitre}</strong>
+                    </div>
+                    <div style="background: ${session.formationColor}22; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+                        <strong style="font-size: 14px; color: ${session.formationColor};">${session.groupe}</strong>
+                    </div>
+                    <div style="font-size: 13px; line-height: 1.6; margin-bottom: 8px;">
+                        📍 ${session.lieu}<br/>
+                        📅 ${session.date}
+                    </div>
+                    <a href="${session.lien}" target="_blank" style="
+                        display: block; 
+                        background: linear-gradient(135deg, ${session.formationColor} 0%, ${session.formationColor}dd 100%); 
+                        color: white; 
+                        padding: 10px 16px; 
+                        text-decoration: none; 
+                        border-radius: 6px; 
+                        font-size: 13px; 
+                        font-weight: 600;
+                        text-align: center;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                        transition: transform 0.2s;
+                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        ✓ S'inscrire maintenant
+                    </a>
+                </div>
+            `;
+
+            marker.bindPopup(popupContent, {
+                maxWidth: 300,
+                className: 'custom-popup'
             });
         });
 
-        // Générer la liste des formations
+        // Générer la liste des formations triées par date
         const formationsList = document.getElementById('formations-list');
-        let sessionNumber = 0;
         
-        formations.forEach(formation => {
-            const block = document.createElement('div');
-            block.className = 'formation-block';
+        allSessions.forEach((session, index) => {
+            const sessionNumber = index + 1;
             
-            let sessionsHTML = '';
-            formation.sessions.forEach(session => {
-                sessionNumber++;
-                sessionsHTML += `
-                    <div class="session-card" style="border-left: 4px solid ${formation.color};">
+            const sessionCard = document.createElement('div');
+            sessionCard.className = 'formation-block';
+            sessionCard.innerHTML = `
+                <div class="formation-header">
+                    <div style="font-size: 28px; margin-right: 8px;">${session.formationIcon}</div>
+                    <div style="flex: 1;">
+                        <div class="formation-title" style="color: ${session.formationColor};">${session.formationTitre}</div>
+                        <div class="formation-desc">${session.formationDesc}</div>
+                    </div>
+                </div>
+                <div class="sessions">
+                    <div class="session-card" style="border-left: 4px solid ${session.formationColor};">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
                             <span style="
-                                background: ${formation.color}; 
+                                background: ${session.formationColor}; 
                                 color: white; 
                                 width: 24px; 
                                 height: 24px; 
@@ -249,28 +299,17 @@
                             📍 ${session.lieu}<br/>
                             📅 ${session.date}
                         </div>
-                        <a href="${session.lien}" target="_blank" class="session-link" style="background-color: ${formation.color}">
+                        <a href="${session.lien}" target="_blank" class="session-link" style="background-color: ${session.formationColor}">
                             🔗 Lien de préinscription
                         </a>
                     </div>
-                `;
-            });
-
-            block.innerHTML = `
-                <div class="formation-header">
-                    <div style="font-size: 28px; margin-right: 8px;">${formation.icon}</div>
-                    <div>
-                        <div class="formation-title" style="color: ${formation.color};">${formation.titre}</div>
-                        <div class="formation-desc">${formation.descriptif}</div>
-                    </div>
                 </div>
-                <div class="sessions">${sessionsHTML}</div>
             `;
             
-            formationsList.appendChild(block);
+            formationsList.appendChild(sessionCard);
         });
 
-        console.log(`✓ Carte initialisée avec ${markerCount} sessions de formation`);
+        console.log(`✓ Carte initialisée avec ${allSessions.length} sessions de formation triées par date`);
     </script>
 </body>
 </html>
