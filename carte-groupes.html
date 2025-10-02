@@ -19,7 +19,7 @@
         
         .search-container { 
             background: white; 
-            padding: 12px 16px; 
+            padding: 10px 16px 8px 16px; 
             border-top: 1px solid #e5e7eb; 
             flex-shrink: 0;
             position: relative;
@@ -31,10 +31,10 @@
         }
         .search-input {
             width: 100%;
-            padding: 10px 40px 10px 12px;
+            padding: 8px 40px 8px 12px;
             border: 2px solid #d1d5db;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.2s;
         }
         .search-input:focus {
@@ -77,8 +77,8 @@
             outline-offset: 2px;
         }
         .search-results {
-            margin-top: 8px;
-            font-size: 12px;
+            margin-top: 4px;
+            font-size: 11px;
             color: #6b7280;
             font-style: italic;
         }
@@ -209,32 +209,33 @@
                 <h1>Formations - Académie de Lille</h1>
                 <p>Cliquez sur les marqueurs pour voir les détails et vous inscrire - 12 sessions au total</p>
             </header>
+            
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <label for="search-input" class="sr-only">Rechercher une formation</label>
+                    <input 
+                        type="search" 
+                        id="search-input" 
+                        class="search-input" 
+                        placeholder="Rechercher par formation, lieu ou date..."
+                        aria-label="Rechercher une formation par nom, lieu ou date"
+                        autocomplete="off"
+                    >
+                    <span class="search-icon" aria-hidden="true">🔍</span>
+                    <button 
+                        id="clear-search" 
+                        class="clear-button" 
+                        aria-label="Effacer la recherche"
+                        title="Effacer la recherche"
+                    >✕</button>
+                </div>
+                <div id="search-results" class="search-results" role="status" aria-live="polite"></div>
+            </div>
+            
             <div class="info-banner" role="alert" aria-live="polite">
                 ℹ️ Cette carte n'affiche que les sessions qui se passent en présentiel (sauf le webinaire Canopé). La fiche Sofia de préinscription donne les détails des sessions hybrides associées au module.
             </div>
             <div id="map" role="application" aria-label="Carte interactive des formations"></div>
-        </div>
-        
-        <div class="search-container">
-            <div class="search-wrapper">
-                <label for="search-input" class="sr-only">Rechercher une formation</label>
-                <input 
-                    type="search" 
-                    id="search-input" 
-                    class="search-input" 
-                    placeholder="Rechercher par formation, lieu ou date..."
-                    aria-label="Rechercher une formation par nom, lieu ou date"
-                    autocomplete="off"
-                >
-                <span class="search-icon" aria-hidden="true">🔍</span>
-                <button 
-                    id="clear-search" 
-                    class="clear-button" 
-                    aria-label="Effacer la recherche"
-                    title="Effacer la recherche"
-                >✕</button>
-            </div>
-            <div id="search-results" class="search-results" role="status" aria-live="polite"></div>
         </div>
         
         <aside class="sidebar" aria-label="Liste des formations">
