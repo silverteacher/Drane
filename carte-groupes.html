@@ -8,50 +8,68 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        .container { display: flex; height: 100vh; flex-direction: column; }
-        .map-container { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-        .header { background: white; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header h1 { font-size: 24px; color: #1f2937; margin-bottom: 4px; }
-        .header p { font-size: 14px; color: #6b7280; }
-        .info-banner { background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 12px 16px; margin: 8px 16px; border-radius: 4px; font-size: 13px; color: #1e40af; }
-        #map { flex: 1; min-height: 400px; }
-        .sidebar { width: 100%; background: white; overflow-y: auto; border-top: 1px solid #e5e7eb; max-height: 50vh; }
-        .sidebar-content { padding: 16px; }
-        .sidebar h2 { font-size: 20px; color: #1f2937; margin-bottom: 16px; }
-        .formation-block { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e5e7eb; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; overflow: hidden; }
+        .container { display: flex; height: 100vh; height: 100dvh; flex-direction: column; }
+        .map-container { display: flex; flex-direction: column; min-height: 0; height: 45vh; }
+        .header { background: white; padding: 12px 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header h1 { font-size: 18px; color: #1f2937; margin-bottom: 4px; }
+        .header p { font-size: 12px; color: #6b7280; line-height: 1.4; }
+        .info-banner { background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 10px 12px; margin: 8px 12px; border-radius: 4px; font-size: 11px; color: #1e40af; line-height: 1.5; }
+        #map { flex: 1; min-height: 200px; }
+        .sidebar { width: 100%; background: white; overflow-y: auto; border-top: 1px solid #e5e7eb; height: 55vh; }
+        .sidebar-content { padding: 12px; }
+        .sidebar h2 { font-size: 16px; color: #1f2937; margin-bottom: 12px; }
+        .formation-block { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
         .formation-header { display: flex; align-items: start; margin-bottom: 8px; }
-        .formation-title { font-weight: bold; color: #1f2937; font-size: 16px; }
-        .formation-desc { font-size: 14px; color: #6b7280; font-style: italic; margin-top: 4px; }
-        .sessions { margin-left: 24px; margin-top: 12px; }
-        .session-card { background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 12px; }
-        .session-group { font-weight: 600; font-size: 14px; color: #1f2937; margin-bottom: 4px; }
-        .session-info { font-size: 12px; color: #6b7280; line-height: 1.6; }
-        .session-link { display: inline-block; margin-top: 8px; padding: 6px 12px; color: white; text-decoration: none; border-radius: 4px; font-size: 12px; transition: opacity 0.2s; }
+        .formation-title { font-weight: bold; color: #1f2937; font-size: 14px; line-height: 1.3; }
+        .formation-desc { font-size: 12px; color: #6b7280; font-style: italic; margin-top: 4px; line-height: 1.4; }
+        .sessions { margin-left: 0; margin-top: 10px; }
+        .session-card { background: #f9fafb; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb; margin-bottom: 10px; }
+        .session-group { font-weight: 600; font-size: 13px; color: #1f2937; margin-bottom: 4px; }
+        .session-info { font-size: 11px; color: #6b7280; line-height: 1.6; }
+        .session-link { display: inline-block; margin-top: 8px; padding: 8px 12px; color: white; text-decoration: none; border-radius: 4px; font-size: 11px; transition: opacity 0.2s; }
         .session-link:hover { opacity: 0.8; }
         .custom-marker { background: transparent !important; border: none !important; }
         .footer { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
             color: white; 
-            padding: 16px 20px; 
+            padding: 10px 16px; 
             text-align: center; 
-            font-size: 14px;
+            font-size: 11px;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             font-weight: 500;
             letter-spacing: 0.3px;
+            line-height: 1.4;
         }
         .footer::before {
             content: "🤖 ";
         }
         @media (min-width: 768px) {
             .container { flex-direction: row; }
-            .map-container { flex: 1; }
+            .map-container { flex: 1; height: auto; }
+            .header { padding: 16px; }
+            .header h1 { font-size: 24px; }
+            .header p { font-size: 14px; }
+            .info-banner { padding: 12px 16px; margin: 8px 16px; font-size: 13px; }
+            #map { min-height: 400px; }
             .sidebar { 
                 width: 384px; 
+                height: auto;
                 border-top: none; 
                 border-left: 1px solid #e5e7eb;
                 max-height: calc(100vh - 46px);
             }
+            .sidebar-content { padding: 16px; }
+            .sidebar h2 { font-size: 20px; margin-bottom: 16px; }
+            .formation-block { margin-bottom: 24px; padding-bottom: 24px; }
+            .formation-title { font-size: 16px; }
+            .formation-desc { font-size: 14px; }
+            .sessions { margin-left: 24px; margin-top: 12px; }
+            .session-card { padding: 12px; border-radius: 8px; margin-bottom: 12px; }
+            .session-group { font-size: 14px; }
+            .session-info { font-size: 12px; }
+            .session-link { font-size: 12px; }
+            .footer { padding: 16px 20px; font-size: 14px; }
         }
     </style>
 </head>
@@ -185,14 +203,20 @@
             const markerNumber = index + 1;
             const pos = getOffset(session.lat, session.lon);
             
+            // Taille des marqueurs adaptée au viewport
+            const isMobile = window.innerWidth < 768;
+            const markerSize = isMobile ? 50 : 40;
+            const badgeSize = isMobile ? 24 : 20;
+            const iconSize = isMobile ? 22 : 18;
+            
             const icon = L.divIcon({
                 className: 'custom-marker',
                 html: `
                     <div style="position: relative;">
                         <div style="
                             background: linear-gradient(135deg, ${session.formationColor} 0%, ${session.formationColor}dd 100%);
-                            width: 40px; 
-                            height: 40px; 
+                            width: ${markerSize}px; 
+                            height: ${markerSize}px; 
                             border-radius: 50% 50% 50% 0; 
                             border: 3px solid white; 
                             box-shadow: 0 3px 8px rgba(0,0,0,0.3);
@@ -201,7 +225,7 @@
                             align-items: center;
                             justify-content: center;
                         ">
-                            <span style="transform: rotate(45deg); font-size: 18px;">${session.formationIcon}</span>
+                            <span style="transform: rotate(45deg); font-size: ${iconSize}px;">${session.formationIcon}</span>
                         </div>
                         <div style="
                             position: absolute;
@@ -210,21 +234,21 @@
                             background: white;
                             border: 2px solid ${session.formationColor};
                             border-radius: 50%;
-                            width: 20px;
-                            height: 20px;
+                            width: ${badgeSize}px;
+                            height: ${badgeSize}px;
                             display: flex;
                             align-items: center;
                             justify-content: center;
-                            font-size: 10px;
+                            font-size: ${isMobile ? 12 : 10}px;
                             font-weight: bold;
                             color: ${session.formationColor};
                             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
                         ">${markerNumber}</div>
                     </div>
                 `,
-                iconSize: [40, 40],
-                iconAnchor: [12, 40],
-                popupAnchor: [8, -40]
+                iconSize: [markerSize, markerSize],
+                iconAnchor: [markerSize * 0.3, markerSize],
+                popupAnchor: [markerSize * 0.2, -markerSize]
             });
 
             const marker = L.marker([pos.lat, pos.lon], { icon }).addTo(map);
@@ -276,26 +300,27 @@
             sessionCard.className = 'formation-block';
             sessionCard.innerHTML = `
                 <div class="formation-header">
-                    <div style="font-size: 28px; margin-right: 8px;">${session.formationIcon}</div>
-                    <div style="flex: 1;">
+                    <div style="font-size: 24px; margin-right: 8px; flex-shrink: 0;">${session.formationIcon}</div>
+                    <div style="flex: 1; min-width: 0;">
                         <div class="formation-title" style="color: ${session.formationColor};">${session.formationTitre}</div>
                         <div class="formation-desc">${session.formationDesc}</div>
                     </div>
                 </div>
                 <div class="sessions">
                     <div class="session-card" style="border-left: 4px solid ${session.formationColor};">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap;">
                             <span style="
                                 background: ${session.formationColor}; 
                                 color: white; 
-                                width: 24px; 
-                                height: 24px; 
+                                width: 22px; 
+                                height: 22px; 
                                 border-radius: 50%; 
                                 display: flex; 
                                 align-items: center; 
                                 justify-content: center; 
-                                font-size: 12px;
+                                font-size: 11px;
                                 font-weight: bold;
+                                flex-shrink: 0;
                             ">${sessionNumber}</span>
                             <div class="session-group">${session.groupe}</div>
                         </div>
@@ -303,7 +328,7 @@
                             📍 ${session.lieu}<br/>
                             📅 ${session.date}
                         </div>
-                        <a href="${session.lien}" target="_blank" class="session-link" style="background-color: ${session.formationColor}">
+                        <a href="${session.lien}" target="_blank" class="session-link" style="background-color: ${session.formationColor}; display: block; text-align: center;">
                             🔗 Lien de préinscription
                         </a>
                     </div>
