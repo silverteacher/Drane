@@ -14,8 +14,6 @@
         .header { background: white; padding: 10px 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0; }
         .header h1 { font-size: 17px; color: #1f2937; margin-bottom: 3px; }
         .header p { font-size: 11px; color: #6b7280; line-height: 1.3; }
-        .info-banner { background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 8px 12px; margin: 6px 12px; border-radius: 4px; font-size: 10px; color: #1e40af; line-height: 1.4; flex-shrink: 0; }
-        #map { flex: 1; min-height: 0; position: relative; z-index: 1; }
         
         .search-container { 
             background: white; 
@@ -83,6 +81,9 @@
             font-style: italic;
         }
         
+        .info-banner { background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 8px 12px; margin: 6px 12px; border-radius: 4px; font-size: 10px; color: #1e40af; line-height: 1.4; flex-shrink: 0; }
+        #map { flex: 1; min-height: 0; position: relative; z-index: 1; }
+        
         .sidebar { 
             width: 100%; 
             background: white; 
@@ -147,6 +148,18 @@
             font-size: 14px;
         }
         
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
         @media (min-width: 768px) {
             body { overflow: auto; position: static; width: auto; height: auto; }
             .container { flex-direction: row; height: 100vh; }
@@ -154,10 +167,10 @@
             .header { padding: 16px; }
             .header h1 { font-size: 24px; }
             .header p { font-size: 14px; }
-            .info-banner { padding: 12px 16px; margin: 8px 16px; font-size: 13px; }
-            #map { min-height: 400px; }
             .search-container { padding: 16px; }
             .search-input { font-size: 15px; padding: 12px 40px 12px 16px; }
+            .info-banner { padding: 12px 16px; margin: 8px 16px; font-size: 13px; }
+            #map { min-height: 400px; }
             .sidebar { 
                 width: 384px; 
                 height: auto;
@@ -261,8 +274,8 @@
                 titre: "Master Class Citoyenneté Numérique",
                 descriptif: "Formation approfondie sur la citoyenneté numérique avec Canopé",
                 sessions: [
-                    { groupe: "Session visio", date: "Mardi 19 novembre 2025 (14h-16h)", lieu: "En ligne", lat: 50.6292, lon: 3.0573, dateSort: "2025-11-19", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/display/sessionId/30181/tab/management" },
-                    { groupe: "Session présentiel", date: "Mercredi 3 décembre 2025 (13h30-17h30)", lieu: "Atelier Canopé, Villeneuve d'Ascq", lat: 50.6204, lon: 3.1374, dateSort: "2025-12-03", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/display/sessionId/30183/tab/management" }
+                    { groupe: "Session visio", date: "Mardi 19 novembre 2025 (14h-16h)", lieu: "En ligne", lat: 50.6292, lon: 3.0573, dateSort: "2025-11-19", lien: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30181/tab/trainee/pill/individualTrainingPlan/infos/102693|01|S1|2025-11-19_14:00:00|2025-11-19_16:00:00" },
+                    { groupe: "Session présentiel", date: "Mercredi 3 décembre 2025 (13h30-17h30)", lieu: "Atelier Canopé, Villeneuve d'Ascq", lat: 50.6204, lon: 3.1374, dateSort: "2025-12-03", lien: "", linkText: "Lien de préinscription à venir" }
                 ],
                 color: "#3B82F6",
                 icon: "🎓"
@@ -426,21 +439,37 @@
                         📍 ${session.lieu}<br/>
                         📅 ${session.date}
                     </div>
-                    <a href="${session.lien}" target="_blank" rel="noopener noreferrer" style="
-                        display: block; 
-                        background: linear-gradient(135deg, ${session.formationColor} 0%, ${session.formationColor}dd 100%); 
-                        color: white; 
-                        padding: 10px 16px; 
-                        text-decoration: none; 
-                        border-radius: 6px; 
-                        font-size: 13px; 
-                        font-weight: 600;
-                        text-align: center;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                        transition: transform 0.2s;
-                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                        ✓ S'inscrire maintenant
-                    </a>
+                    ${session.lien ? `
+                        <a href="${session.lien}" target="_blank" rel="noopener noreferrer" style="
+                            display: block; 
+                            background: linear-gradient(135deg, ${session.formationColor} 0%, ${session.formationColor}dd 100%); 
+                            color: white; 
+                            padding: 10px 16px; 
+                            text-decoration: none; 
+                            border-radius: 6px; 
+                            font-size: 13px; 
+                            font-weight: 600;
+                            text-align: center;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                            transition: transform 0.2s;
+                        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            ✓ S'inscrire maintenant
+                        </a>
+                    ` : `
+                        <div style="
+                            display: block; 
+                            background: #9ca3af; 
+                            color: white; 
+                            padding: 10px 16px; 
+                            border-radius: 6px; 
+                            font-size: 13px; 
+                            font-weight: 600;
+                            text-align: center;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                        ">
+                            ⏳ ${session.linkText || 'Lien de préinscription à venir'}
+                        </div>
+                    `}
                 </div>
             `;
 
@@ -498,91 +527,3 @@
                             🔗 Lien de préinscription
                         </a>
                     </div>
-                </div>
-            `;
-            
-            formationsList.appendChild(sessionCard);
-        });
-
-        // Fonction de recherche
-        const searchInput = document.getElementById('search-input');
-        const clearButton = document.getElementById('clear-search');
-        const searchResults = document.getElementById('search-results');
-        const noResults = document.getElementById('no-results');
-
-        function performSearch(query) {
-            const searchTerm = query.toLowerCase().trim();
-            const formationBlocks = document.querySelectorAll('.formation-block');
-            let visibleCount = 0;
-
-            if (searchTerm === '') {
-                // Afficher tout
-                formationBlocks.forEach(block => {
-                    block.classList.remove('hidden');
-                });
-                markers.forEach(m => map.addLayer(m.marker));
-                searchResults.textContent = '';
-                noResults.style.display = 'none';
-                clearButton.style.display = 'none';
-                return;
-            }
-
-            clearButton.style.display = 'flex';
-
-            // Filtrer les formations
-            formationBlocks.forEach(block => {
-                const searchText = block.getAttribute('data-search-text');
-                if (searchText.includes(searchTerm)) {
-                    block.classList.remove('hidden');
-                    visibleCount++;
-                } else {
-                    block.classList.add('hidden');
-                }
-            });
-
-            // Filtrer les marqueurs
-            markers.forEach(m => {
-                const searchText = `${m.session.formationTitre} ${m.session.formationDesc} ${m.session.lieu} ${m.session.date} ${m.session.groupe}`.toLowerCase();
-                if (searchText.includes(searchTerm)) {
-                    map.addLayer(m.marker);
-                } else {
-                    map.removeLayer(m.marker);
-                }
-            });
-
-            // Afficher les résultats
-            if (visibleCount === 0) {
-                searchResults.textContent = '';
-                noResults.style.display = 'block';
-            } else {
-                searchResults.textContent = `${visibleCount} session${visibleCount > 1 ? 's' : ''} trouvée${visibleCount > 1 ? 's' : ''}`;
-                noResults.style.display = 'none';
-            }
-        }
-
-        searchInput.addEventListener('input', (e) => {
-            performSearch(e.target.value);
-        });
-
-        clearButton.addEventListener('click', () => {
-            searchInput.value = '';
-            searchInput.focus();
-            performSearch('');
-        });
-
-        // Raccourci clavier pour la recherche
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                searchInput.focus();
-            }
-            if (e.key === 'Escape' && document.activeElement === searchInput) {
-                searchInput.value = '';
-                performSearch('');
-            }
-        });
-
-        console.log(`✓ Carte initialisée avec ${allSessions.length} sessions de formation triées par date`);
-    </script>
-</body>
-</html>
