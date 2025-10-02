@@ -191,7 +191,6 @@
             .footer { padding: 16px 20px; font-size: 14px; }
         }
         
-        /* Amélioration de l'accessibilité */
         .skip-link {
             position: absolute;
             top: -40px;
@@ -206,7 +205,6 @@
             top: 0;
         }
         
-        /* Focus visible pour clavier */
         *:focus-visible {
             outline: 2px solid #3B82F6;
             outline-offset: 2px;
@@ -324,7 +322,6 @@
             }
         ];
 
-        // Créer un tableau plat de toutes les sessions avec leur formation
         const allSessions = [];
         formations.forEach(formation => {
             formation.sessions.forEach(session => {
@@ -338,10 +335,8 @@
             });
         });
 
-        // Trier par date
         allSessions.sort((a, b) => new Date(a.dateSort) - new Date(b.dateSort));
 
-        // Initialiser la carte
         const map = L.map('map').setView([50.5, 2.7], 9);
         
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -349,17 +344,15 @@
             maxZoom: 19
         }).addTo(map);
 
-        // Fonction pour décaler légèrement les marqueurs au même endroit
         let offsetIndex = {};
         function getOffset(lat, lon) {
-            const key = `${lat},${lon}`;
+            const key = lat + ',' + lon;
             if (!offsetIndex[key]) {
                 offsetIndex[key] = 0;
             }
             const offset = offsetIndex[key];
             offsetIndex[key]++;
             
-            // Décalage en fonction de l'index
             const offsetAmount = 0.015;
             const angle = (offset * 360 / 6) * (Math.PI / 180);
             return {
@@ -368,15 +361,12 @@
             };
         }
 
-        // Stocker les marqueurs pour la recherche
         const markers = [];
 
-        // Créer les marqueurs pour chaque session triée
         allSessions.forEach((session, index) => {
             const markerNumber = index + 1;
             const pos = getOffset(session.lat, session.lon);
             
-            // Taille des marqueurs adaptée au viewport
             const isMobile = window.innerWidth < 768;
             const markerSize = isMobile ? 50 : 40;
             const badgeSize = isMobile ? 24 : 20;
@@ -384,41 +374,7 @@
             
             const icon = L.divIcon({
                 className: 'custom-marker',
-                html: `
-                    <div style="position: relative;">
-                        <div style="
-                            background: linear-gradient(135deg, ${session.formationColor} 0%, ${session.formationColor}dd 100%);
-                            width: ${markerSize}px; 
-                            height: ${markerSize}px; 
-                            border-radius: 50% 50% 50% 0; 
-                            border: 3px solid white; 
-                            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-                            transform: rotate(-45deg);
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                        ">
-                            <span style="transform: rotate(45deg); font-size: ${iconSize}px;">${session.formationIcon}</span>
-                        </div>
-                        <div style="
-                            position: absolute;
-                            top: -8px;
-                            right: -8px;
-                            background: white;
-                            border: 2px solid ${session.formationColor};
-                            border-radius: 50%;
-                            width: ${badgeSize}px;
-                            height: ${badgeSize}px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: ${isMobile ? 12 : 10}px;
-                            font-weight: bold;
-                            color: ${session.formationColor};
-                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                        ">${markerNumber}</div>
-                    </div>
-                `,
+                html: '<div style="position: relative;"><div style="background: linear-gradient(135deg, ' + session.formationColor + ' 0%, ' + session.formationColor + 'dd 100%); width: ' + markerSize + 'px; height: ' + markerSize + 'px; border-radius: 50% 50% 50% 0; border: 3px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.3); transform: rotate(-45deg); display: flex; align-items: center; justify-content: center;"><span style="transform: rotate(45deg); font-size: ' + iconSize + 'px;">' + session.formationIcon + '</span></div><div style="position: absolute; top: -8px; right: -8px; background: white; border: 2px solid ' + session.formationColor + '; border-radius: 50%; width: ' + badgeSize + 'px; height: ' + badgeSize + 'px; display: flex; align-items: center; justify-content: center; font-size: ' + (isMobile ? 12 : 10) + 'px; font-weight: bold; color: ' + session.formationColor + '; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">' + markerNumber + '</div></div>',
                 iconSize: [markerSize, markerSize],
                 iconAnchor: [markerSize * 0.3, markerSize],
                 popupAnchor: [markerSize * 0.2, -markerSize]
@@ -426,63 +382,23 @@
 
             const marker = L.marker([pos.lat, pos.lon], { icon }).addTo(map);
 
-            const popupContent = `
-                <div style="font-family: system-ui; max-width: 280px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                        <span style="font-size: 24px; margin-right: 8px;" aria-hidden="true">${session.formationIcon}</span>
-                        <strong style="color: ${session.formationColor}; font-size: 16px;">${session.formationTitre}</strong>
-                    </div>
-                    <div style="background: ${session.formationColor}22; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
-                        <strong style="font-size: 14px; color: ${session.formationColor};">${session.groupe}</strong>
-                    </div>
-                    <div style="font-size: 13px; line-height: 1.6; margin-bottom: 8px;">
-                        📍 ${session.lieu}<br/>
-                        📅 ${session.date}
-                    </div>
-                    ${session.lien ? `
-                        <a href="${session.lien}" target="_blank" rel="noopener noreferrer" style="
-                            display: block; 
-                            background: linear-gradient(135deg, ${session.formationColor} 0%, ${session.formationColor}dd 100%); 
-                            color: white; 
-                            padding: 10px 16px; 
-                            text-decoration: none; 
-                            border-radius: 6px; 
-                            font-size: 13px; 
-                            font-weight: 600;
-                            text-align: center;
-                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                            transition: transform 0.2s;
-                        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                            ✓ S'inscrire maintenant
-                        </a>
-                    ` : `
-                        <div style="
-                            display: block; 
-                            background: #9ca3af; 
-                            color: white; 
-                            padding: 10px 16px; 
-                            border-radius: 6px; 
-                            font-size: 13px; 
-                            font-weight: 600;
-                            text-align: center;
-                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                        ">
-                            ⏳ ${session.linkText || 'Lien de préinscription à venir'}
-                        </div>
-                    `}
-                </div>
-            `;
+            let buttonHtml = '';
+            if (session.lien) {
+                buttonHtml = '<a href="' + session.lien + '" target="_blank" rel="noopener noreferrer" style="display: block; background: linear-gradient(135deg, ' + session.formationColor + ' 0%, ' + session.formationColor + 'dd 100%); color: white; padding: 10px 16px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 600; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.05)\'" onmouseout="this.style.transform=\'scale(1)\'">✓ S\'inscrire maintenant</a>';
+            } else {
+                buttonHtml = '<div style="display: block; background: #9ca3af; color: white; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">⏳ ' + (session.linkText || 'Lien de préinscription à venir') + '</div>';
+            }
+
+            const popupContent = '<div style="font-family: system-ui; max-width: 280px;"><div style="display: flex; align-items: center; margin-bottom: 8px;"><span style="font-size: 24px; margin-right: 8px;" aria-hidden="true">' + session.formationIcon + '</span><strong style="color: ' + session.formationColor + '; font-size: 16px;">' + session.formationTitre + '</strong></div><div style="background: ' + session.formationColor + '22; padding: 8px; border-radius: 6px; margin-bottom: 8px;"><strong style="font-size: 14px; color: ' + session.formationColor + ';">' + session.groupe + '</strong></div><div style="font-size: 13px; line-height: 1.6; margin-bottom: 8px;">📍 ' + session.lieu + '<br/>📅 ' + session.date + '</div>' + buttonHtml + '</div>';
 
             marker.bindPopup(popupContent, {
                 maxWidth: 300,
                 className: 'custom-popup'
             });
 
-            // Stocker le marqueur avec les données de session
-            markers.push({ marker, session, index: markerNumber });
+            markers.push({ marker: marker, session: session, index: markerNumber });
         });
 
-        // Générer la liste des formations triées par date
         const formationsList = document.getElementById('formations-list');
         
         allSessions.forEach((session, index) => {
@@ -491,39 +407,95 @@
             const sessionCard = document.createElement('article');
             sessionCard.className = 'formation-block';
             sessionCard.setAttribute('data-session-id', sessionNumber);
-            sessionCard.setAttribute('data-search-text', `${session.formationTitre} ${session.formationDesc} ${session.lieu} ${session.date} ${session.groupe}`.toLowerCase());
+            sessionCard.setAttribute('data-search-text', (session.formationTitre + ' ' + session.formationDesc + ' ' + session.lieu + ' ' + session.date + ' ' + session.groupe).toLowerCase());
             
-            sessionCard.innerHTML = `
-                <div class="formation-header">
-                    <div style="font-size: 24px; margin-right: 8px; flex-shrink: 0;" aria-hidden="true">${session.formationIcon}</div>
-                    <div style="flex: 1; min-width: 0;">
-                        <h3 class="formation-title" style="color: ${session.formationColor};">${session.formationTitre}</h3>
-                        <p class="formation-desc">${session.formationDesc}</p>
-                    </div>
-                </div>
-                <div class="sessions">
-                    <div class="session-card" style="border-left: 4px solid ${session.formationColor};">
-                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap;">
-                            <span style="
-                                background: ${session.formationColor}; 
-                                color: white; 
-                                width: 22px; 
-                                height: 22px; 
-                                border-radius: 50%; 
-                                display: flex; 
-                                align-items: center; 
-                                justify-content: center; 
-                                font-size: 11px;
-                                font-weight: bold;
-                                flex-shrink: 0;
-                            " aria-hidden="true">${sessionNumber}</span>
-                            <div class="session-group">${session.groupe}</div>
-                        </div>
-                        <div class="session-info">
-                            📍 ${session.lieu}<br/>
-                            📅 ${session.date}
-                        </div>
-                        <a href="${session.lien}" target="_blank" rel="noopener noreferrer" class="session-link" style="background-color: ${session.formationColor}; display: block; text-align: center;">
-                            🔗 Lien de préinscription
-                        </a>
-                    </div>
+            let linkHtml = '';
+            if (session.lien) {
+                linkHtml = '<a href="' + session.lien + '" target="_blank" rel="noopener noreferrer" class="session-link" style="background-color: ' + session.formationColor + '; display: block; text-align: center;">🔗 Lien de préinscription</a>';
+            } else {
+                linkHtml = '<div class="session-link" style="background-color: #9ca3af; display: block; text-align: center; cursor: default;">⏳ ' + (session.linkText || 'Lien de préinscription à venir') + '</div>';
+            }
+            
+            sessionCard.innerHTML = '<div class="formation-header"><div style="font-size: 24px; margin-right: 8px; flex-shrink: 0;" aria-hidden="true">' + session.formationIcon + '</div><div style="flex: 1; min-width: 0;"><h3 class="formation-title" style="color: ' + session.formationColor + ';">' + session.formationTitre + '</h3><p class="formation-desc">' + session.formationDesc + '</p></div></div><div class="sessions"><div class="session-card" style="border-left: 4px solid ' + session.formationColor + ';"><div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap;"><span style="background: ' + session.formationColor + '; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; flex-shrink: 0;" aria-hidden="true">' + sessionNumber + '</span><div class="session-group">' + session.groupe + '</div></div><div class="session-info">📍 ' + session.lieu + '<br/>📅 ' + session.date + '</div>' + linkHtml + '</div></div>';
+            
+            formationsList.appendChild(sessionCard);
+        });
+
+        const searchInput = document.getElementById('search-input');
+        const clearButton = document.getElementById('clear-search');
+        const searchResults = document.getElementById('search-results');
+        const noResults = document.getElementById('no-results');
+
+        function performSearch(query) {
+            const searchTerm = query.toLowerCase().trim();
+            const formationBlocks = document.querySelectorAll('.formation-block');
+            let visibleCount = 0;
+
+            if (searchTerm === '') {
+                formationBlocks.forEach(function(block) {
+                    block.classList.remove('hidden');
+                });
+                markers.forEach(function(m) {
+                    map.addLayer(m.marker);
+                });
+                searchResults.textContent = '';
+                noResults.style.display = 'none';
+                clearButton.style.display = 'none';
+                return;
+            }
+
+            clearButton.style.display = 'flex';
+
+            formationBlocks.forEach(function(block) {
+                const searchText = block.getAttribute('data-search-text');
+                if (searchText.includes(searchTerm)) {
+                    block.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    block.classList.add('hidden');
+                }
+            });
+
+            markers.forEach(function(m) {
+                const searchText = (m.session.formationTitre + ' ' + m.session.formationDesc + ' ' + m.session.lieu + ' ' + m.session.date + ' ' + m.session.groupe).toLowerCase();
+                if (searchText.includes(searchTerm)) {
+                    map.addLayer(m.marker);
+                } else {
+                    map.removeLayer(m.marker);
+                }
+            });
+
+            if (visibleCount === 0) {
+                searchResults.textContent = '';
+                noResults.style.display = 'block';
+            } else {
+                searchResults.textContent = visibleCount + ' session' + (visibleCount > 1 ? 's' : '') + ' trouvée' + (visibleCount > 1 ? 's' : '');
+                noResults.style.display = 'none';
+            }
+        }
+
+        searchInput.addEventListener('input', function(e) {
+            performSearch(e.target.value);
+        });
+
+        clearButton.addEventListener('click', function() {
+            searchInput.value = '';
+            searchInput.focus();
+            performSearch('');
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            if (e.key === 'Escape' && document.activeElement === searchInput) {
+                searchInput.value = '';
+                performSearch('');
+            }
+        });
+
+        console.log('Carte initialisée avec ' + allSessions.length + ' sessions de formation triées par date');
+    </script>
+</body>
+</html>
