@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formation IA Éducation - CPE & Enseignants</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-size: 18px;
+        }
+        .card-flip {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .card-flip.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 1rem;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        .card-front {
+            transform: rotateY(0deg);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .demo-mode {
+            animation: pulse 2s infinite;
+        }
+        .incident-blink {
+            animation: incident-pulse 3s infinite;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+        @keyframes incident-pulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            }
+            50% { 
+                transform: scale(1.01);
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+            }
+            100% { 
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- En-tête -->
+        <div class="text-center mb-8">
+            <h1 class="text-6xl font-bold text-gray-800 mb-6">⚖️ Tribunal des IA <span class="text-4xl">(cas concrets enseignants, CPE, chefs d'établissement)</span></h1>
+            <p class="text-gray-600 text-xl">Formation pratique aux enjeux IA dans l'éducation française</p>
+        </div>
+
+        <!-- Mode Démo et Animateur -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-blue-600 text-white p-6 rounded-xl text-center shadow-lg">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <span class="text-4xl">🎯</span>
+                    <h2 class="text-2xl font-bold">Mode Démonstration</h2>
+                </div>
+                <button id="startDemo" class="bg-white text-blue-600 px-8 py-3 rounded-xl text-lg font-bold hover:bg-gray-100 transition-colors demo-mode">
+                    Lancer la Démo Interactive
+                </button>
+            </div>
+            <div class="bg-red-600 text-white p-6 rounded-xl text-center shadow-lg">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <span class="text-4xl">🎮</span>
+                    <h2 class="text-2xl font-bold">Mode Animateur</h2>
+                </div>
+                <button id="startAnimator" class="bg-white text-red-600 px-8 py-3 rounded-xl text-lg font-bold hover:bg-gray-100 transition-colors">
+                    Contrôle des Incidents
+                </button>
+            </div>
+            <div class="bg-green-600 text-white p-6 rounded-xl text-center shadow-lg">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <span class="text-4xl">📋</span>
+                    <h2 class="text-2xl font-bold">Guide Complet</h2>
+                </div>
+                <button id="showSummary" class="bg-white text-green-600 px-8 py-3 rounded-xl text-lg font-bold hover:bg-gray-100 transition-colors">
+                    Voir Tous les Cas
+                </button>
+            </div>
+        </div>
+
+        <!-- Sélection des rôles -->
+        <div class="grid md:grid-cols-3 gap-8 mb-10">
+            <div class="bg-white rounded-2xl p-8 text-center border-2 border-gray-200 shadow-xl">
+                <div class="text-6xl mb-4">👨‍🏫</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-3">Enseignants</h3>
+                <p class="text-gray-600 text-lg mb-3">Cas pratiques d'usage pédagogique de l'IA</p>
+                <div class="bg-yellow-400 text-black px-4 py-2 rounded-full text-lg font-bold mb-5">
+                    100 points max
+                </div>
+                <div class="text-sm text-gray-600 mb-4">
+                    • Détection de plagiat IA<br>
+                    • Outils d'assistance pédagogique<br>
+                    • Évaluation et IA générative<br>
+                    • Équité numérique en classe
+                </div>
+                <button onclick="selectRole('enseignant')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors">
+                    Sélectionner
+                </button>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-8 text-center border-2 border-gray-200 shadow-xl">
+                <div class="text-6xl mb-4">🎓</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-3">CPE</h3>
+                <p class="text-gray-600 text-lg mb-3">Cas de vie scolaire et surveillance IA</p>
+                <div class="bg-yellow-400 text-black px-4 py-2 rounded-full text-lg font-bold mb-5">
+                    100 points max
+                </div>
+                <div class="text-sm text-gray-600 mb-4">
+                    • Surveillance comportementale<br>
+                    • Détection de harcèlement<br>
+                    • Orientation automatisée<br>
+                    • Gestion des données élèves
+                </div>
+                <button onclick="selectRole('cpe')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors">
+                    Sélectionner
+                </button>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 text-center border-2 border-gray-200 shadow-xl">
+                <div class="text-6xl mb-4">🏛️</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-3">Chefs d'Établissement</h3>
+                <p class="text-gray-600 text-lg mb-3">Décisions stratégiques et responsabilité IA</p>
+                <div class="bg-yellow-400 text-black px-4 py-2 rounded-full text-lg font-bold mb-5">
+                    100 points max
+                </div>
+                <div class="text-sm text-gray-600 mb-4">
+                    • Politique d'établissement IA<br>
+                    • Responsabilité juridique<br>
+                    • Budget et investissements<br>
+                    • Gestion des crises IA
+                </div>
+                <button onclick="selectRole('chef')" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors">
+                    Sélectionner
+                </button>
+            </div>
+        </div>
+
+        <!-- Zone de jeu -->
+        <div id="gameArea" class="hidden">
+            <div class="bg-white rounded-2xl p-8 mb-8 border-2 border-gray-200 shadow-xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 id="roleTitle" class="text-3xl font-bold text-gray-800"></h2>
+                    <div class="flex gap-3">
+                        <button onclick="shuffleCards()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors">
+                            🔄 Mélanger
+                        </button>
+                        <button onclick="showIncidentCards()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors">
+                            ⚡ Cartes Incidents
+                        </button>
+                        <button id="triggerIncident" onclick="triggerIncident()" disabled class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            🎯 Déclencher Incident
+                        </button>
+                        <button id="resolveIncident" onclick="resolveIncident()" class="hidden bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors animate-pulse">
+                            ⚡ Résoudre l'Incident
+                        </button>
+                        <button onclick="resetGame()" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors">
+                            ↩️ Retour
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Compteurs -->
+                <div class="flex gap-6 mb-6">
+                    <div class="bg-blue-600 text-white px-6 py-3 rounded-xl text-lg font-semibold">
+                        <span class="font-bold">Cartes jouées: </span>
+                        <span id="playedCount">0</span>
+                    </div>
+                    <div class="bg-green-600 text-white px-6 py-3 rounded-xl text-lg font-semibold">
+                        <span class="font-bold">Score: </span>
+                        <span id="score">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cartes -->
+            <div id="cardsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Les cartes seront générées ici -->
+            </div>
+        </div>
+
+        <!-- Zone de démonstration -->
+        <div id="demoArea" class="hidden bg-white rounded-2xl p-8 border-2 border-gray-200 shadow-xl">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">🎬 Démonstration en cours</h3>
+            <div id="demoContent" class="text-gray-700 space-y-4 text-lg">
+                <!-- Contenu de la démo -->
+            </div>
+            <button onclick="stopDemo()" class="mt-6 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors">
+                Arrêter la Démo
+            </button>
+        </div>
+
+        <!-- Mode Animateur -->
+        <div id="animatorMode" class="hidden fixed inset-0 bg-black z-50">
+            <div class="h-full flex flex-col">
+                <!-- Header Animateur -->
+                <div class="bg-red-600 text-white p-6 flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <span class="text-4xl">🎮</span>
+                        <h1 class="text-3xl font-bold">Mode Animateur - Contrôle des Incidents</h1>
+                    </div>
+                    <button onclick="exitAnimatorMode()" class="bg-white text-red-600 px-6 py-3 rounded-xl text-lg font-bold hover:bg-gray-100 transition-colors">
+                        ✕ Quitter
+                    </button>
+                </div>
+                
+                <!-- Instructions -->
+                <div class="bg-red-50 p-6 border-b">
+                    <h2 class="text-xl font-bold text-red-800 mb-3">🎯 Instructions</h2>
+                    <p class="text-red-700 text-lg">Cliquez sur une carte incident pour la déclencher en plein écran. Les participants verront la situation d'urgence et devront réagir selon la législation française.</p>
+                </div>
+                
+                <!-- Cartes Incidents -->
+                <div class="flex-1 p-8 bg-gray-100 overflow-y-auto">
+                    <div id="animatorIncidentCards" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Les cartes incidents seront affichées ici -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Incident Plein Écran -->
+        <div id="fullscreenIncident" class="hidden fixed inset-0 bg-red-600 z-50 flex items-center justify-center">
+            <div class="text-center text-white p-12 max-w-4xl">
+                <div class="text-8xl mb-8">⚡</div>
+                <h1 class="text-6xl font-bold mb-8" id="incidentTitle">INCIDENT DÉCLENCHÉ</h1>
+                <div class="bg-white/20 rounded-2xl p-8 mb-8">
+                    <p class="text-2xl mb-6" id="incidentScenario"></p>
+                    <p class="text-3xl font-bold text-yellow-300" id="incidentDilemma"></p>
+                </div>
+                <div id="incidentOptions" class="space-y-4 mb-8">
+                    <!-- Options seront affichées ici -->
+                </div>
+                <div class="flex gap-4 justify-center flex-wrap">
+                    <button onclick="startDiscussion()" class="bg-yellow-500 text-black px-8 py-4 rounded-xl text-xl font-bold hover:bg-yellow-400 transition-colors">
+                        🗣️ Lancer la Discussion
+                    </button>
+                    <button onclick="closeFullscreenIncident()" class="bg-white text-red-600 px-8 py-4 rounded-xl text-xl font-bold hover:bg-gray-100 transition-colors">
+                        Fermer l'Incident
+                    </button>
+                    <button onclick="backToAnimator()" class="bg-red-800 text-white px-8 py-4 rounded-xl text-xl font-bold hover:bg-red-900 transition-colors">
+                        Retour Animateur
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Cartes Incidents -->
+        <div id="incidentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-4xl font-bold text-gray-800">⚡ Cartes Incidents - Guide Formateur</h2>
+                        <button onclick="closeIncidentModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors">
+                            ✕ Fermer
+                        </button>
+                    </div>
+                    <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
+                        <h3 class="text-xl font-bold text-red-800 mb-3">🎯 Instructions pour le formateur</h3>
+                        <p class="text-red-700 text-lg">Ces incidents sont basés sur des cas réels et la législation française. Utilisez-les pour tester les réflexes professionnels face aux enjeux IA dans l'éducation.</p>
+                    </div>
+                    <div id="incidentCardsDisplay" class="grid md:grid-cols-2 gap-6">
+                        <!-- Les cartes incidents seront affichées ici -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Guide Complet -->
+        <div id="summaryModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-7xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-4xl font-bold text-gray-800">📋 Guide Complet - CPE & Enseignants</h2>
+                        <button onclick="closeSummaryModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors">
+                            ✕ Fermer
+                        </button>
+                    </div>
+                    
+                    <!-- Vue d'ensemble -->
+                    <div class="mb-8 bg-gradient-to-r from-blue-50 to-green-50 border-l-4 border-blue-500 p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4">🎯 Formation IA pour l'Éducation Française</h3>
+                        <div class="grid md:grid-cols-3 gap-4 text-blue-700">
+                            <div class="bg-white p-4 rounded-lg shadow">
+                                <div class="text-3xl mb-2">⚖️</div>
+                                <h4 class="font-bold">Conformité Légale</h4>
+                                <p class="text-sm">RGPD, Code de l'éducation, CNIL</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow">
+                                <div class="text-3xl mb-2">🛠️</div>
+                                <h4 class="font-bold">Outils Concrets</h4>
+                                <p class="text-sm">Cas déclinables en formation</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow">
+                                <div class="text-3xl mb-2">👥</div>
+                                <h4 class="font-bold">Rôles Terrain</h4>
+                                <p class="text-sm">CPE et Enseignants</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="summaryContent">
+                        <!-- Le contenu sera généré par JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Espace en bas pour permettre le scroll complet -->
+        <div class="h-32"></div>
+    </div>
+
+    <script>
+        // Cartes incidents spécifiques par rôle - Alignées législation française
+        const incidentCardsByRole = {
+            chef: [
+                {
+                    title: "🚨 Fuite de Données IA - Responsabilité Pénale",
+                    scenario: "CRISE MAJEURE : L'IA de gestion scolaire de votre établissement a été piratée. 2000 dossiers d'élèves (notes, sanctions, données médicales) sont en vente sur le dark web. Le parquet ouvre une enquête pour négligence dans la protection des données.",
+                    dilemma: "Comment gérer cette crise qui engage votre responsabilité pénale ?",
+                    options: [
+                        "Minimiser l'incident pour protéger la réputation",
+                        "Notification immédiate CNIL et familles sous 72h",
+                        "Attendre les conclusions de l'enquête"
+                    ],
+                    points: 100,
+                    type: "incident",
+                    bestAnswer: 1,
+                    explanation: "RGPD Art. 33-34 : notification obligatoire sous 72h à la CNIL et aux personnes concernées. Le défaut de notification aggrave la responsabilité pénale du chef d'établissement.",
+                    legalBasis: "RGPD Art. 33-34, Code pénal Art. 226-17, Responsabilité pénale du chef d'établissement",
+                    practicalTool: "Plan de gestion de crise, cellule de communication, audit de sécurité d'urgence"
+                },
+                {
+                    title: "💰 Budget IA - Détournement de Fonds Publics",
+                    scenario: "ALERTE FINANCIÈRE : Vous avez investi 50 000€ dans une IA 'révolutionnaire' qui s'avère être un logiciel basique revendu 10 fois son prix. La chambre régionale des comptes lance un contrôle pour suspicion de favoritisme et gaspillage de fonds publics.",
+                    dilemma: "Comment justifier cet investissement IA défaillant ?",
+                    options: [
+                        "Invoquer l'innovation nécessaire en éducation",
+                        "Reconnaître l'erreur et engager un recours",
+                        "Blâmer le prestataire pour tromperie"
+                    ],
+                    points: 100,
+                    type: "incident",
+                    bestAnswer: 1,
+                    explanation: "Code de la commande publique : obligation de diligence du gestionnaire public. Reconnaître l'erreur et engager un recours limite la responsabilité personnelle et permet la récupération des fonds.",
+                    legalBasis: "Code de la commande publique, Responsabilité des gestionnaires publics, Code pénal Art. 432-16",
+                    practicalTool: "Procédure de recours, audit d'achat, grille d'évaluation technique préalable"
+                },
+                {
+                    title: "⚖️ Discrimination IA - Conseil de Discipline",
+                    scenario: "SCANDALE : L'IA d'aide à la décision disciplinaire que vous avez validée recommande systématiquement l'exclusion pour les élèves de certains quartiers. Un collectif de parents saisit le tribunal administratif et demande votre révocation pour discrimination institutionnelle.",
+                    dilemma: "Votre responsabilité est engagée pour discrimination algorithmique ?",
+                    options: [
+                        "Suspendre immédiatement le système et auditer",
+                        "Défendre l'objectivité de l'algorithme",
+                        "Modifier discrètement les paramètres"
+                    ],
+                    points: 100,
+                    type: "incident",
+                    bestAnswer: 0,
+                    explanation: "Principe d'égalité républicaine : le chef d'établissement est garant de la non-discrimination. L'usage d'un algorithme discriminatoire engage sa responsabilité personnelle et disciplinaire.",
+                    legalBasis: "Constitution Art. 1, Loi anti-discrimination, Statut de la fonction publique",
+                    practicalTool: "Audit de biais urgent, suspension du système, plan de remédiation"
+                }
+            ],
+            enseignant: [
+                {
+                    title: "🤖 Détecteur IA Défaillant - Faux Positifs",
+                    scenario: "URGENT : Votre détecteur de plagiat IA (Turnitin, Compilatio) signale 8 élèves de Terminale pour 'usage d'IA' sur leur dissertation de philosophie. Les copies sont pourtant manuscrites. Les parents menacent de saisir le médiateur académique.",
+                    dilemma: "Comment gérer cette défaillance technique qui met en cause votre évaluation ?",
+                    options: [
+                        "Maintenir les sanctions car l'outil est fiable",
+                        "Suspendre les sanctions et enquêter manuellement",
+                        "Annuler l'évaluation pour toute la classe"
+                    ],
+                    points: 100,
+                    type: "incident",
+                    bestAnswer: 1,
+                    explanation: "Art. L912-1 du Code de l'éducation : l'enseignant est responsable de ses évaluations. Une enquête manuelle s'impose avant toute sanction, les détecteurs IA ayant des taux d'erreur documentés.",
+                    legalBasis: "Code de l'éducation L912-1, Principe du contradictoire",
+                    practicalTool: "Grille d'analyse manuelle, entretien individuel avec l'élève, vérification croisée"
+                },
+                {
+                    title: "📝 ChatGPT en Classe - Usage Non Déclaré",
+                    scenario: "PROBLÈME : Vous découvrez que plusieurs collègues utilisent ChatGPT pour préparer leurs cours et corriger des copies, sans l'avoir déclaré au chef d'établissement. Un parent d'élève l'apprend et saisit la CNIL pour traitement illégal de données.",
+                    dilemma: "Que faire face à cet usage non encadré d'IA générative ?",
+                    options: [
+                        "Continuer discrètement, c'est juste un outil",
+                        "Déclarer immédiatement l'usage au chef d'établissement",
+                        "Arrêter tout usage d'IA par précaution"
+                    ],
+                    points: 100,
+                    type: "incident",
+                    bestAnswer: 1,
+                    explanation: "RGPD Art. 35 : analyse d'impact obligatoire. Le traitement de données d'élèves par IA doit être déclaré et encadré par l'établissement pour être légal.",
+                    legalBasis: "RGPD Art. 35, Circulaire ministérielle sur le numérique éducatif",
+                    practicalTool: "Formulaire de déclaration d'usage IA, charte d'utilisation, formation RGPD"
+                },
+                {
+                    title: "🎯 IA d'Évaluation Discriminatoire",
+                    scenario: "ALERTE : L'IA d'aide à l'évaluation que vous testez semble systématiquement sous-noter les élèves aux noms à consonance étrangère. Une analyse statistique le confirme. Le rectorat lance une enquête.",
+                    dilemma: "Comment réagir face à ce biais algorithmique discriminatoire ?",
+                    options: [
+                        "Arrêter immédiatement l'usage de cet outil",
+                        "Corriger manuellement les biais détectés",
+                        "Demander une mise à jour de l'algorithme"
+                    ],
+                    points: 100,
+                    type: "incident",
+                    bestAnswer: 0,
+                    explanation: "Loi du 3 août 2018 contre les discriminations : usage d'un algorithme discriminatoire interdit. Arrêt immédiat obligatoire pour respecter l'égalité républicaine.",
+                    legalBasis: "Loi anti-discrimination 2018, Code pénal Art. 225-1",
+                    practicalTool: "Audit de biais algorithmique, grille d'évaluation manuelle de secours, signalement hiérarchique"
+                }
+            ],
+            cpe: [
+                {
+                    title: "📱 Surveillance IA Non Consentie",
+                    scenario: "CRISE : L'établissement a installé une IA de surveillance comportementale qui analyse les déplacements et interactions des élèves via les caméras. Aucune information n'a été donnée aux familles. Un collectif de parents saisit le tribunal administratif.",
+                    dilemma: "Comment gérer cette surveillance non déclarée ?",
+                    options: [
+                        "Justifier par la sécurité des élèves",
+                        "Suspendre le système et informer les familles",
+                        "Demander une régularisation a posteriori"
+                    ],
+                    points: 100,
+                    type: "incident",
+                    bestAnswer: 1,
+                    explanation: "RGPD Art. 13-14 : information préalable obligatoire. La surveillance par IA sans consentement des mineurs et information des responsables légaux est illégale.",
+                    legalBasis: "RGPD Art. 13-14, Code de l'éducation L511-2",
+                    practicalTool: "Notice d'information RGPD, formulaire de consentement parental, registre des traitements"
+                },
+                {
+                    title: "🎭 Détection Automatique de Harcèlement",
+                    scenario: "URGENCE : L'IA de détection de harcèlement analyse automatiquement les messages sur l'ENT et signale un élève comme 'harceleur potentiel'. Vous découvrez que l'algorithme s'est trompé, mais l'élève a déjà été convoqué et stigmatisé.",
+                    dilemma: "Comment réparer cette erreur de l'IA de détection ?",
+                    options: [
+                        "Présenter des excuses et effacer les données",
+                        "Maintenir la vigilance car l'IA détecte des signaux",
+                        "Revoir entièrement le processus de détection"
+                    ],
+                    points: 100,
+                    type: "incident",
+                    bestAnswer: 2,
+                    explanation: "Principe de précaution et droit à l'erreur : un processus défaillant doit être suspendu et revu. La stigmatisation d'un élève par erreur algorithmique engage la responsabilité de l'établissement.",
+                    legalBasis: "Code de l'éducation L511-3, Responsabilité administrative",
+                    practicalTool: "Protocole de vérification humaine, procédure de réhabilitation, audit du système de détection"
+                },
+                {
+                    title: "⚖️ Orientation IA et Égalité des Chances",
+                    scenario: "SCANDALE : L'IA d'aide à l'orientation que vous utilisez recommande systématiquement des filières professionnelles aux élèves de quartiers défavorisés, même avec de bons résultats. Le Défenseur des Droits ouvre une enquête pour discrimination.",
+                    dilemma: "Comment répondre à cette accusation de discrimination algorithmique ?",
+                    options: [
+                        "Suspendre l'outil et auditer ses biais",
+                        "Défendre l'objectivité de l'algorithme",
+                        "Corriger manuellement les recommandations"
+                    ],
+                    points: 100,
+                    type: "incident",
+                    bestAnswer: 0,
+                    explanation: "Principe d'égalité républicaine : un algorithme discriminatoire doit être suspendu immédiatement. L'audit des biais est obligatoire avant toute remise en service.",
+                    legalBasis: "Constitution Art. 1, Loi égalité des chances, Code de l'éducation L111-1",
+                    practicalTool: "Audit de biais, grille d'orientation manuelle, formation anti-discrimination"
+                }
+            ]
+        };
+
+        const cardSets = {
+            chef: [
+                {
+                    title: "Politique d'Établissement IA",
+                    scenario: "Votre établissement doit définir une politique claire sur l'usage de l'IA par les enseignants et élèves. Certains collègues utilisent déjà ChatGPT, d'autres s'y opposent fermement.",
+                    dilemma: "Comment élaborer une politique IA équilibrée et légale ?",
+                    options: [
+                        "Interdire complètement l'usage d'IA",
+                        "Créer une charte d'usage encadrée avec formation",
+                        "Laisser chaque enseignant décider librement"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "Une charte d'usage respecte l'autonomie pédagogique tout en assurant la conformité RGPD et l'égalité de traitement. La formation garantit un usage responsable.",
+                    legalBasis: "RGPD Art. 35, Code de l'éducation L912-1, Autonomie des établissements",
+                    practicalTool: "Charte d'usage IA, plan de formation, comité de pilotage numérique"
+                },
+                {
+                    title: "Investissement en IA Éducative",
+                    scenario: "Un éditeur propose une solution IA complète pour 80 000€ : personnalisation des apprentissages, détection de décrochage, aide à l'orientation. Le budget est serré mais la promesse séduisante.",
+                    dilemma: "Investir dans cette solution IA coûteuse ?",
+                    options: [
+                        "Investir immédiatement pour l'innovation",
+                        "Demander une phase pilote gratuite d'évaluation",
+                        "Reporter l'investissement faute de budget"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "La phase pilote permet d'évaluer l'efficacité réelle et la conformité RGPD avant l'investissement. Principe de prudence dans la gestion des fonds publics.",
+                    legalBasis: "Code de la commande publique, Gestion des fonds publics",
+                    practicalTool: "Cahier des charges pilote, grille d'évaluation ROI, comité d'évaluation"
+                },
+                {
+                    title: "Gestion de Crise IA",
+                    scenario: "L'outil d'IA que vous avez validé pour l'orientation a orienté massivement les filles vers des filières littéraires et les garçons vers les sciences. Les médias s'emparent du scandale.",
+                    dilemma: "Comment gérer cette crise de discrimination algorithmique ?",
+                    options: [
+                        "Nier le problème et défendre l'outil",
+                        "Suspendre l'outil et communiquer transparence",
+                        "Modifier discrètement les paramètres"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "La transparence et la suspension immédiate limitent les dégâts juridiques et restaurent la confiance. La dissimulation aggrave la responsabilité.",
+                    legalBasis: "Principe d'égalité, Loi anti-discrimination, Communication de crise",
+                    practicalTool: "Plan de communication de crise, audit de biais, procédure de remédiation"
+                },
+                {
+                    title: "Responsabilité Juridique IA",
+                    scenario: "Un élève conteste sa note obtenue via un système d'IA d'évaluation que vous avez autorisé. Les parents menacent d'un recours au tribunal administratif pour vice de procédure.",
+                    dilemma: "Comment défendre la légalité de l'évaluation par IA ?",
+                    options: [
+                        "Maintenir la note car l'IA est objective",
+                        "Proposer une réévaluation humaine",
+                        "Annuler toutes les notes IA par précaution"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "Le droit au recours et à la réévaluation humaine est garanti par le RGPD Art. 22. Cela protège l'établissement tout en respectant les droits de l'élève.",
+                    legalBasis: "RGPD Art. 22, Code de l'éducation, Droit au recours administratif",
+                    practicalTool: "Procédure de recours, commission de réévaluation, traçabilité des décisions IA"
+                },
+                {
+                    title: "Formation des Équipes à l'IA",
+                    scenario: "Vos équipes sont divisées sur l'IA : certains l'adoptent sans formation, d'autres la rejettent par peur. Vous devez organiser une formation cohérente pour tous.",
+                    dilemma: "Comment former efficacement vos équipes à l'IA ?",
+                    options: [
+                        "Formation obligatoire pour tous immédiatement",
+                        "Formation progressive par volontariat puis généralisation",
+                        "Laisser chacun se former individuellement"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "L'approche progressive respecte les résistances tout en assurant une montée en compétence collective. Plus efficace que l'obligation immédiate.",
+                    legalBasis: "Obligation de formation des agents publics, Management du changement",
+                    practicalTool: "Plan de formation progressive, groupes pilotes, accompagnement personnalisé"
+                },
+                {
+                    title: "Contrôle et Audit des IA",
+                    scenario: "Vous devez mettre en place un système de contrôle des outils IA utilisés dans votre établissement. Certains enseignants utilisent des outils non déclarés.",
+                    dilemma: "Comment contrôler l'usage IA sans brider l'innovation ?",
+                    options: [
+                        "Surveillance stricte et sanctions",
+                        "Déclaration volontaire avec accompagnement",
+                        "Pas de contrôle pour préserver la liberté pédagogique"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "La déclaration volontaire avec accompagnement favorise la transparence sans créer de climat de défiance. Équilibre entre contrôle et innovation.",
+                    legalBasis: "RGPD registre des traitements, Liberté pédagogique, Responsabilité du chef d'établissement",
+                    practicalTool: "Registre des outils IA, accompagnement technique, procédure de validation"
+                }
+            ],
+            enseignant: [
+                {
+                    title: "Détection de Plagiat par IA",
+                    scenario: "Vous utilisez un détecteur de plagiat IA (Turnitin, Compilatio) qui signale 40% de vos copies comme 'suspectes d'usage d'IA'. Certains élèves nient, d'autres avouent.",
+                    dilemma: "Comment gérer cette détection massive tout en respectant le droit des élèves ?",
+                    options: [
+                        "Sanctionner tous les cas détectés par l'IA",
+                        "Vérifier manuellement chaque cas signalé",
+                        "Organiser des entretiens individuels avec les élèves"
+                    ],
+                    points: 100,
+                    bestAnswer: 2,
+                    explanation: "L'entretien individuel respecte le principe du contradictoire (Code de l'éducation) et permet de distinguer les vrais cas de plagiat des faux positifs, tout en étant pédagogique.",
+                    legalBasis: "Code de l'éducation L912-1, Principe du contradictoire",
+                    practicalTool: "Grille d'entretien structurée, formation à la détection manuelle, charte d'usage IA"
+                },
+                {
+                    title: "Assistant IA pour Préparation de Cours",
+                    scenario: "Vous souhaitez utiliser ChatGPT pour créer des exercices et préparer vos cours. Votre établissement n'a pas encore de politique claire sur l'usage d'IA par les enseignants.",
+                    dilemma: "Comment utiliser l'IA de manière légale et éthique ?",
+                    options: [
+                        "Utiliser librement, c'est un outil comme un autre",
+                        "Demander l'autorisation au chef d'établissement",
+                        "Attendre une directive officielle du rectorat"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "RGPD Art. 35 : tout traitement de données d'élèves par IA nécessite une analyse d'impact. L'autorisation hiérarchique protège légalement l'enseignant et l'établissement.",
+                    legalBasis: "RGPD Art. 35, Statut de la fonction publique",
+                    practicalTool: "Formulaire de demande d'usage IA, analyse d'impact RGPD, charte d'utilisation"
+                },
+                {
+                    title: "Évaluation Assistée par IA",
+                    scenario: "Un outil d'IA propose de vous aider à corriger les copies en analysant le style et le contenu. Il promet un gain de temps considérable mais traite les données des élèves.",
+                    dilemma: "Accepter cette assistance IA pour l'évaluation ?",
+                    options: [
+                        "Accepter pour gagner du temps",
+                        "Refuser par principe de précaution",
+                        "Tester avec anonymisation des copies"
+                    ],
+                    points: 100,
+                    bestAnswer: 2,
+                    explanation: "L'anonymisation respecte le RGPD tout en permettant de tester l'outil. Cette approche progressive permet d'évaluer les bénéfices sans compromettre les données personnelles.",
+                    legalBasis: "RGPD Art. 25 (Privacy by design), Code de l'éducation L912-1",
+                    practicalTool: "Procédure d'anonymisation, grille d'évaluation de l'outil IA, test pilote encadré"
+                },
+                {
+                    title: "Formation des Élèves à l'IA",
+                    scenario: "Vos élèves utilisent massivement ChatGPT pour leurs devoirs. Vous devez les former à un usage éthique et critique de ces outils.",
+                    dilemma: "Comment intégrer l'éducation à l'IA dans votre pédagogie ?",
+                    options: [
+                        "Interdire complètement l'usage d'IA",
+                        "Créer des séances dédiées à l'usage éthique de l'IA",
+                        "Laisser faire et s'adapter progressivement"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "Mission éducative de l'école (Code de l'éducation L121-1) : former les élèves aux enjeux du numérique. L'éducation critique à l'IA fait partie des compétences numériques obligatoires.",
+                    legalBasis: "Code de l'éducation L121-1, Référentiel de compétences numériques",
+                    practicalTool: "Séquence pédagogique sur l'IA, charte élève d'usage IA, évaluation des compétences critiques"
+                },
+                {
+                    title: "Équité Numérique et IA",
+                    scenario: "Certains élèves ont accès à des outils IA payants performants (GPT-4, Claude Pro), d'autres utilisent seulement les versions gratuites limitées. Cette inégalité impacte leurs résultats.",
+                    dilemma: "Comment garantir l'équité face à cette fracture numérique IA ?",
+                    options: [
+                        "Fournir un accès égal à tous via l'établissement",
+                        "Adapter les évaluations pour neutraliser l'avantage",
+                        "Sensibiliser sans agir sur l'inégalité"
+                    ],
+                    points: 100,
+                    bestAnswer: 0,
+                    explanation: "Principe d'égalité (Constitution Art. 1) et mission de service public d'éducation : l'école doit compenser les inégalités sociales, y compris numériques.",
+                    legalBasis: "Constitution Art. 1, Code de l'éducation L111-1",
+                    practicalTool: "Budget numérique établissement, convention avec fournisseurs IA, politique d'équipement"
+                },
+                {
+                    title: "Données Personnelles et IA Pédagogique",
+                    scenario: "Un éditeur propose une IA qui personnalise les apprentissages en analysant les erreurs, le temps de réponse et les difficultés de chaque élève. L'outil nécessite de nombreuses données personnelles.",
+                    dilemma: "Accepter ce traitement de données pour personnaliser l'apprentissage ?",
+                    options: [
+                        "Accepter car c'est pour le bien pédagogique",
+                        "Refuser par protection des données",
+                        "Négocier une version respectueuse du RGPD"
+                    ],
+                    points: 100,
+                    bestAnswer: 2,
+                    explanation: "RGPD Art. 25 : Privacy by design obligatoire. Il faut exiger une version conforme plutôt que renoncer aux bénéfices pédagogiques ou accepter une violation.",
+                    legalBasis: "RGPD Art. 25, 35, Code de l'éducation L131-1-1",
+                    practicalTool: "Cahier des charges RGPD, analyse d'impact, négociation contractuelle"
+                }
+            ],
+            cpe: [
+                {
+                    title: "Surveillance Comportementale par IA",
+                    scenario: "L'établissement envisage d'installer une IA qui analyse les comportements des élèves via les caméras pour détecter les bagarres, intrusions et comportements suspects.",
+                    dilemma: "Accepter cette surveillance IA pour améliorer la sécurité ?",
+                    options: [
+                        "Installer le système pour la sécurité de tous",
+                        "Refuser par respect de la vie privée",
+                        "Accepter avec encadrement strict et information"
+                    ],
+                    points: 100,
+                    bestAnswer: 2,
+                    explanation: "Équilibre entre sécurité et vie privée : possible avec information préalable (RGPD Art. 13), limitation des finalités et proportionnalité (CNIL).",
+                    legalBasis: "RGPD Art. 13, Code de l'éducation L511-2, Jurisprudence CNIL",
+                    practicalTool: "Notice d'information, registre des traitements, procédure d'effacement automatique"
+                },
+                {
+                    title: "Détection Automatique de Harcèlement",
+                    scenario: "Une IA propose d'analyser les messages sur l'ENT, les réseaux sociaux scolaires et les interactions pour détecter automatiquement les cas de harcèlement.",
+                    dilemma: "Utiliser cette IA pour protéger les élèves harcelés ?",
+                    options: [
+                        "Déployer immédiatement pour protéger les victimes",
+                        "Tester sur la base du volontariat",
+                        "Maintenir seulement la détection humaine"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "Approche progressive respectant le consentement (RGPD Art. 7) tout en testant l'efficacité. Permet d'évaluer les bénéfices sans imposer la surveillance à tous.",
+                    legalBasis: "RGPD Art. 7, Code de l'éducation L511-3, Loi anti-harcèlement",
+                    practicalTool: "Consentement éclairé, groupe pilote, évaluation d'efficacité"
+                },
+                {
+                    title: "Orientation Automatisée par IA",
+                    scenario: "L'IA d'orientation analyse les résultats, comportements et profils socio-économiques pour recommander des filières. Elle semble efficace mais certains parents contestent les recommandations.",
+                    dilemma: "Maintenir cet outil d'aide à l'orientation malgré les contestations ?",
+                    options: [
+                        "Maintenir car l'IA est objective",
+                        "Suspendre et auditer les biais potentiels",
+                        "Garder comme aide mais décision finale humaine"
+                    ],
+                    points: 100,
+                    bestAnswer: 2,
+                    explanation: "Principe de décision humaine finale (RGPD Art. 22) : l'IA peut conseiller mais ne peut pas décider seule de l'orientation d'un élève. Maintient l'expertise humaine.",
+                    legalBasis: "RGPD Art. 22, Code de l'éducation L331-7",
+                    practicalTool: "Procédure de décision humaine, droit de recours, audit régulier des recommandations"
+                },
+                {
+                    title: "Gestion Prédictive des Absences",
+                    scenario: "Une IA analyse les patterns d'absence pour prédire quels élèves risquent de décrocher. Elle propose des interventions préventives ciblées.",
+                    dilemma: "Utiliser ces prédictions pour prévenir le décrochage ?",
+                    options: [
+                        "Intervenir systématiquement sur les élèves 'à risque'",
+                        "Utiliser comme alerte pour surveillance renforcée",
+                        "Rejeter ces prédictions comme stigmatisantes"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "Approche préventive non stigmatisante : l'alerte permet une vigilance accrue sans étiqueter l'élève. Respecte la présomption d'innocence tout en permettant l'action préventive.",
+                    legalBasis: "Code de l'éducation L122-2, Principe de non-discrimination",
+                    practicalTool: "Protocole d'alerte, entretien bienveillant, suivi individualisé"
+                },
+                {
+                    title: "Analyse des Réseaux Sociaux Élèves",
+                    scenario: "Pour prévenir les violences, une IA propose d'analyser les comptes publics des élèves sur les réseaux sociaux pour détecter des menaces ou comportements dangereux.",
+                    dilemma: "Surveiller les réseaux sociaux des élèves pour leur sécurité ?",
+                    options: [
+                        "Surveiller tous les comptes publics",
+                        "Surveiller seulement sur signalement",
+                        "Refuser toute surveillance des réseaux sociaux"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "Proportionnalité et nécessité (RGPD) : la surveillance sur signalement respecte mieux la vie privée tout en permettant d'agir en cas de danger avéré.",
+                    legalBasis: "RGPD Art. 6, Code de l'éducation L511-2, Droit à la vie privée",
+                    practicalTool: "Procédure de signalement, grille d'évaluation du danger, formation aux réseaux sociaux"
+                },
+                {
+                    title: "IA de Gestion des Sanctions",
+                    scenario: "Un système d'IA propose d'harmoniser les sanctions en analysant les fautes commises et en recommandant des punitions équitables basées sur l'historique de l'établissement.",
+                    dilemma: "Laisser l'IA recommander les sanctions disciplinaires ?",
+                    options: [
+                        "Adopter pour plus d'équité dans les sanctions",
+                        "Utiliser comme aide mais garder la décision humaine",
+                        "Refuser l'automatisation des sanctions"
+                    ],
+                    points: 100,
+                    bestAnswer: 1,
+                    explanation: "Principe d'individualisation des sanctions (Code de l'éducation) : l'IA peut aider à l'équité mais la décision disciplinaire doit rester humaine pour prendre en compte le contexte.",
+                    legalBasis: "Code de l'éducation R511-13, Principe d'individualisation",
+                    practicalTool: "Grille d'aide à la décision, formation des équipes, procédure de recours"
+                }
+            ]
+        };
+
+        let currentRole = '';
+        let currentCards = [];
+        let playedCards = 0;
+        let totalScore = 0;
+        let demoInterval;
+        let activeIncident = false;
+        let currentIncidentCard = null;
+        let playerAnswers = [];
+
+        function selectRole(role) {
+            console.log('Sélection du rôle:', role);
+            
+            currentRole = role;
+            
+            if (!cardSets[role]) {
+                console.error('Rôle non trouvé dans cardSets:', role);
+                return;
+            }
+            
+            currentCards = [...cardSets[role]];
+            console.log('Cartes chargées pour', role, ':', currentCards.length);
+            
+            playedCards = 0;
+            totalScore = 0;
+            activeIncident = false;
+            playerAnswers = [];
+            
+            const gameArea = document.getElementById('gameArea');
+            if (gameArea) {
+                gameArea.classList.remove('hidden');
+            }
+            
+            const roleTitle = document.getElementById('roleTitle');
+            if (roleTitle) {
+                roleTitle.textContent = getRoleTitle(role);
+            }
+            
+            const triggerBtn = document.getElementById('triggerIncident');
+            const resolveBtn = document.getElementById('resolveIncident');
+            
+            if (triggerBtn) {
+                triggerBtn.disabled = false;
+                triggerBtn.classList.remove('hidden');
+            }
+            
+            if (resolveBtn) {
+                resolveBtn.classList.add('hidden');
+            }
+            
+            updateCounters();
+            displayCards();
+        }
+
+        function triggerIncident() {
+            if (currentCards.length === 0) {
+                showNotification('⚠️ Aucune carte disponible pour déclencher un incident !');
+                return;
+            }
+            
+            if (activeIncident) {
+                showNotification('⚠️ Un incident est déjà en cours ! Résolvez-le d\'abord.');
+                return;
+            }
+            
+            const roleIncidents = incidentCardsByRole[currentRole] || [];
+            if (roleIncidents.length === 0) {
+                showNotification('⚠️ Aucun incident disponible pour ce rôle !');
+                return;
+            }
+            
+            const randomIncident = roleIncidents[Math.floor(Math.random() * roleIncidents.length)];
+            
+            const incidentCard = {
+                ...randomIncident,
+                isTriggeredIncident: true,
+                id: 'incident_' + Date.now()
+            };
+            
+            currentCards.unshift(incidentCard);
+            activeIncident = true;
+            
+            const triggerBtn = document.getElementById('triggerIncident');
+            const resolveBtn = document.getElementById('resolveIncident');
+            
+            triggerBtn.classList.add('hidden');
+            resolveBtn.classList.remove('hidden');
+            
+            displayCards();
+            
+            setTimeout(() => {
+                const incidentCardElement = document.querySelector('#card-container-0');
+                if (incidentCardElement) {
+                    incidentCardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    incidentCardElement.classList.add('incident-blink');
+                }
+            }, 100);
+            
+            showNotification('⚡ INCIDENT DÉCLENCHÉ ! Une situation d\'urgence nécessite votre attention immédiate.');
+        }
+
+        function resolveIncident() {
+            if (!activeIncident) {
+                showNotification('⚠️ Aucun incident actif à résoudre !');
+                return;
+            }
+            
+            const incidentIndex = currentCards.findIndex(card => card.isTriggeredIncident);
+            if (incidentIndex !== -1) {
+                currentCards.splice(incidentIndex, 1);
+                displayCards();
+            }
+            
+            activeIncident = false;
+            
+            const triggerBtn = document.getElementById('triggerIncident');
+            const resolveBtn = document.getElementById('resolveIncident');
+            
+            triggerBtn.classList.remove('hidden');
+            resolveBtn.classList.add('hidden');
+            
+            showNotification('✅ Incident résolu ! Vous pouvez déclencher un nouvel incident.');
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 text-lg font-semibold';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        function getRoleTitle(role) {
+            const titles = {
+                enseignant: '👨‍🏫 Formation Enseignants - Usage IA Pédagogique',
+                cpe: '🎓 Formation CPE - IA et Vie Scolaire',
+                chef: '🏛️ Formation Chefs d\'Établissement - Gouvernance IA'
+            };
+            return titles[role];
+        }
+
+        function shuffleCards() {
+            if (!currentRole || !cardSets[currentRole]) {
+                console.log('Aucun rôle sélectionné pour mélanger');
+                return;
+            }
+            
+            currentCards = [...cardSets[currentRole]];
+            
+            for (let i = currentCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentCards[i], currentCards[j]] = [currentCards[j], currentCards[i]];
+            }
+            
+            playedCards = 0;
+            totalScore = 0;
+            playerAnswers = [];
+            updateCounters();
+            
+            const container = document.getElementById('cardsContainer');
+            container.className = 'grid md:grid-cols-2 lg:grid-cols-3 gap-6';
+            
+            displayCards();
+        }
+
+        function displayCards() {
+            console.log('displayCards appelée, currentCards:', currentCards);
+            
+            const container = document.getElementById('cardsContainer');
+            if (!container) {
+                console.error('Container cardsContainer non trouvé');
+                return;
+            }
+            
+            // Nettoyage du container
+            container.innerHTML = '';
+            container.className = 'grid md:grid-cols-2 lg:grid-cols-3 gap-6';
+            
+            if (!currentCards || currentCards.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center text-gray-500 text-xl">Aucune carte disponible</div>';
+                return;
+            }
+            
+            console.log('Affichage de', currentCards.length, 'cartes');
+            
+            // Création et affichage immédiat des cartes
+            currentCards.forEach((card, index) => {
+                console.log('Création carte', index, ':', card.title);
+                const cardDiv = createCardElement(card, index);
+                if (cardDiv) {
+                    container.appendChild(cardDiv);
+                    
+                    // Animation d'apparition
+                    setTimeout(() => {
+                        cardDiv.style.opacity = '1';
+                        cardDiv.style.transform = 'translateY(0) scale(1)';
+                    }, index * 150);
+                }
+            });
+            
+            // Passage à une seule carte après délai
+            if (currentCards.length > 1) {
+                setTimeout(() => {
+                    showOnlyOneCard();
+                }, 5000);
+            }
+        }
+
+        function showOnlyOneCard() {
+            const container = document.getElementById('cardsContainer');
+            const cardElements = Array.from(container.children);
+            
+            if (cardElements.length <= 1) return;
+            
+            // Animation de sortie rapide pour les cartes supplémentaires
+            for (let i = 1; i < cardElements.length; i++) {
+                const cardElement = cardElements[i];
+                cardElement.style.transition = 'all 0.3s ease-out';
+                cardElement.style.opacity = '0';
+                cardElement.style.transform = 'translateY(-30px) scale(0.9)';
+            }
+            
+            // Nettoyage et reconfiguration rapide
+            setTimeout(() => {
+                // Suppression des cartes supplémentaires
+                while (container.children.length > 1) {
+                    container.removeChild(container.lastChild);
+                }
+                
+                currentCards = [currentCards[0]];
+                
+                // Reconfiguration du layout
+                container.className = 'flex justify-center items-start';
+                const remainingCard = container.firstChild;
+                
+                if (remainingCard) {
+                    // Reset des styles inline
+                    remainingCard.style.cssText = '';
+                    remainingCard.className = 'w-full max-w-4xl mx-auto card-hover transition-all duration-300 cursor-pointer';
+                    
+                    // Optimisation des dimensions
+                    const cardFlip = remainingCard.querySelector('.card-flip');
+                    const cardFront = remainingCard.querySelector('.card-front');
+                    const cardBack = remainingCard.querySelector('.card-back');
+                    
+                    if (cardFlip) {
+                        cardFlip.style.minHeight = '700px';
+                    }
+                    
+                    if (cardFront) {
+                        cardFront.style.minHeight = '700px';
+                        cardFront.style.padding = '2rem';
+                    }
+                    
+                    if (cardBack) {
+                        cardBack.style.minHeight = '700px';
+                        cardBack.style.padding = '2rem';
+                    }
+                    
+                    // Animation d'entrée pour la carte restante
+                    remainingCard.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        remainingCard.style.transform = 'scale(1)';
+                    }, 200);
+                }
+                
+                showNotification('🎯 Une carte vous est présentée. Analysez le cas et choisissez votre réponse !');
+            }, 300); // Réduit de 800ms à 300ms
+        }
+
+        function flipCard(index) {
+            const card = document.getElementById(`card-${index}`);
+            if (card) {
+                card.classList.toggle('flipped');
+            }
+        }
+
+        function selectOption(cardIndex, optionIndex) {
+            event.stopPropagation();
+            const card = currentCards[cardIndex];
+            
+            playerAnswers.push({
+                title: card.title,
+                scenario: card.scenario,
+                dilemma: card.dilemma,
+                options: card.options,
+                playerChoice: optionIndex,
+                bestAnswer: card.bestAnswer,
+                explanation: card.explanation,
+                legalBasis: card.legalBasis,
+                practicalTool: card.practicalTool,
+                points: card.points,
+                isCorrect: optionIndex === card.bestAnswer
+            });
+            
+            totalScore += (card.points || 0);
+            playedCards++;
+            
+            const isIncidentResolved = card.type === 'incident' || card.isTriggeredIncident;
+            
+            const cardElement = document.getElementById(`card-container-${cardIndex}`);
+            if (cardElement) {
+                const optionButtons = cardElement.querySelectorAll('button');
+                optionButtons.forEach((button, btnIndex) => {
+                    button.disabled = true;
+                    button.style.cursor = 'not-allowed';
+                    
+                    if (btnIndex === optionIndex) {
+                        button.className = 'w-full bg-blue-600 text-white p-3 rounded-lg text-sm font-bold border-2 border-blue-800 leading-snug shadow-sm break-words';
+                        button.innerHTML = `<span class="font-bold text-yellow-300 text-base">${btnIndex + 1}.</span> <span class="text-white">${card.options[btnIndex]} ✓ CHOISI</span>`;
+                    } else {
+                        button.className = 'w-full bg-gray-300 text-gray-600 p-3 rounded-lg text-sm font-medium border-2 border-gray-400 leading-snug shadow-sm break-words opacity-60';
+                    }
+                });
+                
+                const cardBack = cardElement.querySelector('.card-back');
+                if (cardBack && !cardBack.querySelector('.response-confirmation')) {
+                    const confirmationDiv = document.createElement('div');
+                    confirmationDiv.className = 'response-confirmation mt-4 bg-green-500 text-white p-3 rounded-lg text-center font-bold';
+                    confirmationDiv.innerHTML = '✅ Réponse enregistrée ! Prochaine carte dans 3 secondes...';
+                    cardBack.appendChild(confirmationDiv);
+                }
+            }
+            
+            setTimeout(() => {
+                currentCards.splice(cardIndex, 1);
+                
+                if (isIncidentResolved) {
+                    activeIncident = false;
+                    const triggerBtn = document.getElementById('triggerIncident');
+                    const resolveBtn = document.getElementById('resolveIncident');
+                    
+                    triggerBtn.classList.remove('hidden');
+                    resolveBtn.classList.add('hidden');
+                    
+                    showNotification('✅ Incident résolu ! Vous pouvez déclencher un nouvel incident.');
+                }
+                
+                if (currentCards.length === 0) {
+                    showCompletionMessage();
+                } else {
+                    loadNextCard();
+                }
+                
+                updateCounters();
+            }, 3000);
+        }
+
+        function loadNextCard() {
+            const container = document.getElementById('cardsContainer');
+            
+            const currentCardElement = container.firstChild;
+            if (currentCardElement) {
+                // Animation de sortie rapide
+                currentCardElement.style.transition = 'all 0.3s ease-out';
+                currentCardElement.style.opacity = '0';
+                currentCardElement.style.transform = 'translateX(-50px) scale(0.9)';
+                
+                setTimeout(() => {
+                    container.innerHTML = '';
+                    
+                    const nextCard = currentCards[0];
+                    const cardElement = createCardElement(nextCard, 0);
+                    
+                    if (cardElement) {
+                        // Pré-configuration pour l'animation d'entrée
+                        cardElement.style.opacity = '0';
+                        cardElement.style.transform = 'translateX(50px) scale(0.9)';
+                        cardElement.style.transition = 'all 0.3s ease-out';
+                        
+                        container.appendChild(cardElement);
+                        
+                        // Animation d'entrée immédiate
+                        requestAnimationFrame(() => {
+                            cardElement.style.opacity = '1';
+                            cardElement.style.transform = 'translateX(0) scale(1)';
+                        });
+                    }
+                }, 300); // Réduit de 600ms à 300ms
+            }
+        }
+
+        function createCardElement(card, index) {
+            if (!card) {
+                console.error('Carte vide pour index:', index);
+                return null;
+            }
+            
+            console.log('Création de la carte:', card.title);
+            
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'relative min-h-[600px] card-hover transition-all duration-300 cursor-pointer';
+            cardDiv.id = `card-container-${index}`;
+            cardDiv.style.opacity = '0';
+            cardDiv.style.transform = 'translateY(30px) scale(0.95)';
+            cardDiv.style.transition = 'all 0.4s ease-out';
+            
+            const isIncident = card.type === 'incident' || card.isTriggeredIncident;
+            const frontColors = isIncident ? 'from-red-600 to-orange-600' : 'from-blue-600 to-indigo-700';
+            const backColors = isIncident ? 'from-red-700 to-red-800' : 'from-green-600 to-emerald-700';
+            const borderClass = card.isTriggeredIncident ? 'border-red-500 border-4 animate-pulse' : 'border-gray-200 border-2';
+            
+            const incidentBadge = card.isTriggeredIncident ? 
+                '<div class="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">⚡ INCIDENT URGENT</div>' : '';
+            
+            const incidentStatus = card.isTriggeredIncident ? 
+                '<span class="bg-red-500 text-white px-3 py-1 rounded text-xs font-bold animate-pulse">INCIDENT ACTIF</span>' : '';
+            
+            const urgencyBadge = isIncident ? 
+                '<div class="mt-4 bg-yellow-400 text-black p-2 rounded-lg text-center"><p class="font-bold text-sm">⚡ SITUATION D\'URGENCE</p></div>' : '';
+            
+            let optionsHTML = '';
+            if (card.options && Array.isArray(card.options)) {
+                optionsHTML = card.options.map((option, optIndex) => 
+                    `<button onclick="selectOption(${index}, ${optIndex})" 
+                            class="w-full bg-white text-gray-900 p-4 rounded-lg text-lg font-medium transition-all hover:bg-gray-50 hover:scale-105 text-left border-2 border-gray-300 leading-relaxed shadow-sm break-words">
+                        <span class="font-bold text-blue-700 text-xl">${optIndex + 1}.</span> <span class="text-gray-800 text-lg">${option}</span>
+                    </button>`
+                ).join('');
+            }
+            
+            cardDiv.innerHTML = `
+                <div class="card-flip h-full w-full min-h-[600px]" id="card-${index}">
+                    <div class="card-front bg-gradient-to-br ${frontColors} rounded-2xl p-6 ${borderClass} shadow-lg min-h-[600px] flex flex-col">
+                        ${incidentBadge}
+                        <div class="flex justify-between items-start mb-6 ${card.isTriggeredIncident ? 'mt-8' : ''}">
+                            <h3 class="text-2xl font-bold text-white flex-1 pr-2 leading-tight">${card.title || 'Titre manquant'}</h3>
+                            <span class="bg-yellow-400 text-black px-4 py-3 rounded-lg text-xl font-bold whitespace-nowrap">${card.points || 0}pts</span>
+                        </div>
+                        <div class="flex-1 flex flex-col justify-center">
+                            <p class="text-white text-xl mb-8 leading-relaxed font-medium">${card.scenario || 'Scénario manquant'}</p>
+                            <div class="bg-white/20 rounded-xl p-6 mb-6">
+                                <p class="text-yellow-300 font-bold text-2xl text-center leading-tight">${card.dilemma || 'Dilemme manquant'}</p>
+                            </div>
+                        </div>
+                        <div class="text-center mt-auto">
+                            <div class="bg-white/10 rounded-lg p-3 animate-pulse">
+                                <span class="text-white text-xl font-bold">👆 Cliquez pour voir les options</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back bg-gradient-to-br ${backColors} rounded-2xl p-6 ${borderClass} shadow-lg min-h-[600px] flex flex-col">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-white">${card.title || 'Titre manquant'}</h3>
+                            ${incidentStatus}
+                        </div>
+                        <div class="bg-white/20 rounded-lg p-5 mb-6">
+                            <p class="text-white font-bold text-xl text-center">${card.dilemma || 'Dilemme manquant'}</p>
+                        </div>
+                        <div class="space-y-4 flex-1">
+                            <p class="text-white font-semibold text-xl mb-6">Choisissez votre approche :</p>
+                            ${optionsHTML}
+                            ${urgencyBadge}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Événement de clic
+            cardDiv.addEventListener('click', function(e) {
+                if (!e.target.closest('button')) {
+                    flipCard(index);
+                }
+            });
+            
+            console.log('Carte créée avec succès:', cardDiv);
+            return cardDiv;
+        }
+
+        function updateCounters() {
+            document.getElementById('playedCount').textContent = playedCards;
+            document.getElementById('score').textContent = totalScore;
+        }
+
+        function showCompletionMessage() {
+            const container = document.getElementById('cardsContainer');
+            
+            const correctAnswers = playerAnswers.filter(answer => answer.isCorrect).length;
+            const totalAnswers = playerAnswers.length;
+            const successRate = Math.round((correctAnswers / totalAnswers) * 100);
+            
+            let summaryHTML = '';
+            playerAnswers.forEach((answer, index) => {
+                const isCorrect = answer.isCorrect;
+                const statusIcon = isCorrect ? '✅' : '❌';
+                const statusColor = isCorrect ? 'bg-green-100 border-green-500' : 'bg-red-100 border-red-500';
+                const textColor = isCorrect ? 'text-green-800' : 'text-red-800';
+                
+                summaryHTML += `
+                    <div class="mb-6 p-6 ${statusColor} border-2 rounded-xl">
+                        <div class="flex items-start gap-4 mb-4">
+                            <span class="text-2xl">${statusIcon}</span>
+                            <div class="flex-1">
+                                <h4 class="text-xl font-bold ${textColor} mb-2">${answer.title}</h4>
+                                <p class="text-gray-700 mb-3">${answer.dilemma}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <p class="font-semibold text-gray-800 mb-2">Votre choix :</p>
+                                <p class="bg-white p-3 rounded-lg border ${isCorrect ? 'border-green-300' : 'border-red-300'}">
+                                    ${answer.playerChoice + 1}. ${answer.options[answer.playerChoice]}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800 mb-2">Meilleure réponse :</p>
+                                <p class="bg-green-50 p-3 rounded-lg border border-green-300">
+                                    ${answer.bestAnswer + 1}. ${answer.options[answer.bestAnswer]}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-300">
+                                <p class="font-semibold text-blue-800 mb-2">💡 Explication :</p>
+                                <p class="text-blue-700">${answer.explanation}</p>
+                            </div>
+                            
+                            ${answer.legalBasis ? `
+                                <div class="bg-purple-50 p-4 rounded-lg border border-purple-300">
+                                    <p class="font-semibold text-purple-800 mb-2">⚖️ Base légale :</p>
+                                    <p class="text-purple-700 text-sm">${answer.legalBasis}</p>
+                                </div>
+                            ` : ''}
+                            
+                            ${answer.practicalTool ? `
+                                <div class="bg-orange-50 p-4 rounded-lg border border-orange-300">
+                                    <p class="font-semibold text-orange-800 mb-2">🛠️ Outils pratiques :</p>
+                                    <p class="text-orange-700 text-sm">${answer.practicalTool}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = `
+                <div class="col-span-full">
+                    <!-- En-tête de fin -->
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-center shadow-2xl mb-8">
+                        <div class="text-6xl mb-4">🎉</div>
+                        <h2 class="text-4xl font-bold text-white mb-4">Formation Terminée !</h2>
+                        <p class="text-white/90 text-xl mb-4">Voici votre bilan de conformité IA</p>
+                        
+                        <div class="grid md:grid-cols-3 gap-6 mb-6">
+                            <div class="bg-white/20 rounded-xl p-4">
+                                <div class="text-2xl font-bold text-amber-300">${totalScore}</div>
+                                <div class="text-white/80">Points totaux</div>
+                            </div>
+                            <div class="bg-white/20 rounded-xl p-4">
+                                <div class="text-2xl font-bold text-amber-300">${correctAnswers}/${totalAnswers}</div>
+                                <div class="text-white/80">Réponses conformes</div>
+                            </div>
+                            <div class="bg-white/20 rounded-xl p-4">
+                                <div class="text-2xl font-bold text-amber-300">${successRate}%</div>
+                                <div class="text-white/80">Taux de conformité</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4 justify-center flex-wrap">
+                            <button onclick="resetGame()" class="bg-white text-blue-600 px-6 py-3 rounded-xl text-lg font-bold hover:bg-gray-100 transition-colors">
+                                Choisir un autre rôle
+                            </button>
+                            <button onclick="selectRole(currentRole)" class="bg-blue-700 text-white px-6 py-3 rounded-xl text-lg font-bold hover:bg-blue-800 transition-colors">
+                                Refaire cette formation
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Récapitulatif détaillé -->
+                    <div class="bg-white rounded-2xl p-8 shadow-xl">
+                        <h3 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+                            📊 Analyse Détaillée - Conformité Légale IA
+                        </h3>
+                        <p class="text-gray-600 text-lg mb-8 text-center">
+                            Vos décisions analysées au regard de la législation française
+                        </p>
+                        
+                        <div class="space-y-6">
+                            ${summaryHTML}
+                        </div>
+                        
+                        <!-- Conseils généraux -->
+                        <div class="mt-8 bg-gradient-to-r from-purple-100 to-blue-100 p-6 rounded-xl border-2 border-purple-300">
+                            <h4 class="text-xl font-bold text-purple-800 mb-4">🎯 Points Clés de la Formation</h4>
+                            <div class="grid md:grid-cols-2 gap-4 text-purple-700">
+                                <div>
+                                    <p class="font-semibold mb-2">• Conformité RGPD Obligatoire</p>
+                                    <p class="text-sm mb-3">Toute IA traitant des données d'élèves doit respecter le RGPD</p>
+                                    
+                                    <p class="font-semibold mb-2">• Principe de Précaution</p>
+                                    <p class="text-sm">En cas de doute, suspendre et consulter la hiérarchie</p>
+                                </div>
+                                <div>
+                                    <p class="font-semibold mb-2">• Décision Humaine Finale</p>
+                                    <p class="text-sm mb-3">L'IA aide mais ne remplace pas le jugement professionnel</p>
+                                    
+                                    <p class="font-semibold mb-2">• Formation Continue</p>
+                                    <p class="text-sm">Se tenir informé de l'évolution de la réglementation</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function resetGame() {
+            document.getElementById('gameArea').classList.add('hidden');
+            document.getElementById('demoArea').classList.add('hidden');
+            
+            const triggerBtn = document.getElementById('triggerIncident');
+            const resolveBtn = document.getElementById('resolveIncident');
+            
+            triggerBtn.disabled = true;
+            triggerBtn.classList.remove('hidden');
+            resolveBtn.classList.add('hidden');
+            
+            activeIncident = false;
+            currentRole = '';
+            currentCards = [];
+            playedCards = 0;
+            totalScore = 0;
+            playerAnswers = [];
+        }
+
+        function startDemo() {
+            document.getElementById('demoArea').classList.remove('hidden');
+            const demoContent = document.getElementById('demoContent');
+            
+            const demoSteps = [
+                "🎯 Formation pratique aux enjeux IA pour CPE et Enseignants",
+                "⚖️ Tous les cas sont alignés sur la législation française actuelle",
+                "🛠️ Chaque situation peut être déclinée en formation concrète",
+                "📚 Base légale : RGPD, Code de l'éducation, jurisprudence CNIL",
+                "🎓 Rôle Enseignant : détection plagiat, outils pédagogiques, évaluation IA",
+                "🏫 Rôle CPE : surveillance comportementale, détection harcèlement, orientation",
+                "⚡ Incidents d'urgence basés sur des cas réels d'établissements",
+                "📊 Analyse de conformité avec recommandations d'experts juridiques"
+            ];
+            
+            let stepIndex = 0;
+            demoContent.innerHTML = `<div class="text-lg">${demoSteps[0]}</div>`;
+            
+            demoInterval = setInterval(() => {
+                stepIndex++;
+                if (stepIndex < demoSteps.length) {
+                    demoContent.innerHTML += `<div class="text-lg animate-pulse">${demoSteps[stepIndex]}</div>`;
+                } else {
+                    clearInterval(demoInterval);
+                    demoContent.innerHTML += `
+                        <div class="mt-6 p-4 bg-blue-600 text-white rounded-lg">
+                            <strong>✅ Démonstration terminée !</strong><br>
+                            Sélectionnez un rôle pour commencer la formation pratique.
+                        </div>
+                    `;
+                }
+            }, 2000);
+        }
+
+        function stopDemo() {
+            clearInterval(demoInterval);
+            document.getElementById('demoArea').classList.add('hidden');
+        }
+
+        function showIncidentCards() {
+            const modal = document.getElementById('incidentModal');
+            const display = document.getElementById('incidentCardsDisplay');
+            
+            display.innerHTML = '';
+            
+            const cardsToShow = currentRole ? incidentCardsByRole[currentRole] || [] : 
+                Object.values(incidentCardsByRole).flat();
+            
+            cardsToShow.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl p-6 text-white shadow-lg';
+                cardElement.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold">${card.title}</h3>
+                        <span class="bg-yellow-400 text-black px-3 py-2 rounded-lg text-lg font-bold">${card.points}pts</span>
+                    </div>
+                    <p class="text-red-100 text-lg mb-4">${card.scenario}</p>
+                    <div class="bg-white/20 rounded-lg p-3 mb-4">
+                        <p class="text-yellow-300 font-bold text-lg">${card.dilemma}</p>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <p class="text-red-100 font-semibold">Options disponibles :</p>
+                        ${card.options.map((option, optIndex) => `
+                            <div class="bg-white text-gray-800 p-3 rounded-lg border-2 border-white">
+                                <span class="font-bold text-blue-600">${optIndex + 1}.</span> <span class="font-medium">${option}</span>
+                                ${optIndex === card.bestAnswer ? '<span class="text-green-600 font-bold"> ✅</span>' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${card.legalBasis ? `
+                        <div class="bg-purple-500/30 p-3 rounded-lg mb-3">
+                            <p class="font-bold text-sm">⚖️ Base légale :</p>
+                            <p class="text-xs">${card.legalBasis}</p>
+                        </div>
+                    ` : ''}
+                    ${card.practicalTool ? `
+                        <div class="bg-orange-500/30 p-3 rounded-lg">
+                            <p class="font-bold text-sm">🛠️ Outils pratiques :</p>
+                            <p class="text-xs">${card.practicalTool}</p>
+                        </div>
+                    ` : ''}
+                `;
+                display.appendChild(cardElement);
+            });
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeIncidentModal() {
+            document.getElementById('incidentModal').classList.add('hidden');
+        }
+
+        function startAnimatorMode() {
+            document.getElementById('animatorMode').classList.remove('hidden');
+            displayAnimatorIncidentCards();
+        }
+
+        function exitAnimatorMode() {
+            document.getElementById('animatorMode').classList.add('hidden');
+            document.getElementById('fullscreenIncident').classList.add('hidden');
+        }
+
+        function displayAnimatorIncidentCards() {
+            const container = document.getElementById('animatorIncidentCards');
+            container.innerHTML = '';
+            
+            const allIncidents = Object.values(incidentCardsByRole).flat();
+            
+            allIncidents.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl p-6 text-white shadow-lg cursor-pointer hover:scale-105 transition-transform';
+                cardElement.onclick = () => triggerFullscreenIncident(card);
+                
+                cardElement.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold">${card.title}</h3>
+                        <span class="bg-yellow-400 text-black px-3 py-2 rounded-lg text-lg font-bold">${card.points}pts</span>
+                    </div>
+                    <p class="text-red-100 text-lg mb-4">${card.scenario}</p>
+                    <div class="bg-white/20 rounded-lg p-3 mb-4">
+                        <p class="text-orange-300 font-bold text-lg">${card.dilemma}</p>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-3 text-center mb-3">
+                        <span class="font-bold text-lg">🎯 CLIQUER POUR DÉCLENCHER</span>
+                    </div>
+                    ${card.legalBasis ? `
+                        <div class="bg-purple-500/30 rounded-lg p-2 text-center">
+                            <span class="text-sm font-semibold">⚖️ Cas Juridique Réel</span>
+                        </div>
+                    ` : ''}
+                `;
+                
+                container.appendChild(cardElement);
+            });
+        }
+
+        function triggerFullscreenIncident(card) {
+            currentIncidentCard = card;
+            document.getElementById('incidentTitle').textContent = card.title;
+            document.getElementById('incidentScenario').textContent = card.scenario;
+            document.getElementById('incidentDilemma').textContent = card.dilemma;
+            
+            const optionsContainer = document.getElementById('incidentOptions');
+            optionsContainer.innerHTML = '';
+            
+            card.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'bg-white/20 rounded-xl p-6 text-2xl font-bold';
+                optionDiv.textContent = `${index + 1}. ${option}`;
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            document.getElementById('fullscreenIncident').classList.remove('hidden');
+        }
+
+        function closeFullscreenIncident() {
+            document.getElementById('fullscreenIncident').classList.add('hidden');
+        }
+
+        function backToAnimator() {
+            document.getElementById('fullscreenIncident').classList.add('hidden');
+        }
+
+        function startDiscussion() {
+            const timerDiv = document.createElement('div');
+            timerDiv.id = 'discussionTimer';
+            timerDiv.className = 'fixed top-4 left-4 bg-yellow-500 text-black px-6 py-3 rounded-xl text-xl font-bold z-50 shadow-lg';
+            timerDiv.innerHTML = '⏱️ Discussion: 5:00';
+            document.body.appendChild(timerDiv);
+            
+            const instructionsDiv = document.createElement('div');
+            instructionsDiv.id = 'discussionInstructions';
+            instructionsDiv.className = 'fixed top-20 left-4 right-4 bg-yellow-500/95 text-black p-6 rounded-xl text-lg font-semibold z-50 shadow-lg max-w-md';
+            instructionsDiv.innerHTML = `
+                <h3 class="text-xl font-bold mb-3">🎯 Discussion Cas Pratique</h3>
+                <div class="space-y-2 text-base">
+                    <p>• Analysez la conformité légale</p>
+                    <p>• Identifiez les risques juridiques</p>
+                    <p>• Proposez des solutions pratiques</p>
+                    <p>• Débat de 5 minutes chronométrées</p>
+                </div>
+                <button onclick="endDiscussion()" class="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    Terminer Discussion
+                </button>
+            `;
+            document.body.appendChild(instructionsDiv);
+            
+            let timeLeft = 300;
+            const timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDiv.innerHTML = `⏱️ Discussion: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDiv.innerHTML = '⏰ TEMPS ÉCOULÉ !';
+                    timerDiv.className = 'fixed top-4 left-4 bg-red-600 text-white px-6 py-3 rounded-xl text-xl font-bold z-50 shadow-lg animate-pulse';
+                }
+            }, 1000);
+            
+            window.discussionInterval = timerInterval;
+        }
+
+        function endDiscussion() {
+            const timer = document.getElementById('discussionTimer');
+            const instructions = document.getElementById('discussionInstructions');
+            if (timer) timer.remove();
+            if (instructions) instructions.remove();
+            
+            if (window.discussionInterval) {
+                clearInterval(window.discussionInterval);
+            }
+            
+            showNotification('✅ Discussion terminée ! Excellents échanges sur la conformité IA.');
+        }
+
+        function showCompleteSummary() {
+            const modal = document.getElementById('summaryModal');
+            const content = document.getElementById('summaryContent');
+            
+            let summaryHTML = '';
+            
+            // Section Cartes par Rôle
+            Object.keys(cardSets).forEach(role => {
+                const roleTitle = getRoleTitle(role);
+                const cards = cardSets[role];
+                const incidents = incidentCardsByRole[role] || [];
+                
+                summaryHTML += `
+                    <div class="mb-8 bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">${roleTitle}</h3>
+                        
+                        <!-- Cartes Normales -->
+                        <div class="mb-6">
+                            <h4 class="text-xl font-bold text-blue-700 mb-4">🃏 Cas de Formation (${cards.length})</h4>
+                            <div class="grid md:grid-cols-1 gap-4">
+                                ${cards.map((card, index) => `
+                                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                        <div class="flex justify-between items-start mb-3">
+                                            <h5 class="font-bold text-blue-800 text-lg">${card.title}</h5>
+                                            <span class="bg-yellow-400 text-black px-2 py-1 rounded text-sm font-bold">${card.points}pts</span>
+                                        </div>
+                                        <p class="text-gray-700 mb-3 text-sm">${card.scenario}</p>
+                                        <div class="bg-blue-100 p-3 rounded-lg mb-3">
+                                            <p class="font-semibold text-blue-800 text-sm">${card.dilemma}</p>
+                                        </div>
+                                        <div class="space-y-1 mb-3">
+                                            ${card.options.map((option, optIndex) => `
+                                                <div class="text-xs p-2 rounded ${optIndex === card.bestAnswer ? 'bg-green-100 border border-green-300 font-semibold' : 'bg-gray-50'}">
+                                                    ${optIndex + 1}. ${option} ${optIndex === card.bestAnswer ? '✅' : ''}
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                        ${card.explanation ? `
+                                            <div class="bg-green-50 border border-green-200 p-3 rounded-lg mb-2">
+                                                <p class="text-green-800 text-xs"><strong>💡 Explication :</strong> ${card.explanation}</p>
+                                            </div>
+                                        ` : ''}
+                                        ${card.legalBasis ? `
+                                            <div class="bg-purple-50 border border-purple-200 p-3 rounded-lg mb-2">
+                                                <p class="text-purple-800 text-xs"><strong>⚖️ Base légale :</strong> ${card.legalBasis}</p>
+                                            </div>
+                                        ` : ''}
+                                        ${card.practicalTool ? `
+                                            <div class="bg-orange-50 border border-orange-200 p-3 rounded-lg">
+                                                <p class="text-orange-800 text-xs"><strong>🛠️ Outils pratiques :</strong> ${card.practicalTool}</p>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <!-- Cartes Incidents -->
+                        <div>
+                            <h4 class="text-xl font-bold text-red-700 mb-4">⚡ Incidents d'Urgence (${incidents.length})</h4>
+                            <div class="grid md:grid-cols-1 gap-4">
+                                ${incidents.map(incident => `
+                                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                        <div class="flex justify-between items-start mb-3">
+                                            <h5 class="font-bold text-red-800 text-lg">${incident.title}</h5>
+                                            <span class="bg-yellow-400 text-black px-2 py-1 rounded text-sm font-bold">${incident.points}pts</span>
+                                        </div>
+                                        <p class="text-gray-700 mb-3 text-sm">${incident.scenario}</p>
+                                        <div class="bg-red-100 p-3 rounded-lg mb-3">
+                                            <p class="font-semibold text-red-800 text-sm">${incident.dilemma}</p>
+                                        </div>
+                                        <div class="space-y-1 mb-3">
+                                            ${incident.options.map((option, optIndex) => `
+                                                <div class="text-xs p-2 rounded ${optIndex === incident.bestAnswer ? 'bg-green-100 border border-green-300 font-semibold' : 'bg-gray-50'}">
+                                                    ${optIndex + 1}. ${option} ${optIndex === incident.bestAnswer ? '✅' : ''}
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                        ${incident.explanation ? `
+                                            <div class="bg-green-50 border border-green-200 p-3 rounded-lg mb-2">
+                                                <p class="text-green-800 text-xs"><strong>💡 Explication :</strong> ${incident.explanation}</p>
+                                            </div>
+                                        ` : ''}
+                                        ${incident.legalBasis ? `
+                                            <div class="bg-purple-50 border border-purple-200 p-3 rounded-lg mb-2">
+                                                <p class="text-purple-800 text-xs"><strong>⚖️ Base légale :</strong> ${incident.legalBasis}</p>
+                                            </div>
+                                        ` : ''}
+                                        ${incident.practicalTool ? `
+                                            <div class="bg-orange-50 border border-orange-200 p-3 rounded-lg mb-2">
+                                                <p class="text-orange-800 text-xs"><strong>🛠️ Outils pratiques :</strong> ${incident.practicalTool}</p>
+                                            </div>
+                                        ` : ''}
+                                        <div class="bg-red-100 border border-red-300 p-2 rounded-lg text-center">
+                                            <span class="text-red-800 text-xs font-bold">🚨 SITUATION D'URGENCE</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Section Statistiques et Guide d'Usage
+            const totalCards = Object.values(cardSets).reduce((sum, cards) => sum + cards.length, 0);
+            const totalIncidents = Object.values(incidentCardsByRole).reduce((sum, incidents) => sum + incidents.length, 0);
+            const maxPoints = Object.values(cardSets).reduce((sum, cards) => sum + cards.reduce((cardSum, card) => cardSum + card.points, 0), 0);
+            
+            summaryHTML += `
+                <div class="bg-gradient-to-r from-purple-100 to-blue-100 border-2 border-purple-300 rounded-2xl p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-purple-800 mb-6">📊 Guide d'Usage Formation</h3>
+                    <div class="grid md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-white p-4 rounded-lg text-center shadow">
+                            <div class="text-3xl mb-2">🃏</div>
+                            <div class="text-2xl font-bold text-blue-600">${totalCards}</div>
+                            <div class="text-sm text-gray-600">Cas de Formation</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg text-center shadow">
+                            <div class="text-3xl mb-2">⚡</div>
+                            <div class="text-2xl font-bold text-red-600">${totalIncidents}</div>
+                            <div class="text-sm text-gray-600">Incidents d'Urgence</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg text-center shadow">
+                            <div class="text-3xl mb-2">⚖️</div>
+                            <div class="text-2xl font-bold text-purple-600">100%</div>
+                            <div class="text-sm text-gray-600">Conformité Légale</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg text-center shadow">
+                            <div class="text-3xl mb-2">🛠️</div>
+                            <div class="text-2xl font-bold text-orange-600">Oui</div>
+                            <div class="text-sm text-gray-600">Outils Pratiques</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">🎯 Comment Utiliser Cette Formation</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-xl font-bold text-blue-800 mb-4">👨‍🏫 Pour les Formateurs</h4>
+                            <div class="space-y-3 text-gray-700">
+                                <p class="flex items-start gap-2">
+                                    <span class="text-blue-600 font-bold">1.</span>
+                                    <span>Sélectionnez le rôle correspondant à votre public</span>
+                                </p>
+                                <p class="flex items-start gap-2">
+                                    <span class="text-blue-600 font-bold">2.</span>
+                                    <span>Utilisez le mode animateur pour déclencher des incidents</span>
+                                </p>
+                                <p class="flex items-start gap-2">
+                                    <span class="text-blue-600 font-bold">3.</span>
+                                    <span>Lancez des discussions de 5 minutes sur chaque cas</span>
+                                </p>
+                                <p class="flex items-start gap-2">
+                                    <span class="text-blue-600 font-bold">4.</span>
+                                    <span>Exploitez les bases légales et outils pratiques fournis</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-green-800 mb-4">🎓 Pour les Participants</h4>
+                            <div class="space-y-3 text-gray-700">
+                                <p class="flex items-start gap-2">
+                                    <span class="text-green-600 font-bold">1.</span>
+                                    <span>Lisez attentivement chaque scénario</span>
+                                </p>
+                                <p class="flex items-start gap-2">
+                                    <span class="text-green-600 font-bold">2.</span>
+                                    <span>Réfléchissez aux enjeux légaux et éthiques</span>
+                                </p>
+                                <p class="flex items-start gap-2">
+                                    <span class="text-green-600 font-bold">3.</span>
+                                    <span>Choisissez la réponse la plus conforme</span>
+                                </p>
+                                <p class="flex items-start gap-2">
+                                    <span class="text-green-600 font-bold">4.</span>
+                                    <span>Analysez les explications et outils proposés</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 bg-yellow-50 border border-yellow-300 p-4 rounded-lg">
+                        <h4 class="text-lg font-bold text-yellow-800 mb-2">⚠️ Important</h4>
+                        <p class="text-yellow-700">Tous les cas sont basés sur la législation française en vigueur (RGPD, Code de l'éducation, jurisprudence CNIL). Les outils pratiques peuvent être directement utilisés dans vos établissements.</p>
+                    </div>
+                </div>
+            `;
+            
+            content.innerHTML = summaryHTML;
+            modal.classList.remove('hidden');
+        }
+
+        function closeSummaryModal() {
+            document.getElementById('summaryModal').classList.add('hidden');
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Application CPE & Enseignants chargée - Sélectionnez un rôle pour commencer');
+        });
+        
+        document.getElementById('startDemo').addEventListener('click', startDemo);
+        document.getElementById('startAnimator').addEventListener('click', startAnimatorMode);
+        document.getElementById('triggerIncident').addEventListener('click', triggerIncident);
+        document.getElementById('showSummary').addEventListener('click', showCompleteSummary);
+    </script>
+</body>
+</html>
