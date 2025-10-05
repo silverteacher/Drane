@@ -1,0 +1,1144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.1">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="fr"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Tribunal de l'IA - Cartes Éducatives&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-sizing: border-box;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 18px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card-flip {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform-style: preserve-3d;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: transform 0.6s;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card-flip.flipped {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: rotateY(180deg);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card-front, .card-back {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>backface-visibility: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>top: 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>left: 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 1rem;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card-back {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: rotateY(180deg);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card-front {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: rotateY(0deg);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card-hover:hover {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: translateY(-8px);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 20px 40px rgba(0,0,0,0.2);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.demo-mode {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>animation: pulse 2s infinite;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Animation pulse ajoutée */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>@keyframes pulse {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>0%, 100% {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>opacity: 1;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>transform: scale(1);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>50% {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>opacity: 0.8;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>transform: scale(1.05);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container mx-auto px-4 py-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- En-tête --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="text-center mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1 class="text-6xl font-bold text-gray-800 mb-6"&gt;⚖️ Tribunal de l'IA Éducatif&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="text-gray-600 text-xl"&gt;Explorez les enjeux de l'IA dans l'éducation à travers différents rôles&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Mode Démo et Animateur --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grid md:grid-cols-2 gap-6 mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="bg-blue-600 text-white p-6 rounded-xl text-center shadow-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex items-center justify-center gap-3 mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="text-4xl"&gt;🎯&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-2xl font-bold"&gt;Mode Démonstration&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="startDemo" class="bg-white text-blue-600 px-8 py-3 rounded-xl text-lg font-bold hover:bg-gray-100 transition-colors demo-mode"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Lancer la Démo Interactive</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="bg-red-600 text-white p-6 rounded-xl text-center shadow-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex items-center justify-center gap-3 mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="text-4xl"&gt;🎮&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-2xl font-bold"&gt;Mode Animateur&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="startAnimator" class="bg-white text-red-600 px-8 py-3 rounded-xl text-lg font-bold hover:bg-gray-100 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Contrôle des Incidents</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Sélection des rôles --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grid md:grid-cols-3 gap-8 mb-10"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white rounded-2xl p-8 text-center border-2 border-gray-200 shadow-xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="text-6xl mb-4"&gt;👨‍🏫&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h3 class="text-2xl font-bold text-gray-800 mb-3"&gt;Enseignants&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-gray-600 text-lg mb-3"&gt;Cartes sur l'intégration pédagogique de l'IA&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-yellow-400 text-black px-4 py-2 rounded-full text-lg font-bold mb-5"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>100 points max</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button data-role="enseignant" class="role-select-btn bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Sélectionner</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white rounded-2xl p-8 text-center border-2 border-gray-200 shadow-xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="text-6xl mb-4"&gt;🎓&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h3 class="text-2xl font-bold text-gray-800 mb-3"&gt;Élèves&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-gray-600 text-lg mb-3"&gt;Cartes sur l'usage responsable de l'IA&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-yellow-400 text-black px-4 py-2 rounded-full text-lg font-bold mb-5"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>100 points max</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button data-role="eleve" class="role-select-btn bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Sélectionner</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white rounded-2xl p-8 text-center border-2 border-gray-200 shadow-xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="text-6xl mb-4"&gt;🏛️&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h3 class="text-2xl font-bold text-gray-800 mb-3"&gt;Chefs d'Établissement&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-gray-600 text-lg mb-3"&gt;Cartes sur la gouvernance et la stratégie&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-yellow-400 text-black px-4 py-2 rounded-full text-lg font-bold mb-5"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>100 points max</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button data-role="chef" class="role-select-btn bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Sélectionner</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Zone de jeu --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="gameArea" class="hidden"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white rounded-2xl p-8 mb-8 border-2 border-gray-200 shadow-xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex justify-between items-center mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 id="roleTitle" class="text-3xl font-bold text-gray-800"&gt;&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex gap-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button id="shuffleBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>🔄 Mélanger</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button id="showIncidentBtn" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>⚡ Cartes Incidents</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button id="triggerIncident" disabled class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>🎯 Déclencher Incident</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button id="resetBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>↩️ Retour</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Compteurs --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex gap-6 mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-blue-600 text-white px-6 py-3 rounded-xl text-lg font-semibold"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="font-bold"&gt;Cartes jouées: &lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span id="playedCount"&gt;0&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-green-600 text-white px-6 py-3 rounded-xl text-lg font-semibold"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="font-bold"&gt;Score: &lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span id="score"&gt;0&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- Cartes --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="cardsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Les cartes seront générées ici --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Zone de démonstration --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="demoArea" class="hidden bg-white rounded-2xl p-8 border-2 border-gray-200 shadow-xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3 class="text-2xl font-bold text-gray-800 mb-6"&gt;🎬 Démonstration en cours&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="demoContent" class="text-gray-700 space-y-4 text-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Contenu de la démo --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="stopDemoBtn" class="mt-6 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Arrêter la Démo</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Mode Animateur --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="animatorMode" class="hidden fixed inset-0 bg-black z-50"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="h-full flex flex-col"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Header Animateur --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-red-600 text-white p-6 flex justify-between items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex items-center gap-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-4xl"&gt;🎮&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h1 class="text-3xl font-bold"&gt;Mode Animateur - Contrôle des Incidents&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button id="exitAnimatorBtn" class="bg-white text-red-600 px-6 py-3 rounded-xl text-lg font-bold hover:bg-gray-100 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>✕ Quitter</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Instructions --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-red-50 p-6 border-b"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-xl font-bold text-red-800 mb-3"&gt;🎯 Instructions&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-red-700 text-lg"&gt;Cliquez sur une carte incident pour la déclencher en plein écran. Les participants verront la situation d'urgence et devront réagir immédiatement.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Cartes Incidents --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex-1 p-8 bg-gray-100 overflow-y-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div id="animatorIncidentCards" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;!-- Les cartes incidents seront affichées ici --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Modal Incident Plein Écran --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="fullscreenIncident" class="hidden fixed inset-0 bg-red-600 z-50 flex items-center justify-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="text-center text-white p-12 max-w-4xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="text-8xl mb-8"&gt;⚡&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h1 class="text-6xl font-bold mb-8" id="incidentTitle"&gt;INCIDENT DÉCLENCHÉ&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white/20 rounded-2xl p-8 mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-2xl mb-6" id="incidentScenario"&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-3xl font-bold text-yellow-300" id="incidentDilemma"&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="incidentOptions" class="space-y-4 mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- Options seront affichées ici --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex gap-4 justify-center flex-wrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button id="startDiscussionBtn" class="bg-yellow-500 text-black px-8 py-4 rounded-xl text-xl font-bold hover:bg-yellow-400 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>🗣️ Lancer la Discussion</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button id="closeFullscreenBtn" class="bg-white text-red-600 px-8 py-4 rounded-xl text-xl font-bold hover:bg-gray-100 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>Fermer l'Incident</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button id="backToAnimatorBtn" class="bg-red-800 text-white px-8 py-4 rounded-xl text-xl font-bold hover:bg-red-900 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>Retour Animateur</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Modal Cartes Incidents --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="incidentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="p-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-center mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h2 class="text-4xl font-bold text-gray-800"&gt;⚡ Cartes Incidents - Guide Animateur&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button id="closeIncidentModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>✕ Fermer</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="mb-6 bg-red-50 border-l-4 border-red-500 p-6 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-xl font-bold text-red-800 mb-3"&gt;🎯 Instructions pour l'animateur&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-red-700 text-lg"&gt;Utilisez ces cartes incidents pour pimenter vos sessions ! Déclenchez-les à tout moment pendant le jeu pour tester la réactivité des participants face à des situations d'urgence liées à l'IA éducative.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div id="incidentCardsDisplay" class="grid md:grid-cols-2 gap-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;!-- Les cartes incidents seront affichées ici --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Données des cartes incidents</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const incidentCards = [</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>title: "🤖 IA Génère des Réponses Biaisées",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>scenario: "URGENT : L'IA utilisée en classe génère des réponses sexistes et racistes lors d'un cours d'histoire. Les élèves sont choqués, certains parents sont déjà alertés par leurs enfants.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dilemma: "Comment gérez-vous cette situation immédiatement ?",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Arrêter l'IA et expliquer les biais algorithmiques",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Utiliser cet incident comme leçon sur l'esprit critique",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Minimiser l'incident et changer de sujet"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>points: 25,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: "incident",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>discussion: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>prompt: "🗣️ DÉBAT : Comment préparer les élèves aux biais de l'IA ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>questions: [</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Enseignants : Comment intégrez-vous l'éducation aux biais dans vos cours ?",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Élèves : Saviez-vous que l'IA pouvait avoir des préjugés ?",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Direction : Quelle formation proposer aux équipes ?"</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>consequences: "⚠️ Cette situation influence la confiance des élèves envers l'IA"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>title: "📊 Données d'Élèves Exposées",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>scenario: "ALERTE SÉCURITÉ : Une faille dans l'IA éducative expose les données personnelles de 500 élèves : notes, difficultés d'apprentissage, situations familiales. Les médias locaux enquêtent.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dilemma: "Votre première action en tant que responsable ?",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Transparence totale avec les familles",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Enquête interne avant communication",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Contacter immédiatement les autorités"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>points: 30,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: "incident",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>discussion: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>prompt: "🔒 PROTECTION DES DONNÉES : Qui est responsable ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>questions: [</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Parents : Accepteriez-vous encore l'IA après cette faille ?",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Direction : Comment restaurer la confiance ?",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Technique : Quelles mesures préventives adopter ?"</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>consequences: "📊 Cette faille peut interdire l'IA dans l'établissement"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>title: "🎯 IA Remplace un Enseignant Absent",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>scenario: "SITUATION CRITIQUE : Un enseignant est absent, l'IA assure le cours en autonomie. Les élèves posent des questions complexes sur un sujet sensible (sexualité, religion). L'IA donne des réponses inappropriées.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dilemma: "Comment intervenir rapidement ?",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Interrompre immédiatement le cours IA",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Superviser et corriger en temps réel",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Laisser faire et débriefing après"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>points: 20,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: "incident",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>discussion: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>prompt: "👨‍🏫 L'IA peut-elle remplacer un humain ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>questions: [</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Élèves : Préférez-vous un cours avec IA ou un remplaçant humain ?",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Enseignants : Quelles limites fixer à l'IA pédagogique ?",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Parents : Acceptez-vous qu'une IA enseigne à votre enfant ?"</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>consequences: "🤖 Cette expérience définit l'avenir de l'IA enseignante"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>title: "📝 Triche Massive avec IA",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>scenario: "SCANDALE : 80% d'une classe utilise ChatGPT pour un devoir noté. Les copies sont parfaites mais identiques. Les autres élèves se plaignent d'injustice. Les parents divisés.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dilemma: "Quelle sanction appliquer ?",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Zéro pour tous les tricheurs",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Refaire le devoir sous surveillance",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Adapter l'évaluation à l'ère de l'IA"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>points: 25,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: "incident",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>discussion: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>prompt: "⚖️ Redéfinir la triche à l'ère de l'IA",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>questions: [</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Élèves 'tricheurs' : Justifiez votre usage de l'IA",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Élèves 'honnêtes' : Comment vous sentez-vous ?",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Enseignants : Comment évaluer avec l'IA disponible ?"</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>consequences: "📚 Cette décision change les règles d'évaluation"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>title: "🧠 IA Diagnostique des Troubles d'Apprentissage",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>scenario: "DILEMME ÉTHIQUE : L'IA détecte des signes de dyslexie chez plusieurs élèves non diagnostiqués. Faut-il alerter les familles ? Certaines refusent le diagnostic, d'autres exigent des aménagements immédiats.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dilemma: "Comment gérer ces révélations de l'IA ?",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Informer toutes les familles concernées",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Orienter discrètement vers des spécialistes",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Ignorer les suggestions de l'IA"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>points: 30,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: "incident",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>discussion: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>prompt: "🔍 L'IA peut-elle diagnostiquer nos enfants ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>questions: [</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Parents : Faites-vous confiance au diagnostic IA ?",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Professionnels : L'IA remplace-t-elle l'expertise humaine ?",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Élèves : Comment vivez-vous cette surveillance IA ?"</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>consequences: "🏥 Cette situation redéfinit le rôle de l'IA en santé scolaire"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                </span>title: "💰 Budget IA vs Emplois Humains",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>scenario: "CRISE BUDGÉTAIRE : Le rectorat impose un choix : investir dans l'IA éducative ou maintenir les postes d'assistants pédagogiques. Les syndicats menacent de grève, les parents sont divisés.",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dilemma: "Quelle priorité pour l'établissement ?",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: [</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Choisir l'IA pour l'innovation",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Préserver les emplois humains",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>"Chercher un compromis hybride"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>points: 25,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: "incident",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>discussion: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>prompt: "💼 Humain vs Machine : qui choisir ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>questions: [</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Syndicats : Défendez l'emploi humain face à l'IA",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Direction : Justifiez votre choix budgétaire",</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>"Élèves : Qui vous aide le mieux : humain ou IA ?"</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>consequences: "⚖️ Cette décision impacte l'avenir de l'école"</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const cardSets = {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>enseignant: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Détection de Plagiat IA",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Un élève remet un devoir parfaitement rédigé, mais vous suspectez l'usage d'IA générative.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Comment vérifier sans accuser injustement ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Utiliser un détecteur d'IA", "Dialogue avec l'élève", "Évaluation orale complémentaire"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Assistant IA en Classe",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Vous envisagez d'utiliser ChatGPT pour préparer vos cours et aider les élèves.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Quelles limites fixer pour un usage pédagogique responsable ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Usage libre supervisé", "Interdiction totale", "Usage encadré avec règles"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Évaluation Adaptée",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Avec l'IA accessible, vos méthodes d'évaluation traditionnelles perdent leur pertinence.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Comment adapter votre pédagogie ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Évaluations orales", "Projets collaboratifs", "Examens sur table uniquement"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 20</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Formation Continue",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "L'établissement propose une formation sur l'IA éducative, mais vous manquez de temps.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Investir dans cette formation ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Formation complète", "Auto-formation", "Attendre d'autres retours"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Équité Numérique",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Certains élèves ont accès à des outils IA payants, d'autres non.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Comment garantir l'équité ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Outils gratuits pour tous", "Interdire les outils payants", "Ignorer les différences"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 20</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Créativité vs IA",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Un élève utilise l'IA pour créer une œuvre artistique remarquable.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Comment évaluer sa créativité personnelle ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Valoriser le processus", "Évaluer le résultat", "Demander une version sans IA"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>eleve: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Devoir Maison Difficile",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Vous avez un devoir de philosophie très complexe et ChatGPT pourrait vous aider.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Utiliser l'IA sans tricher ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Brainstorming avec IA", "Rédaction personnelle", "Copier-coller direct"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Examen Surprise",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Pendant un contrôle, vous pourriez discrètement utiliser votre téléphone avec une IA.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Céder à la tentation ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Rester honnête", "Utiliser discrètement", "Demander de l'aide au voisin"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Projet de Groupe",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Votre groupe utilise massivement l'IA pour un projet, mais vous préféreriez faire autrement.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Comment réagir ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Suivre le groupe", "Proposer une alternative", "Signaler au professeur"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Apprentissage Personnel",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "L'IA vous explique mieux certains concepts que votre professeur.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Remplacer les cours par l'IA ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["IA comme complément", "IA comme substitut", "Rester traditionnel"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 20</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Orientation Future",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Vous vous demandez si votre futur métier sera remplacé par l'IA.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Comment adapter votre parcours ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Choisir un métier 'IA-proof'", "Apprendre à collaborer avec l'IA", "Ignorer cette question"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 20</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Données Personnelles",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Une IA éducative vous demande beaucoup d'informations personnelles pour personnaliser l'apprentissage.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Partager vos données ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Partager pour optimiser", "Données minimales", "Refuser totalement"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>chef: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Politique d'Établissement",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Vous devez définir la politique officielle de votre établissement concernant l'usage de l'IA.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Quelle approche adopter ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Interdiction stricte", "Usage encadré", "Liberté totale"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 20</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Budget Technologique",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Investir dans des outils IA éducatifs coûteux ou maintenir les équipements traditionnels ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Optimiser le budget ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Investissement IA", "Équipement traditionnel", "Solution hybride"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 20</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Formation du Personnel",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Certains enseignants résistent à la formation IA, d'autres la réclament.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Comment gérer cette disparité ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Formation obligatoire", "Formation volontaire", "Formation progressive"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Surveillance et Contrôle",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Installer des systèmes de détection d'usage IA ou faire confiance ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Niveau de contrôle approprié ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Surveillance active", "Contrôles ponctuels", "Confiance totale"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Communication Parents",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Les parents s'inquiètent de l'impact de l'IA sur l'éducation de leurs enfants.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Comment les rassurer ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Transparence totale", "Communication rassurante", "Information minimale"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>title: "Partenariats Externes",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scenario: "Une entreprise tech propose un partenariat IA gratuit en échange de données d'élèves.",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dilemma: "Accepter ce partenariat ?",</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: ["Accepter avec conditions", "Refuser catégoriquement", "Négocier les termes"],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>points: 15</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Variables globales</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let currentRole = '';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let currentCards = [];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let playedCards = 0;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let totalScore = 0;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let demoInterval;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let activeIncident = false;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let currentIncidentCard = null;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Fonctions utilitaires</p>
+<p class="p1"><span class="Apple-converted-space">        </span>function saveGameState() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>localStorage.setItem('tribunalIA_gameState', JSON.stringify({</p>
+<p class="p1"><span class="Apple-converted-space">                </span>currentRole,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>playedCards,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>totalScore,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>timestamp: Date.now()</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function loadGameState() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const saved = localStorage.getItem('tribunalIA_gameState');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (saved) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const state = JSON.parse(saved);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Vérifier si la sauvegarde n'est pas trop ancienne (24h)</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (Date.now() - state.timestamp &lt; 86400000) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>return state;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return null;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function selectRole(role) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentRole = role;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentCards = [...cardSets[role]];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>shuffleCards();</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('gameArea').classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('roleTitle').textContent = getRoleTitle(role);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('triggerIncident').disabled = false;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>displayCards();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>updateCounters();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>saveGameState();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function triggerIncident() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!incidentCards || incidentCards.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>showNotification('⚠️ Aucune carte incident disponible !');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (currentCards.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>showNotification('⚠️ Aucune carte disponible pour déclencher un incident !');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (activeIncident) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>showNotification('⚠️ Un incident est déjà en cours ! Résolvez-le d\'abord.');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const randomIncident = incidentCards[Math.floor(Math.random() * incidentCards.length)];</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const incidentCard = {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>...randomIncident,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>isTriggeredIncident: true,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>id: 'incident_' + Date.now()</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentCards.unshift(incidentCard);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>activeIncident = true;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const triggerBtn = document.getElementById('triggerIncident');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>triggerBtn.disabled = true;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>triggerBtn.textContent = '⚡ Incident Actif';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>triggerBtn.classList.add('bg-red-700');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>displayCards();</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const cardContainer = document.querySelector('#card-container-0');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (cardContainer) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>cardContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>cardContainer.style.animation = 'pulse 2s infinite';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}, 100);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>showNotification('⚡ INCIDENT DÉCLENCHÉ ! Une carte d\'urgence a été ajoutée au jeu.');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function showNotification(message) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const notification = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>notification.className = 'fixed top-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 text-lg font-semibold';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>notification.textContent = message;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.body.appendChild(notification);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>notification.remove();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}, 4000);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function getRoleTitle(role) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const titles = {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>enseignant: '👨‍🏫 Perspective Enseignant',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>eleve: '🎓 Perspective Élève',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>chef: '🏛️ Perspective Chef d\'Établissement'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return titles[role] || 'Rôle Inconnu';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function shuffleCards() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>for (let i = currentCards.length - 1; i &gt; 0; i--) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const j = Math.floor(Math.random() * (i + 1));</p>
+<p class="p1"><span class="Apple-converted-space">                </span>[currentCards[i], currentCards[j]] = [currentCards[j], currentCards[i]];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (currentCards.length &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>displayCards();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function displayCards() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const container = document.getElementById('cardsContainer');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!container) return;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>container.innerHTML = '';</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (currentCards.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>container.innerHTML = '&lt;div class="col-span-full text-center text-gray-500 text-xl"&gt;Aucune carte disponible&lt;/div&gt;';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentCards.forEach((card, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const cardElement = createCardElement(card, index);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>container.appendChild(cardElement);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function createCardElement(card, index) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const cardDiv = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cardDiv.className = 'relative min-h-[400px] card-hover transition-all duration-300 cursor-pointer';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cardDiv.id = `card-container-${index}`;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const isIncident = card.type === 'incident' || card.isTriggeredIncident;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const frontColors = isIncident ? 'from-red-600 to-orange-600' : 'from-blue-600 to-indigo-700';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const backColors = isIncident ? 'from-red-700 to-red-800' : 'from-green-600 to-emerald-700';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const textColor = isIncident ? 'text-red-100' : 'text-blue-100';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const backTextColor = isIncident ? 'text-red-100' : 'text-green-100';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const highlightColor = isIncident ? 'text-orange-300' : 'text-yellow-300';</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const borderClass = card.isTriggeredIncident ? 'border-red-500 border-4 animate-pulse' : 'border-gray-200 border-2';</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const cardTitle = card.title || 'Carte de Réflexion';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const cardScenario = card.scenario || 'Situation à analyser';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const cardDilemma = card.dilemma || 'Quelle est votre décision ?';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const cardPoints = card.points || 10;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const cardOptions = card.options || ['Option A', 'Option B', 'Option C'];</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>cardDiv.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="card-flip h-full w-full min-h-[400px]" id="card-${index}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="card-front bg-gradient-to-br ${frontColors} rounded-2xl p-6 ${borderClass} shadow-lg min-h-[400px] flex flex-col ${card.isTriggeredIncident ? 'relative' : ''}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>${card.isTriggeredIncident ? `</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>⚡ INCIDENT URGENT</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>` : ''}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex justify-between items-start mb-4 ${card.isTriggeredIncident ? 'mt-8' : ''}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h3 class="text-lg font-bold text-white flex-1 pr-2"&gt;${cardTitle}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="bg-yellow-400 text-black px-3 py-2 rounded-lg text-sm font-bold whitespace-nowrap"&gt;${cardPoints}pts&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="${textColor} text-base mb-4 flex-1 leading-relaxed"&gt;${cardScenario}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="mt-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="${highlightColor} font-bold text-base mb-3"&gt;${cardDilemma}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="text-white/80 text-sm"&gt;Cliquez pour voir les options&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="card-back bg-gradient-to-br ${backColors} rounded-2xl p-6 ${borderClass} shadow-lg min-h-[400px] flex flex-col"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex justify-between items-center mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h3 class="text-lg font-bold text-white"&gt;${cardTitle}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>${card.isTriggeredIncident ? `</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="bg-red-500 text-white px-3 py-1 rounded text-xs font-bold animate-pulse"&gt;INCIDENT ACTIF&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>` : ''}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="${backTextColor} text-base mb-4"&gt;Choisissez votre approche :&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="space-y-3 flex-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>${cardOptions.map((option, optIndex) =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button class="option-btn w-full bg-white/20 hover:bg-white/30 text-white p-4 rounded-lg text-sm transition-colors text-left font-medium leading-relaxed"<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>data-card-index="${index}"<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>data-option-index="${optIndex}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>${optIndex + 1}. ${option}</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>`).join('')}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Utiliser addEventListener au lieu d'attributs onclick</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cardDiv.addEventListener('click', (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (!e.target.closest('.option-btn')) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>flipCard(index);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Ajouter les événements pour les boutons d'options</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const optionButtons = cardDiv.querySelectorAll('.option-btn');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>optionButtons.forEach(btn =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>btn.addEventListener('click', (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>e.stopPropagation();</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const cardIndex = parseInt(btn.dataset.cardIndex);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const optionIndex = parseInt(btn.dataset.optionIndex);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>selectOption(cardIndex, optionIndex);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>return cardDiv;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function flipCard(index) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const card = document.getElementById(`card-${index}`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (card) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>card.classList.toggle('flipped');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function selectOption(cardIndex, optionIndex) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const card = currentCards[cardIndex];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!card) return;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>totalScore += (card.points || 0);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>playedCards++;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const isIncidentResolved = card.type === 'incident' || card.isTriggeredIncident;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const cardElement = document.getElementById(`card-${cardIndex}`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (cardElement) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cardElement.style.transform = 'scale(1.1)';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cardElement.style.opacity = '0.7';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>currentCards.splice(cardIndex, 1);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>displayCards();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>updateCounters();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>saveGameState();</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (isIncidentResolved) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>activeIncident = false;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const triggerBtn = document.getElementById('triggerIncident');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (triggerBtn) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>triggerBtn.disabled = false;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>triggerBtn.textContent = '🎯 Déclencher Incident';</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>triggerBtn.classList.remove('bg-red-700');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>showNotification('✅ Incident résolu ! Vous pouvez déclencher un nouvel incident.');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (currentCards.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>showCompletionMessage();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}, 500);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function updateCounters() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const playedCountEl = document.getElementById('playedCount');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const scoreEl = document.getElementById('score');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (playedCountEl) playedCountEl.textContent = playedCards;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (scoreEl) scoreEl.textContent = totalScore;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function showCompletionMessage() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const container = document.getElementById('cardsContainer');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!container) return;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>container.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="col-span-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-12 text-center shadow-2xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-8xl mb-6"&gt;🎉&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-4xl font-bold text-white mb-6"&gt;Félicitations !&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-white/90 text-xl mb-6"&gt;Vous avez exploré tous les dilemmes de ce rôle&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-amber-300 text-2xl font-bold mb-8"&gt;Score final : ${totalScore} points&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex gap-6 justify-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button id="completionResetBtn" class="bg-white text-blue-600 px-8 py-4 rounded-xl text-lg font-bold hover:bg-gray-100 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>Choisir un autre rôle</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button id="completionReplayBtn" class="bg-blue-700 text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-blue-800 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>Rejouer ce rôle</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Ajouter les événements aux boutons</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('completionResetBtn').addEventListener('click', resetGame);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('completionReplayBtn').addEventListener('click', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>selectRole(currentRole);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function resetGame() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('gameArea').classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('demoArea').classList.add('hidden');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const triggerBtn = document.getElementById('triggerIncident');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (triggerBtn) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>triggerBtn.disabled = true;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>triggerBtn.textContent = '🎯 Déclencher Incident';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>triggerBtn.classList.remove('bg-red-700');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>activeIncident = false;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentRole = '';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentCards = [];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>playedCards = 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>totalScore = 0;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>localStorage.removeItem('tribunalIA_gameState');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function startDemo() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('demoArea').classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const demoContent = document.getElementById('demoContent');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const demoSteps = [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>"🎯 Bienvenue dans la démonstration du Tribunal de l'IA Éducatif",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>"👥 Cette application simule des dilemmes éthiques liés à l'IA dans l'éducation",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>"🎭 Trois rôles disponibles : Enseignants, Élèves, Chefs d'établissement",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>"🃏 Chaque rôle contient 6 cartes avec des scénarios réalistes sur l'IA éducative",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>"⚡ Des cartes incidents peuvent être déclenchées pour des situations d'urgence",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>"⚖️ Les participants doivent prendre des décisions éthiques sur l'usage de l'IA",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>"📊 Un système de points encourage la réflexion approfondie",</p>
+<p class="p1"><span class="Apple-converted-space">                </span>"🎓 Parfait pour la formation et la sensibilisation aux enjeux de l'IA à l'école"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>];</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>let stepIndex = 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>demoContent.innerHTML = `&lt;div class="text-lg"&gt;${demoSteps[0]}&lt;/div&gt;`;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>demoInterval = setInterval(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stepIndex++;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (stepIndex &lt; demoSteps.length) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>demoContent.innerHTML += `&lt;div class="text-lg animate-pulse"&gt;${demoSteps[stepIndex]}&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>clearInterval(demoInterval);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>demoContent.innerHTML += `</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="mt-6 p-4 bg-blue-600 text-white rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;strong&gt;✅ Démonstration terminée !&lt;/strong&gt;&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>Vous pouvez maintenant utiliser l'application pour explorer les dilemmes de l'IA éducative.</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}, 2000);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function stopDemo() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (demoInterval) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>clearInterval(demoInterval);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('demoArea').classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function showIncidentCards() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const modal = document.getElementById('incidentModal');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const display = document.getElementById('incidentCardsDisplay');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!modal || !display) return;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>display.innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>incidentCards.forEach((card, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const cardElement = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cardElement.className = 'bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl p-6 text-white shadow-lg';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cardElement.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-start mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-xl font-bold"&gt;${card.title}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="bg-yellow-400 text-black px-3 py-2 rounded-lg text-lg font-bold"&gt;${card.points}pts&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-red-100 text-lg mb-4"&gt;${card.scenario}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-orange-300 font-bold text-lg mb-4"&gt;${card.dilemma}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-red-100 font-semibold"&gt;Options disponibles :&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>${card.options.map((option, optIndex) =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="bg-white/20 p-3 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="font-medium"&gt;${optIndex + 1}. ${option}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>`).join('')}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="mt-4 bg-yellow-500/20 p-3 rounded-lg border border-yellow-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-yellow-200 font-semibold"&gt;💡 Spécifique à l'IA éducative&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>display.appendChild(cardElement);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>modal.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function closeIncidentModal() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const modal = document.getElementById('incidentModal');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (modal) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>modal.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function startAnimatorMode() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('animatorMode').classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>displayAnimatorIncidentCards();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function exitAnimatorMode() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('animatorMode').classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('fullscreenIncident').classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function displayAnimatorIncidentCards() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const container = document.getElementById('animatorIncidentCards');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!container) return;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>container.innerHTML = '';</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>incidentCards.forEach((card, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const cardElement = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>cardElement.className = 'bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl p-6 text-white shadow-lg cursor-pointer hover:scale-105 transition-transform';</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>cardElement.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-start mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-xl font-bold"&gt;${card.title}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="bg-yellow-400 text-black px-3 py-2 rounded-lg text-lg font-bold"&gt;${card.points}pts&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-red-100 text-lg mb-4"&gt;${card.scenario}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-orange-300 font-bold text-lg mb-4"&gt;${card.dilemma}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white/20 rounded-lg p-3 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="font-bold text-lg"&gt;🎯 CLIQUER POUR DÉCLENCHER&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="mt-3 bg-blue-500/30 rounded-lg p-2 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-sm font-semibold"&gt;🤖 Incident IA Éducative&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>`;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>cardElement.addEventListener('click', () =&gt; triggerFullscreenIncident(card));</p>
+<p class="p1"><span class="Apple-converted-space">                </span>container.appendChild(cardElement);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function triggerFullscreenIncident(card) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentIncidentCard = card;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const titleEl = document.getElementById('incidentTitle');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const scenarioEl = document.getElementById('incidentScenario');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const dilemmaEl = document.getElementById('incidentDilemma');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const optionsContainer = document.getElementById('incidentOptions');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (titleEl) titleEl.textContent = card.title;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (scenarioEl) scenarioEl.textContent = card.scenario;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (dilemmaEl) dilemmaEl.textContent = card.dilemma;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (optionsContainer) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>optionsContainer.innerHTML = '';</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>card.options.forEach((option, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const optionDiv = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>optionDiv.className = 'bg-white/20 rounded-xl p-6 text-2xl font-bold';</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>optionDiv.textContent = `${index + 1}. ${option}`;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>optionsContainer.appendChild(optionDiv);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (card.discussion) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const discussionDiv = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>discussionDiv.className = 'bg-yellow-500/20 rounded-2xl p-6 mt-6 border-2 border-yellow-400';</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>discussionDiv.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-2xl font-bold text-yellow-300 mb-4"&gt;${card.discussion.prompt}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="space-y-3 mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>${card.discussion.questions.map(question =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="bg-white/10 rounded-lg p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;p class="text-xl font-semibold"&gt;${question}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>`).join('')}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-red-500/30 rounded-lg p-4 border border-red-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-xl font-bold text-red-200"&gt;${card.discussion.consequences}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>optionsContainer.appendChild(discussionDiv);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('fullscreenIncident').classList.remove('hidden');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const modal = document.getElementById('fullscreenIncident');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (modal) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>modal.style.animation = 'pulse 0.5s ease-in-out';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}, 100);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function closeFullscreenIncident() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('fullscreenIncident').classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function backToAnimator() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('fullscreenIncident').classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function startDiscussion() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!currentIncidentCard || !currentIncidentCard.discussion) return;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const timerDiv = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>timerDiv.id = 'discussionTimer';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>timerDiv.className = 'fixed top-4 left-4 bg-yellow-500 text-black px-6 py-3 rounded-xl text-xl font-bold z-50 shadow-lg';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>timerDiv.innerHTML = '⏱️ Discussion: 5:00';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.body.appendChild(timerDiv);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const instructionsDiv = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>instructionsDiv.id = 'discussionInstructions';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>instructionsDiv.className = 'fixed top-20 left-4 right-4 bg-yellow-500/95 text-black p-6 rounded-xl text-lg font-semibold z-50 shadow-lg max-w-md';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>instructionsDiv.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h3 class="text-xl font-bold mb-3"&gt;🎯 Discussion sur l'IA Éducative&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="space-y-2 text-base"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;• Chaque participant prend un rôle&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;• Débat de 5 minutes chronométrées&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;• Focus sur les enjeux de l'IA à l'école&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;• Trouvez un consensus si possible&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button id="endDiscussionBtn" class="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Terminer Discussion</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.body.appendChild(instructionsDiv);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('endDiscussionBtn').addEventListener('click', endDiscussion);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>let timeLeft = 300;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const timerInterval = setInterval(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>timeLeft--;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const minutes = Math.floor(timeLeft / 60);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const seconds = timeLeft % 60;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>timerDiv.innerHTML = `⏱️ Discussion: ${minutes}:${seconds.toString().padStart(2, '0')}`;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (timeLeft &lt;= 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>clearInterval(timerInterval);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>timerDiv.innerHTML = '⏰ TEMPS ÉCOULÉ !';</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>timerDiv.className = 'fixed top-4 left-4 bg-red-600 text-white px-6 py-3 rounded-xl text-xl font-bold z-50 shadow-lg animate-pulse';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}, 1000);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>window.discussionInterval = timerInterval;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function endDiscussion() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const timer = document.getElementById('discussionTimer');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const instructions = document.getElementById('discussionInstructions');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (timer) timer.remove();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (instructions) instructions.remove();</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (window.discussionInterval) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>clearInterval(window.discussionInterval);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>showNotification('✅ Discussion terminée ! Merci pour vos échanges sur l\'IA éducative.');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Initialisation avec addEventListener au lieu d'attributs onclick</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('DOMContentLoaded', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Boutons principaux</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('startDemo').addEventListener('click', startDemo);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('startAnimator').addEventListener('click', startAnimatorMode);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Boutons de contrôle du jeu</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('shuffleBtn').addEventListener('click', shuffleCards);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('showIncidentBtn').addEventListener('click', showIncidentCards);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('triggerIncident').addEventListener('click', triggerIncident);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('resetBtn').addEventListener('click', resetGame);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Bouton démo</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('stopDemoBtn').addEventListener('click', stopDemo);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Boutons mode animateur</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('exitAnimatorBtn').addEventListener('click', exitAnimatorMode);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('closeIncidentModalBtn').addEventListener('click', closeIncidentModal);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('startDiscussionBtn').addEventListener('click', startDiscussion);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('closeFullscreenBtn').addEventListener('click', closeFullscreenIncident);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('backToAnimatorBtn').addEventListener('click', backToAnimator);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Boutons de sélection de rôle</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.role-select-btn').forEach(btn =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>btn.addEventListener('click', (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const role = e.target.dataset.role;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>selectRole(role);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Charger l'état sauvegardé si disponible</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const savedState = loadGameState();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (savedState) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const restore = confirm('Une partie sauvegardée a été détectée. Voulez-vous la reprendre ?');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (restore) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>currentRole = savedState.currentRole;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>playedCards = savedState.playedCards;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>totalScore = savedState.totalScore;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>selectRole(currentRole);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
