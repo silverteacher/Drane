@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Battle IA - Lycéens vs Futur 🚀</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-size: 22px;
+            overflow-y: scroll;
+            height: auto;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+        
+        html {
+            overflow-y: scroll;
+            height: 100%;
+        }
+        .card-flip {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .card-flip.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 1rem;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        .card-front {
+            transform: rotateY(0deg);
+        }
+        .team-glow {
+            animation: teamGlow 2s infinite alternate;
+        }
+        @keyframes teamGlow {
+            0% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+        }
+        .wild-card {
+            animation: wildPulse 1.5s infinite;
+        }
+        @keyframes wildPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .battle-mode {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 400% 400%;
+            animation: battleGradient 3s ease infinite;
+        }
+        @keyframes battleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .buzzer-button {
+            position: relative;
+            overflow: hidden;
+        }
+        .buzzer-button:active {
+            transform: scale(0.95);
+        }
+        .buzzer-pulse {
+            animation: buzzerPulse 0.5s ease-in-out;
+        }
+        @keyframes buzzerPulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 255, 0, 0.8); }
+            50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 255, 0, 1); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 255, 0, 0.8); }
+        }
+        .buzzer-winner {
+            animation: buzzerWin 1s ease-in-out;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 1);
+        }
+        @keyframes buzzerWin {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.05) rotate(2deg); }
+            75% { transform: scale(1.05) rotate(-2deg); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-emerald-800 via-teal-800 to-cyan-900 min-h-screen text-white">
+    <div class="container mx-auto px-4 py-6">
+        <!-- En-tête Battle -->
+        <div class="text-center mb-8">
+            <h1 class="text-8xl font-bold mb-6 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 bg-clip-text text-transparent">
+                🎮 BATTLE IA 🚀
+            </h1>
+            <p class="text-3xl text-blue-300 mb-8">Lycéens vs Futur - L'École de Demain se Joue Maintenant !</p>
+            
+            <!-- 4 Principes -->
+            <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-8 max-w-6xl mx-auto mb-8">
+                <h2 class="text-3xl font-bold mb-6">🎯 4 Principes pour Maîtriser l'IA</h2>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="bg-white/20 rounded-lg p-4 text-center">
+                        <div class="text-4xl mb-3">🔍</div>
+                        <div class="font-bold text-xl">Transparence</div>
+                        <div class="text-base">Pas de secrets !</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 text-center">
+                        <div class="text-4xl mb-3">⚖️</div>
+                        <div class="font-bold text-xl">Équité</div>
+                        <div class="text-base">Justice pour tous</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 text-center">
+                        <div class="text-4xl mb-3">🌱</div>
+                        <div class="font-bold text-xl">Sobriété</div>
+                        <div class="text-base">Pas d'abus</div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-4 text-center">
+                        <div class="text-4xl mb-3">👤</div>
+                        <div class="font-bold text-xl">Humain d'Abord</div>
+                        <div class="text-base">Vous décidez !</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conseil Démarrage -->
+            <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-2xl p-8 max-w-6xl mx-auto">
+                <h3 class="text-3xl font-bold text-white mb-6 text-center">💡 Conseil pour Démarrer</h3>
+                <div class="bg-white/20 rounded-xl p-6 mb-6">
+                    <p class="text-2xl text-white text-center">
+                        <strong>🧠 Commencez par 2 cartes BRAINSTORMING</strong> pour échauffer les esprits !
+                    </p>
+                    <p class="text-lg text-green-100 text-center mt-3">
+                        Parfait pour briser la glace et faire participer tout le monde dès le début
+                    </p>
+                </div>
+
+                <!-- Cartes Brainstorming Cliquables -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div onclick="selectBrainstormCard(0)" class="bg-gray-700 hover:bg-gray-600 rounded-xl p-6 cursor-pointer hover:scale-105 transition-all shadow-lg border border-gray-500">
+                        <div class="text-center">
+                            <div class="text-3xl mb-3">🧠</div>
+                            <h4 class="text-lg font-bold text-white mb-2">IA au Lycée</h4>
+                            <div class="bg-blue-600 text-white px-3 py-1 rounded text-sm font-bold">
+                                Cliquez pour commencer
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div onclick="selectBrainstormCard(4)" class="bg-gray-700 hover:bg-gray-600 rounded-xl p-6 cursor-pointer hover:scale-105 transition-all shadow-lg border border-gray-500">
+                        <div class="text-center">
+                            <div class="text-3xl mb-3">🎭</div>
+                            <h4 class="text-lg font-bold text-white mb-2">Conseil de Classe IA</h4>
+                            <div class="bg-blue-600 text-white px-3 py-1 rounded text-sm font-bold">
+                                Cliquez pour commencer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration du Jeu -->
+        <div id="gameSetup" class="grid md:grid-cols-2 gap-10 mb-10 max-w-7xl mx-auto">
+            <!-- Équipe 1 -->
+            <div class="bg-gradient-to-br from-blue-600 to-cyan-600 rounded-3xl p-10 shadow-2xl">
+                <div class="text-center mb-8">
+                    <div class="text-8xl mb-6">🚀</div>
+                    <h3 class="text-4xl font-bold">ÉQUIPE FUTURISTES</h3>
+                    <p class="text-blue-100 text-xl mt-3">Pro-IA, Innovation, Disruption</p>
+                </div>
+                <div class="space-y-6">
+                    <input type="text" id="team1Name" placeholder="Nom de l'équipe (ex: Les Cyborgs)" 
+                           class="w-full p-4 rounded-xl text-gray-800 text-lg font-semibold text-center">
+                    <div class="text-center text-blue-100 text-xl space-y-2">
+                        <p>💡 Équipe qui défend l'innovation IA</p>
+                        <p>🚀 Vision optimiste du futur</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Équipe 2 -->
+            <div class="bg-gradient-to-br from-red-600 to-orange-600 rounded-3xl p-10 shadow-2xl">
+                <div class="text-center mb-8">
+                    <div class="text-8xl mb-6">🛡️</div>
+                    <h3 class="text-4xl font-bold">ÉQUIPE GARDIENS</h3>
+                    <p class="text-red-100 text-xl mt-3">Prudence, Éthique, Humanité</p>
+                </div>
+                <div class="space-y-6">
+                    <input type="text" id="team2Name" placeholder="Nom de l'équipe (ex: Les Résistants)" 
+                           class="w-full p-4 rounded-xl text-gray-800 text-lg font-semibold text-center">
+                    <div class="text-center text-red-100 text-xl space-y-2">
+                        <p>🛡️ Équipe qui privilégie l'humain</p>
+                        <p>⚖️ Vision prudente et éthique</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Boutons de Lancement -->
+        <div class="text-center mb-12 space-y-6 max-w-6xl mx-auto">
+            <button onclick="startBattle()" class="bg-gradient-to-r from-yellow-400 to-red-500 text-black px-16 py-6 rounded-3xl text-3xl font-bold hover:scale-105 transition-transform shadow-2xl">
+                🎮 LANCER LA BATTLE ! 🚀
+            </button>
+            <div class="flex gap-6 justify-center flex-wrap">
+                <button onclick="showSummary()" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-10 py-4 rounded-2xl text-xl font-bold hover:scale-105 transition-transform">
+                    📋 Voir Toutes les Questions
+                </button>
+                <button onclick="showFinalChallenge()" class="bg-gradient-to-r from-green-600 to-teal-600 text-white px-10 py-4 rounded-2xl text-xl font-bold hover:scale-105 transition-transform">
+                    🌟 Question Finale Collective
+                </button>
+                <button onclick="showTimingGuide()" class="bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-10 py-4 rounded-2xl text-xl font-bold hover:scale-105 transition-transform">
+                    ⏰ Guide 1h30
+                </button>
+            </div>
+        </div>
+
+        <!-- Zone de Battle -->
+        <div id="battleArea" class="hidden">
+            <!-- Tableau de Bord -->
+            <div class="bg-black/50 rounded-2xl p-6 mb-8 border-2 border-yellow-400">
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Score Équipe 1 -->
+                    <div id="team1Score" class="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl p-6 text-center">
+                        <h3 id="team1DisplayName" class="text-2xl font-bold mb-2">ÉQUIPE FUTURISTES</h3>
+                        <div class="text-4xl font-bold" id="team1Points">0</div>
+                        <div class="text-lg">points</div>
+                        <div class="mt-2 text-sm" id="team1Status">En attente...</div>
+                    </div>
+
+                    <!-- Contrôles -->
+                    <div class="text-center space-y-4">
+                        <div class="bg-yellow-400 text-black rounded-xl p-4">
+                            <div class="text-2xl font-bold">MANCHE <span id="roundNumber">1</span></div>
+                            <div class="text-lg" id="gameMode">Préparation...</div>
+                        </div>
+                        
+                        <!-- Buzzers -->
+                        <div id="buzzerArea" class="hidden">
+                            <div class="text-xl font-bold text-white mb-4">🚨 BUZZERS ACTIFS 🚨</div>
+                            <div class="flex gap-6 justify-center mb-4">
+                                <button onclick="buzz(1)" id="buzzer1" class="buzzer-button bg-gradient-to-br from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-bold text-2xl px-12 py-8 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-200 border-4 border-blue-300">
+                                    🚀<br><span class="text-lg" id="buzzer1Text">FUTURISTES</span>
+                                </button>
+                                <button onclick="buzz(2)" id="buzzer2" class="buzzer-button bg-gradient-to-br from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold text-2xl px-12 py-8 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-200 border-4 border-red-300">
+                                    🛡️<br><span class="text-lg" id="buzzer2Text">GARDIENS</span>
+                                </button>
+                            </div>
+                            <div id="buzzerStatus" class="text-lg font-bold text-yellow-300">Première équipe à buzzer répond !</div>
+                        </div>
+                        
+                        <div class="flex gap-2 justify-center flex-wrap">
+                            <button onclick="drawCard()" id="drawButton" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-xl font-bold transition-colors">
+                                🃏 Tirer une Carte
+                            </button>
+                            <button onclick="activateBuzzers()" id="buzzerActivateButton" class="hidden bg-yellow-600 hover:bg-yellow-700 px-6 py-3 rounded-xl font-bold transition-colors">
+                                🚨 Activer Buzzers
+                            </button>
+                            <button onclick="nextRound()" id="nextRoundButton" class="hidden bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-xl font-bold transition-colors">
+                                ➡️ Manche Suivante
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Score Équipe 2 -->
+                    <div id="team2Score" class="bg-gradient-to-r from-red-600 to-orange-600 rounded-xl p-6 text-center">
+                        <h3 id="team2DisplayName" class="text-2xl font-bold mb-2">ÉQUIPE GARDIENS</h3>
+                        <div class="text-4xl font-bold" id="team2Points">0</div>
+                        <div class="text-lg">points</div>
+                        <div class="mt-2 text-sm" id="team2Status">En attente...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zone de Carte Active -->
+            <div id="activeCardArea" class="mb-8">
+                <!-- La carte active apparaîtra ici -->
+            </div>
+
+            <!-- Historique des Manches -->
+            <div id="roundHistory" class="bg-black/30 rounded-2xl p-6">
+                <h3 class="text-2xl font-bold mb-4 text-center">📊 Historique des Manches</h3>
+                <div id="historyContent" class="space-y-4">
+                    <!-- L'historique apparaîtra ici -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Récapitulatif -->
+        <div id="summaryModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+            <div class="bg-gradient-to-br from-purple-900 to-indigo-900 rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-4xl font-bold text-white">📋 Récapitulatif des Questions Battle IA</h2>
+                    <button onclick="closeSummary()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-bold">
+                        ✕ Fermer
+                    </button>
+                </div>
+                <div id="summaryContent" class="space-y-6">
+                    <!-- Le contenu sera généré par JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Question Finale -->
+        <div id="finalChallengeModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+            <div class="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl max-w-4xl w-full p-8 text-center">
+                <div class="text-8xl mb-6">🌟</div>
+                <h2 class="text-5xl font-bold text-black mb-6">DÉFI FINAL COLLECTIF</h2>
+                <div class="bg-white/20 rounded-2xl p-8 mb-8">
+                    <h3 class="text-3xl font-bold text-black mb-6">🏫 L'École de 2030 - Votre Vision</h3>
+                    <p class="text-xl text-black mb-6 leading-relaxed">
+                        Vous êtes en 2030. L'IA fait partie du quotidien scolaire. 
+                        <strong>ENSEMBLE</strong>, les deux équipes doivent créer le lycée parfait qui respecte les 4 principes.
+                    </p>
+                    <div class="bg-black/20 rounded-xl p-6 mb-6">
+                        <h4 class="text-2xl font-bold text-yellow-200 mb-4">🎯 Mission Collective</h4>
+                        <div class="grid md:grid-cols-2 gap-4 text-lg text-white">
+                            <div>
+                                <p class="font-bold mb-2">🔍 Transparence</p>
+                                <p class="text-sm">Comment informer sur l'IA ?</p>
+                            </div>
+                            <div>
+                                <p class="font-bold mb-2">⚖️ Équité</p>
+                                <p class="text-sm">Comment garantir l'égalité ?</p>
+                            </div>
+                            <div>
+                                <p class="font-bold mb-2">🌱 Sobriété</p>
+                                <p class="text-sm">Comment éviter les excès ?</p>
+                            </div>
+                            <div>
+                                <p class="font-bold mb-2">👤 Humain d'Abord</p>
+                                <p class="text-sm">Comment préserver l'humanité ?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-green-500 text-black rounded-xl p-6">
+                        <h4 class="text-xl font-bold mb-3">⏰ Temps de Réflexion : 10 minutes</h4>
+                        <p class="text-lg">Présentez votre lycée idéal en 3 minutes par équipe, puis débat collectif !</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 justify-center">
+                    <button onclick="startFinalTimer()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-xl font-bold">
+                        ⏰ Lancer le Chrono
+                    </button>
+                    <button onclick="closeFinalChallenge()" class="bg-gray-600 hover:bg-gray-700 text-white px-8 py-4 rounded-xl text-xl font-bold">
+                        Fermer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Guide Timing -->
+        <div id="timingGuideModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+            <div class="bg-gradient-to-br from-yellow-600 to-orange-600 rounded-2xl max-w-4xl w-full p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-4xl font-bold text-white">⏰ Guide Animation 1h30</h2>
+                    <button onclick="closeTimingGuide()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-bold">
+                        ✕ Fermer
+                    </button>
+                </div>
+                <div class="space-y-6">
+                    <div class="bg-white/20 rounded-2xl p-6">
+                        <h3 class="text-2xl font-bold text-white mb-4">🎯 Déroulé Optimal</h3>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="bg-blue-500/30 rounded-lg p-4">
+                                <h4 class="font-bold text-lg mb-2">⏰ 0-20min : Échauffement</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• Présentation des 4 principes (5min)</li>
+                                    <li>• Formation des équipes (5min)</li>
+                                    <li>• 2 cartes Brainstorming (10min)</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-500/30 rounded-lg p-4">
+                                <h4 class="font-bold text-lg mb-2">⏰ 20-70min : Battle</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• 5-6 cartes débat (50min)</li>
+                                    <li>• 8min par carte max</li>
+                                    <li>• Privilégier actions concrètes</li>
+                                </ul>
+                            </div>
+                            <div class="bg-purple-500/30 rounded-lg p-4">
+                                <h4 class="font-bold text-lg mb-2">⏰ 70-90min : Synthèse</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• Question finale collective (15min)</li>
+                                    <li>• Bilan et engagement (5min)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/20 rounded-2xl p-6">
+                        <h3 class="text-2xl font-bold text-white mb-4">💡 Conseils Animation</h3>
+                        <div class="grid md:grid-cols-2 gap-4 text-white">
+                            <div>
+                                <h4 class="font-bold mb-2">🚀 Pour Dynamiser :</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• Commencer par les cartes Brainstorming</li>
+                                    <li>• Alterner débats et actions concrètes</li>
+                                    <li>• Utiliser le chrono visible</li>
+                                    <li>• Encourager les prises de position</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-2">⚖️ Pour Équilibrer :</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• Donner la parole aux timides</li>
+                                    <li>• Recadrer les débordements</li>
+                                    <li>• Valoriser les nuances</li>
+                                    <li>• Rappeler les 4 principes</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-green-500 to-blue-500 rounded-2xl p-6 text-center">
+                        <h3 class="text-2xl font-bold text-white mb-4">🎯 Objectif Final</h3>
+                        <p class="text-lg text-white">Que chaque lycéen reparte avec une vision claire de l'IA éthique et des actions concrètes à mettre en place !</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Carte Brainstorming -->
+        <div id="brainstormModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+            <div class="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl max-w-4xl w-full p-8 max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-4xl font-bold text-white">🧠 Carte Brainstorming</h2>
+                    <button onclick="closeBrainstormModal()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-bold">
+                        ✕ Fermer
+                    </button>
+                </div>
+                <div id="brainstormCardContent">
+                    <!-- Le contenu de la carte apparaîtra ici -->
+                </div>
+                <div class="text-center mt-8">
+                    <button onclick="useBrainstormCard()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-xl font-bold mr-4">
+                        🎮 Utiliser cette Carte
+                    </button>
+                    <button onclick="closeBrainstormModal()" class="bg-gray-600 hover:bg-gray-700 text-white px-8 py-4 rounded-xl text-xl font-bold">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Fin de Partie -->
+        <div id="gameEndModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+            <div class="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl max-w-4xl w-full p-8 text-center">
+                <div class="text-8xl mb-6" id="winnerEmoji">🏆</div>
+                <h2 class="text-5xl font-bold mb-4" id="winnerTitle">VICTOIRE !</h2>
+                <div class="text-2xl mb-6" id="winnerText"></div>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white/20 rounded-xl p-6">
+                        <h3 class="text-xl font-bold mb-2" id="finalTeam1Name">Équipe 1</h3>
+                        <div class="text-4xl font-bold" id="finalTeam1Score">0</div>
+                        <div>points finaux</div>
+                    </div>
+                    <div class="bg-white/20 rounded-xl p-6">
+                        <h3 class="text-xl font-bold mb-2" id="finalTeam2Name">Équipe 2</h3>
+                        <div class="text-4xl font-bold" id="finalTeam2Score">0</div>
+                        <div>points finaux</div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 justify-center">
+                    <button onclick="restartGame()" class="bg-green-600 hover:bg-green-700 px-8 py-4 rounded-xl text-xl font-bold transition-colors">
+                        🔄 Nouvelle Partie
+                    </button>
+                    <button onclick="closeGameEnd()" class="bg-gray-600 hover:bg-gray-700 px-8 py-4 rounded-xl text-xl font-bold transition-colors">
+                        📊 Voir Résultats
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Espace en bas pour éviter que le contenu soit coupé -->
+    <div class="h-32"></div>
+
+    <script>
+        // Cartes de jeu pour lycéens - BRAINSTORMING EN PREMIER !
+        const battleCards = [
+            // 🧠 CARTES BRAINSTORMING - PARFAIT POUR COMMENCER !
+            {
+                type: "brainstorm",
+                title: "🧠 Brainstorm: IA au Lycée",
+                scenario: "Votre lycée vient d'installer une IA. En 3 minutes, listez TOUTES les utilisations possibles (bonnes et mauvaises).",
+                challenge: "BRAINSTORM: Quels usages de l'IA dans votre lycée ?",
+                team1Advantage: "Optimisation, personnalisation, aide 24h/24",
+                team2Advantage: "Surveillance, dépendance, perte d'autonomie",
+                points: 100,
+                wildCard: false,
+                category: "🧠 Brainstorming",
+                action: "📝 ACTION: Chaque équipe note ses idées sur papier, puis présente en 1 minute"
+            },
+            {
+                type: "brainstorm",
+                title: "⚡ Speed Thinking: Problèmes IA",
+                scenario: "Tour de table express : chacun cite UN problème que l'IA pourrait causer au lycée. Pas le droit de répéter !",
+                challenge: "SPEED: Un problème IA par personne en 30 secondes !",
+                team1Advantage: "Anticipation des risques, solutions préventives",
+                team2Advantage: "Prise de conscience collective des dangers",
+                points: 80,
+                wildCard: false,
+                category: "🧠 Brainstorming",
+                action: "🎯 ACTION: Tour de table chronométré, noter tous les problèmes au tableau"
+            },
+            {
+                type: "brainstorm",
+                title: "🎨 Dessine ton IA Idéale",
+                scenario: "Si vous pouviez créer l'IA parfaite pour votre lycée, à quoi ressemblerait-elle ? Dessinez-la !",
+                challenge: "CRÉATIF: Dessinez votre IA lycéenne idéale !",
+                team1Advantage: "Innovation sans limites, créativité maximale",
+                team2Advantage: "Réflexion sur les besoins réels des élèves",
+                points: 120,
+                wildCard: false,
+                category: "🧠 Brainstorming",
+                action: "✏️ ACTION: 5 minutes de dessin, puis présentation des créations"
+            },
+            {
+                type: "brainstorm",
+                title: "🗳️ Vote Express: Priorités IA",
+                scenario: "Voici 5 usages IA pour le lycée. Votez pour vos 3 priorités : Aide aux devoirs, Anti-harcèlement, Orientation, Cantine, Sécurité.",
+                challenge: "VOTE: Quelles sont vos 3 priorités IA au lycée ?",
+                team1Advantage: "Efficacité, amélioration de la vie scolaire",
+                team2Advantage: "Préservation de l'humain, choix réfléchis",
+                points: 90,
+                wildCard: false,
+                category: "🧠 Brainstorming",
+                action: "🗳️ ACTION: Vote à main levée, débat sur les choix différents"
+            },
+            {
+                type: "brainstorm",
+                title: "🎭 Jeu de Rôles: Conseil de Classe IA",
+                scenario: "Simulez un conseil de classe où l'IA propose les orientations. Chacun joue un rôle : élève, parent, prof, proviseur.",
+                challenge: "JEU DE RÔLES: Débattez des orientations IA !",
+                team1Advantage: "Objectivité, données précises, pas de favoritisme",
+                team2Advantage: "Connaissance humaine, contexte personnel, empathie",
+                points: 110,
+                wildCard: false,
+                category: "🧠 Brainstorming",
+                action: "🎭 ACTION: Distribuez les rôles, 5 minutes de débat en personnages"
+            },
+            {
+                type: "brainstorm",
+                title: "📱 Appli IA Lycéenne",
+                scenario: "Créez l'application IA parfaite pour les lycéens. Quelles fonctionnalités ? Quel design ? Quelles limites ?",
+                challenge: "CRÉATION: Concevez votre app IA lycéenne !",
+                team1Advantage: "Innovation, fonctionnalités révolutionnaires",
+                team2Advantage: "Simplicité, respect de la vie privée",
+                points: 130,
+                wildCard: false,
+                category: "🧠 Brainstorming",
+                action: "📱 ACTION: Dessinez l'interface, présentez les fonctions en 2 minutes"
+            },
+
+            // 🌟 WILD CARDS ANIMATEUR - POUR DYNAMISER !
+            {
+                type: "wild",
+                title: "🎪 Wild: Débat Libre Total",
+                scenario: "L'animateur lance un sujet IA surprise ! 5 minutes de débat libre sans règles. Tous les arguments sont permis !",
+                challenge: "WILD: Débat libre sur le sujet surprise de l'animateur !",
+                team1Advantage: "Liberté totale d'argumentation",
+                team2Advantage: "Créativité et spontanéité maximales",
+                points: 200,
+                wildCard: true,
+                category: "🌟 Wild Card Animateur",
+                action: "🎪 ACTION: L'animateur choisit un sujet IA chaud, débat libre de 5 minutes !"
+            },
+            {
+                type: "wild",
+                title: "🎲 Wild: Inversion des Rôles",
+                scenario: "PLOT TWIST ! Les équipes doivent défendre la position opposée pendant 3 minutes. Les Futuristes deviennent prudents, les Gardiens deviennent pro-IA !",
+                challenge: "INVERSION: Défendez la position opposée à votre équipe !",
+                team1Advantage: "Comprendre l'autre point de vue",
+                team2Advantage: "Développer l'esprit critique",
+                points: 180,
+                wildCard: true,
+                category: "🌟 Wild Card Animateur",
+                action: "🎲 ACTION: Inversion immédiate ! 3 minutes pour convaincre dans l'autre sens !"
+            },
+            {
+                type: "wild",
+                title: "⚡ Wild: Question Flash",
+                scenario: "L'animateur pose une question IA ultra-rapide ! Première équipe qui lève la main répond. Si c'est juste, elle gagne les points !",
+                challenge: "FLASH: Première équipe qui répond correctement gagne !",
+                team1Advantage: "Réactivité et connaissances techniques",
+                team2Advantage: "Réflexion rapide et intuition",
+                points: 150,
+                wildCard: true,
+                category: "🌟 Wild Card Animateur",
+                action: "⚡ ACTION: L'animateur pose une question surprise, première main levée répond !"
+            },
+            {
+                type: "wild",
+                title: "🎭 Wild: Théâtre IA",
+                scenario: "Chaque équipe doit jouer une scène de 2 minutes : 'Un jour où l'IA a mal tourné au lycée'. Soyez créatifs et dramatiques !",
+                challenge: "THÉÂTRE: Jouez une scène 'IA qui dérape' !",
+                team1Advantage: "Créativité et mise en scène",
+                team2Advantage: "Imagination et expression",
+                points: 220,
+                wildCard: true,
+                category: "🌟 Wild Card Animateur",
+                action: "🎭 ACTION: 3 minutes de préparation, puis représentation théâtrale !"
+            },
+            {
+                type: "wild",
+                title: "🔥 Wild: Bataille d'Arguments",
+                scenario: "Combat d'arguments ! Chaque équipe a 30 secondes pour donner son meilleur argument. L'animateur désigne le plus convaincant !",
+                challenge: "COMBAT: Votre meilleur argument en 30 secondes !",
+                team1Advantage: "Persuasion et rhétorique",
+                team2Advantage: "Passion et conviction",
+                points: 160,
+                wildCard: true,
+                category: "🌟 Wild Card Animateur",
+                action: "🔥 ACTION: 30 secondes par équipe, l'animateur juge le plus convaincant !"
+            },
+
+            // 🎯 NOUVELLES QUESTIONS IA - DÉBATS APPROFONDIS
+            {
+                type: "debate",
+                title: "🤖 IA Prof vs Prof Humain",
+                scenario: "Votre lycée hésite entre embaucher un prof d'histoire humain ou installer une IA prof ultra-performante. Même salaire, même efficacité annoncée.",
+                challenge: "CHOIX: IA prof ou prof humain pour enseigner l'histoire ?",
+                team1Advantage: "Disponibilité 24h/24, connaissances infinies, pas de fatigue",
+                team2Advantage: "Empathie, expérience de vie, adaptation aux émotions",
+                points: 140,
+                wildCard: false,
+                category: "🎯 Éducation IA",
+                action: "🗣️ ACTION: Débat de 4 minutes, puis vote de la classe"
+            },
+            {
+                type: "debate",
+                title: "📊 Surveillance IA des Élèves",
+                scenario: "Le lycée veut installer une IA qui analyse le comportement des élèves pour prévenir le harcèlement et l'échec scolaire. Elle surveille tout : regards, postures, interactions.",
+                challenge: "DILEMME: Accepter la surveillance IA pour votre sécurité ?",
+                team1Advantage: "Protection efficace, prévention des drames, aide personnalisée",
+                team2Advantage: "Vie privée, liberté, risque de fichage et contrôle",
+                points: 160,
+                wildCard: false,
+                category: "🎯 Éthique IA",
+                action: "⚖️ ACTION: Débat éthique, imaginez les conséquences à 5 ans"
+            },
+            {
+                type: "debate",
+                title: "🎓 Diplôme par IA",
+                scenario: "Une IA peut maintenant évaluer vos compétences en temps réel et délivrer votre bac sans examen. Elle connaît tout de votre parcours scolaire depuis la 6ème.",
+                challenge: "RÉVOLUTION: Remplacer le bac par une évaluation IA continue ?",
+                team1Advantage: "Évaluation juste, pas de stress d'examen, reconnaissance des talents",
+                team2Advantage: "Tradition, effort ponctuel, égalité des chances",
+                points: 150,
+                wildCard: false,
+                category: "🎯 Éducation IA",
+                action: "🎓 ACTION: Vote secret puis débat sur les résultats"
+            },
+            {
+                type: "debate",
+                title: "💬 IA Psy Scolaire",
+                scenario: "Votre lycée propose une IA psychologue disponible 24h/24 pour parler de vos problèmes. Elle garde tout secret et donne de vrais conseils. Mais c'est une machine...",
+                challenge: "INTIMITÉ: Faire confiance à une IA psy plutôt qu'à un humain ?",
+                team1Advantage: "Disponibilité totale, pas de jugement, confidentialité absolue",
+                team2Advantage: "Compréhension humaine, expérience de vie, vraie empathie",
+                points: 170,
+                wildCard: false,
+                category: "🎯 Bien-être IA",
+                action: "💭 ACTION: Témoignages anonymes, puis débat sur la confiance"
+            },
+            {
+                type: "debate",
+                title: "🚫 Détecteur Anti-Triche IA",
+                scenario: "Une IA peut détecter instantanément si vous trichez, copiez ou utilisez ChatGPT dans vos devoirs. Taux de réussite : 99,9%. Fini la triche !",
+                challenge: "CONTRÔLE: Accepter une IA anti-triche ultra-efficace ?",
+                team1Advantage: "Justice, égalité, valorisation du vrai travail",
+                team2Advantage: "Confiance, apprentissage par l'erreur, créativité",
+                points: 130,
+                wildCard: false,
+                category: "🎯 Éthique IA",
+                action: "🔍 ACTION: Sondage sur vos habitudes de triche, puis débat"
+            },
+            {
+                type: "debate",
+                title: "🎮 IA Compagnon Personnel",
+                scenario: "Chaque élève reçoit une IA compagnon qui le connaît parfaitement, l'aide dans ses devoirs, le motive et devient son meilleur ami virtuel.",
+                challenge: "AMITIÉ: Avoir une IA comme meilleur ami au lycée ?",
+                team1Advantage: "Soutien constant, compréhension parfaite, aide personnalisée",
+                team2Advantage: "Vraies amitiés humaines, relations authentiques, émotions réelles",
+                points: 140,
+                wildCard: false,
+                category: "🎯 Social IA",
+                action: "👥 ACTION: Comparez avec vos vraies amitiés, débat sur l'authenticité"
+            },
+            {
+                type: "debate",
+                title: "🔮 IA Prédictive d'Orientation",
+                scenario: "Une IA analyse vos résultats, personnalité et comportements pour prédire votre métier idéal avec 95% de précision. Elle vous oriente dès la seconde.",
+                challenge: "DESTIN: Laisser une IA choisir votre orientation ?",
+                team1Advantage: "Précision scientifique, éviter les erreurs d'orientation, efficacité",
+                team2Advantage: "Libre arbitre, surprises de la vie, passion personnelle",
+                points: 180,
+                wildCard: false,
+                category: "🎯 Avenir IA",
+                action: "🔮 ACTION: L'IA prédit vos métiers, débattez de ses propositions"
+            },
+            {
+                type: "debate",
+                title: "📚 Manuels IA Adaptatifs",
+                scenario: "Vos manuels scolaires sont remplacés par une IA qui adapte le contenu à votre niveau en temps réel. Plus jamais de cours trop faciles ou trop durs !",
+                challenge: "PERSONNALISATION: Des cours IA adaptés à chacun ?",
+                team1Advantage: "Apprentissage optimal, progression personnalisée, motivation",
+                team2Advantage: "Culture commune, effort collectif, dépassement de soi",
+                points: 120,
+                wildCard: false,
+                category: "🎯 Éducation IA",
+                action: "📖 ACTION: Testez un cours adaptatif, comparez avec un cours classique"
+            },
+            {
+                type: "debate",
+                title: "🏆 Compétition IA vs Humains",
+                scenario: "Votre lycée organise un concours : équipes d'élèves VS équipes avec IA. Même épreuve, qui gagnera ? Et est-ce équitable ?",
+                challenge: "DÉFI: Concours élèves VS élèves+IA, pour ou contre ?",
+                team1Advantage: "Innovation, préparation au futur, nouvelles compétences",
+                team2Advantage: "Équité, valorisation humaine, compétition loyale",
+                points: 160,
+                wildCard: false,
+                category: "🎯 Compétition IA",
+                action: "🏆 ACTION: Organisez un mini-concours en direct, analysez les résultats"
+            },
+            {
+                type: "debate",
+                title: "🌍 IA Écologique du Lycée",
+                scenario: "Une IA gère l'énergie, les déchets et l'eau du lycée. Elle peut couper le chauffage de votre classe si elle juge que vous gaspillez. Écologie VS confort !",
+                challenge: "PLANÈTE: IA écolo qui contrôle votre confort ?",
+                team1Advantage: "Urgence climatique, gestion optimale, responsabilisation",
+                team2Advantage: "Confort d'apprentissage, liberté de choix, bien-être",
+                points: 140,
+                wildCard: false,
+                category: "🎯 Écologie IA",
+                action: "🌱 ACTION: Calculez l'impact écologique de votre classe, débattez des solutions"
+            }
+        ];
+
+        // Variables de jeu
+        let team1Name = "ÉQUIPE FUTURISTES";
+        let team2Name = "ÉQUIPE GARDIENS";
+        let team1Score = 0;
+        let team2Score = 0;
+        let currentRound = 1;
+        let maxRounds = 8;
+        let gameHistory = [];
+        let currentCard = null;
+        let usedCards = [];
+        let buzzersActive = false;
+        let buzzerWinner = null;
+
+        function startBattle() {
+            team1Name = document.getElementById('team1Name').value || "ÉQUIPE FUTURISTES";
+            team2Name = document.getElementById('team2Name').value || "ÉQUIPE GARDIENS";
+
+            document.getElementById('team1DisplayName').textContent = team1Name;
+            document.getElementById('team2DisplayName').textContent = team2Name;
+            
+            document.getElementById('gameSetup').classList.add('hidden');
+            document.getElementById('battleArea').classList.remove('hidden');
+            
+            document.body.classList.add('battle-mode');
+            
+            updateScoreboard();
+            updateGameMode("🎮 Battle en cours - Tirez une carte !");
+            
+            showNotification("🚀 BATTLE LANCÉE ! Que le meilleur gagne !");
+        }
+
+        function drawCard() {
+            if (usedCards.length >= battleCards.length) {
+                endGame();
+                return;
+            }
+            
+            let availableCards = battleCards.filter(card => !usedCards.includes(card));
+            currentCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+            usedCards.push(currentCard);
+            
+            displayBattleCard(currentCard);
+            
+            document.getElementById('drawButton').classList.add('hidden');
+            document.getElementById('buzzerActivateButton').classList.remove('hidden');
+            document.getElementById('nextRoundButton').classList.remove('hidden');
+            
+            updateGameMode(`🃏 ${currentCard.category} - Choisissez: Buzzers ou Vote direct !`);
+        }
+
+        function displayBattleCard(card) {
+            const cardArea = document.getElementById('activeCardArea');
+            
+            if (!cardArea || !card) return;
+            
+            const isWild = card.wildCard || false;
+            const cardClass = isWild ? 'wild-card' : '';
+            const borderClass = isWild ? 'border-yellow-400 border-4' : 'border-purple-400 border-2';
+            const bgGradient = isWild ? 'from-yellow-500 to-orange-500' : 'from-purple-600 to-indigo-600';
+            
+            const cardHTML = `
+                <div class="bg-gradient-to-br ${bgGradient} rounded-2xl p-8 ${borderClass} shadow-2xl ${cardClass}">
+                    <div class="text-center mb-6">
+                        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                            <span class="bg-white text-black px-4 py-2 rounded-full font-bold text-lg">${card.category || 'Catégorie'}</span>
+                            ${isWild ? '<span class="bg-yellow-400 text-black px-4 py-2 rounded-full font-bold text-lg animate-pulse">🌟 WILD CARD</span>' : ''}
+                            <span class="bg-green-400 text-black px-4 py-2 rounded-full font-bold text-lg">${card.points || 100} pts</span>
+                        </div>
+                        <h2 class="text-4xl font-bold mb-4 text-white">${card.title || 'Titre de la carte'}</h2>
+                    </div>
+                    
+                    <div class="bg-white/20 rounded-xl p-6 mb-6">
+                        <h3 class="text-2xl font-bold mb-4 text-white">📖 Situation</h3>
+                        <p class="text-xl leading-relaxed text-white">${card.scenario || 'Scénario de la carte'}</p>
+                    </div>
+                    
+                    <div class="bg-yellow-400 text-black rounded-xl p-6 mb-6">
+                        <h3 class="text-2xl font-bold mb-4">🎯 ${isWild ? 'DÉFI' : 'CHALLENGE'}</h3>
+                        <p class="text-xl font-bold">${card.challenge || 'Challenge de la carte'}</p>
+                        ${card.action ? `<div class="mt-4 bg-orange-500 text-white rounded-lg p-3"><p class="font-bold">${card.action}</p></div>` : ''}
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-blue-600/50 rounded-xl p-6">
+                            <h4 class="text-xl font-bold mb-3 text-white">🚀 ${team1Name}</h4>
+                            <p class="text-lg text-blue-100">${card.team1Advantage || 'Avantage équipe 1'}</p>
+                            <button onclick="voteTeam(1)" class="mt-4 bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-xl font-bold transition-colors w-full text-white">
+                                Voter pour cette équipe
+                            </button>
+                        </div>
+                        <div class="bg-red-600/50 rounded-xl p-6">
+                            <h4 class="text-xl font-bold mb-3 text-white">🛡️ ${team2Name}</h4>
+                            <p class="text-lg text-red-100">${card.team2Advantage || 'Avantage équipe 2'}</p>
+                            <button onclick="voteTeam(2)" class="mt-4 bg-red-500 hover:bg-red-600 px-6 py-3 rounded-xl font-bold transition-colors w-full text-white">
+                                Voter pour cette équipe
+                            </button>
+                        </div>
+                    </div>
+                    
+                    ${isWild ? `
+                        <div class="bg-gradient-to-r from-yellow-400 to-orange-400 text-black rounded-xl p-6 text-center">
+                            <h4 class="text-xl font-bold mb-2">⚡ WILD CARD BONUS ⚡</h4>
+                            <p class="text-lg">Débat libre de 3 minutes ! Laissez parler votre créativité !</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            cardArea.innerHTML = cardHTML;
+        }
+
+        function voteTeam(teamNumber) {
+            if (!currentCard) return;
+            
+            const points = currentCard.points;
+            
+            if (teamNumber === 1) {
+                team1Score += points;
+                updateTeamStatus(1, `+${points} points ! 🎉`);
+                updateTeamStatus(2, "Pas de points cette manche 😔");
+            } else {
+                team2Score += points;
+                updateTeamStatus(2, `+${points} points ! 🎉`);
+                updateTeamStatus(1, "Pas de points cette manche 😔");
+            }
+            
+            gameHistory.push({
+                round: currentRound,
+                card: currentCard,
+                winner: teamNumber,
+                points: points,
+                method: 'vote'
+            });
+            
+            updateScoreboard();
+            updateHistoryDisplay();
+            
+            document.getElementById('buzzerArea').classList.add('hidden');
+            document.getElementById('buzzerActivateButton').classList.add('hidden');
+            
+            const voteButtons = document.querySelectorAll('button[onclick^="voteTeam"]');
+            voteButtons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+            
+            showNotification(`🎉 ${teamNumber === 1 ? team1Name : team2Name} remporte la manche !`);
+        }
+
+        function nextRound() {
+            currentRound++;
+            
+            if (currentRound > maxRounds) {
+                endGame();
+                return;
+            }
+            
+            document.getElementById('activeCardArea').innerHTML = '';
+            document.getElementById('drawButton').classList.remove('hidden');
+            document.getElementById('nextRoundButton').classList.add('hidden');
+            document.getElementById('buzzerActivateButton').classList.add('hidden');
+            document.getElementById('buzzerArea').classList.add('hidden');
+            
+            buzzersActive = false;
+            buzzerWinner = null;
+            
+            updateScoreboard();
+            updateGameMode(`🎮 Manche ${currentRound} - Tirez une nouvelle carte !`);
+            updateTeamStatus(1, "Prêt pour la prochaine manche");
+            updateTeamStatus(2, "Prêt pour la prochaine manche");
+        }
+
+        function endGame() {
+            const winner = team1Score > team2Score ? 1 : (team2Score > team1Score ? 2 : 0);
+            
+            document.getElementById('winnerEmoji').textContent = winner === 0 ? '🤝' : '🏆';
+            document.getElementById('winnerTitle').textContent = winner === 0 ? 'ÉGALITÉ !' : 'VICTOIRE !';
+            
+            if (winner === 0) {
+                document.getElementById('winnerText').textContent = 'Match nul parfait ! Vous êtes tous des champions de l\'IA !';
+            } else {
+                const winnerName = winner === 1 ? team1Name : team2Name;
+                document.getElementById('winnerText').textContent = `${winnerName} remporte la Battle IA !`;
+            }
+            
+            document.getElementById('finalTeam1Name').textContent = team1Name;
+            document.getElementById('finalTeam1Score').textContent = team1Score;
+            document.getElementById('finalTeam2Name').textContent = team2Name;
+            document.getElementById('finalTeam2Score').textContent = team2Score;
+            
+            document.getElementById('gameEndModal').classList.remove('hidden');
+        }
+
+        function updateScoreboard() {
+            document.getElementById('team1Points').textContent = team1Score;
+            document.getElementById('team2Points').textContent = team2Score;
+            document.getElementById('roundNumber').textContent = currentRound;
+        }
+
+        function updateGameMode(text) {
+            document.getElementById('gameMode').textContent = text;
+        }
+
+        function updateTeamStatus(teamNumber, status) {
+            document.getElementById(`team${teamNumber}Status`).textContent = status;
+        }
+
+        function updateHistoryDisplay() {
+            const historyContent = document.getElementById('historyContent');
+            
+            if (gameHistory.length === 0) {
+                historyContent.innerHTML = '<p class="text-center text-gray-400">Aucune manche jouée pour le moment</p>';
+                return;
+            }
+            
+            let historyHTML = '';
+            gameHistory.forEach(entry => {
+                const winnerName = entry.winner === 1 ? team1Name : team2Name;
+                const winnerColor = entry.winner === 1 ? 'bg-blue-600' : 'bg-red-600';
+                const methodIcon = entry.method === 'buzzer' ? '🚨' : '🗳️';
+                const methodText = entry.method === 'buzzer' ? 'Buzzer' : 'Vote';
+                
+                historyHTML += `
+                    <div class="bg-white/10 rounded-lg p-4 flex justify-between items-center">
+                        <div>
+                            <span class="font-bold">Manche ${entry.round}:</span>
+                            <span class="text-gray-300">${entry.card.title}</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="bg-gray-600 px-2 py-1 rounded text-xs font-bold">
+                                ${methodIcon} ${methodText}
+                            </span>
+                            <span class="${winnerColor} px-3 py-1 rounded-full text-sm font-bold">
+                                ${winnerName} +${entry.points}pts
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            historyContent.innerHTML = historyHTML;
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 text-lg font-semibold';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        function restartGame() {
+            team1Score = 0;
+            team2Score = 0;
+            currentRound = 1;
+            gameHistory = [];
+            currentCard = null;
+            usedCards = [];
+            
+            document.getElementById('gameEndModal').classList.add('hidden');
+            document.getElementById('battleArea').classList.add('hidden');
+            document.getElementById('gameSetup').classList.remove('hidden');
+            document.body.classList.remove('battle-mode');
+            
+            document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            
+            updateScoreboard();
+            updateHistoryDisplay();
+        }
+
+        function closeGameEnd() {
+            document.getElementById('gameEndModal').classList.add('hidden');
+        }
+
+        function showSummary() {
+            const summaryContent = document.getElementById('summaryContent');
+            
+            let summaryHTML = `
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 mb-8">
+                    <h3 class="text-3xl font-bold text-white mb-4 text-center">🎮 Toutes les Questions Battle IA</h3>
+                    <div class="grid md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white/20 rounded-lg p-4">
+                            <div class="text-2xl font-bold text-yellow-300">${battleCards.length}</div>
+                            <div class="text-white">Questions Total</div>
+                        </div>
+                        <div class="bg-white/20 rounded-lg p-4">
+                            <div class="text-2xl font-bold text-green-300">${battleCards.filter(card => card.wildCard).length}</div>
+                            <div class="text-white">Wild Cards</div>
+                        </div>
+                        <div class="bg-white/20 rounded-lg p-4">
+                            <div class="text-2xl font-bold text-red-300">${[...new Set(battleCards.map(card => card.category))].length}</div>
+                            <div class="text-white">Catégories</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const categories = {};
+            battleCards.forEach(card => {
+                if (!categories[card.category]) {
+                    categories[card.category] = [];
+                }
+                categories[card.category].push(card);
+            });
+            
+            Object.keys(categories).forEach(category => {
+                const cards = categories[category];
+                const isWildCategory = cards[0].wildCard;
+                const bgColor = isWildCategory ? 'from-yellow-600 to-orange-600' : 'from-gray-700 to-gray-800';
+                
+                summaryHTML += `
+                    <div class="bg-gradient-to-r ${bgColor} rounded-2xl p-6">
+                        <h4 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                            ${isWildCategory ? '🌟' : '🎯'} ${category} (${cards.length} questions)
+                        </h4>
+                        <div class="space-y-4">
+                `;
+                
+                cards.forEach((card) => {
+                    summaryHTML += `
+                        <div class="bg-white/10 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-3">
+                                <h5 class="text-lg font-bold text-white">${card.title}</h5>
+                                <div class="flex gap-2">
+                                    ${card.wildCard ? '<span class="bg-yellow-400 text-black px-2 py-1 rounded text-sm font-bold">WILD</span>' : ''}
+                                    <span class="bg-green-400 text-black px-2 py-1 rounded text-sm font-bold">${card.points}pts</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-200 mb-3 text-sm">${card.scenario}</p>
+                            <div class="bg-yellow-400/20 rounded-lg p-3 mb-3">
+                                <p class="text-yellow-200 font-semibold">${card.challenge}</p>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-3 text-sm">
+                                <div class="bg-blue-500/30 rounded-lg p-3">
+                                    <p class="text-blue-200 font-semibold mb-1">🚀 Position Pro-IA :</p>
+                                    <p class="text-blue-100">${card.team1Advantage}</p>
+                                </div>
+                                <div class="bg-red-500/30 rounded-lg p-3">
+                                    <p class="text-red-200 font-semibold mb-1">🛡️ Position Prudente :</p>
+                                    <p class="text-red-100">${card.team2Advantage}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                summaryHTML += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            summaryContent.innerHTML = summaryHTML;
+            document.getElementById('summaryModal').classList.remove('hidden');
+        }
+
+        function closeSummary() {
+            document.getElementById('summaryModal').classList.add('hidden');
+        }
+
+        function showFinalChallenge() {
+            document.getElementById('finalChallengeModal').classList.remove('hidden');
+        }
+
+        function closeFinalChallenge() {
+            document.getElementById('finalChallengeModal').classList.add('hidden');
+        }
+
+        function showTimingGuide() {
+            document.getElementById('timingGuideModal').classList.remove('hidden');
+        }
+
+        function closeTimingGuide() {
+            document.getElementById('timingGuideModal').classList.add('hidden');
+        }
+
+        function startFinalTimer() {
+            let timeLeft = 600;
+            
+            const timerDiv = document.createElement('div');
+            timerDiv.id = 'finalTimer';
+            timerDiv.className = 'fixed top-4 left-4 bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-xl text-xl font-bold z-50 shadow-lg';
+            document.body.appendChild(timerDiv);
+            
+            const instructionsDiv = document.createElement('div');
+            instructionsDiv.id = 'finalInstructions';
+            instructionsDiv.className = 'fixed top-20 left-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-xl text-lg font-semibold z-50 shadow-lg max-w-md';
+            instructionsDiv.innerHTML = `
+                <h3 class="text-xl font-bold mb-3">🏫 Lycée 2030 - Réflexion</h3>
+                <div class="space-y-2 text-base">
+                    <p>• 🔍 Transparence sur l'IA</p>
+                    <p>• ⚖️ Équité pour tous</p>
+                    <p>• 🌱 Usage raisonné</p>
+                    <p>• 👤 Humain au centre</p>
+                </div>
+                <button onclick="endFinalTimer()" class="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    Terminer Réflexion
+                </button>
+            `;
+            document.body.appendChild(instructionsDiv);
+            
+            const timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDiv.innerHTML = `⏰ Réflexion: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDiv.innerHTML = '🎯 TEMPS DE PRÉSENTATION !';
+                    timerDiv.className = 'fixed top-4 left-4 bg-gradient-to-r from-yellow-500 to-red-500 text-black px-6 py-3 rounded-xl text-xl font-bold z-50 shadow-lg animate-pulse';
+                    
+                    instructionsDiv.innerHTML = `
+                        <h3 class="text-xl font-bold mb-3">🎤 Phase Présentation</h3>
+                        <div class="space-y-2 text-base">
+                            <p>• 3 min par équipe</p>
+                            <p>• Puis débat collectif</p>
+                            <p>• Trouvez un consensus !</p>
+                        </div>
+                        <button onclick="endFinalTimer()" class="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            Terminer Défi
+                        </button>
+                    `;
+                }
+            }, 1000);
+            
+            window.finalTimerInterval = timerInterval;
+        }
+
+        function endFinalTimer() {
+            const timer = document.getElementById('finalTimer');
+            const instructions = document.getElementById('finalInstructions');
+            if (timer) timer.remove();
+            if (instructions) instructions.remove();
+            
+            if (window.finalTimerInterval) {
+                clearInterval(window.finalTimerInterval);
+            }
+            
+            showNotification('🎉 Excellent travail ! Vous avez imaginé l\'école de demain ensemble !');
+        }
+
+        function activateBuzzers() {
+            buzzersActive = true;
+            buzzerWinner = null;
+            
+            document.getElementById('buzzer1Text').textContent = 'ÉQUIPE 1';
+            document.getElementById('buzzer2Text').textContent = 'ÉQUIPE 2';
+            
+            document.getElementById('buzzerArea').classList.remove('hidden');
+            document.getElementById('buzzerActivateButton').classList.add('hidden');
+            
+            resetBuzzers();
+            
+            updateGameMode('🚨 BUZZERS ACTIFS ! Première équipe à buzzer répond !');
+            showNotification('🚨 Buzzers activés ! Que la plus rapide gagne !');
+        }
+
+        function buzz(teamNumber) {
+            if (!buzzersActive || buzzerWinner !== null) return;
+            
+            buzzerWinner = teamNumber;
+            buzzersActive = false;
+            
+            const winnerBuzzer = document.getElementById(`buzzer${teamNumber}`);
+            const loserBuzzer = document.getElementById(`buzzer${teamNumber === 1 ? 2 : 1}`);
+            const winnerName = teamNumber === 1 ? team1Name : team2Name;
+            
+            winnerBuzzer.classList.add('buzzer-winner');
+            winnerBuzzer.style.transform = 'scale(1.1)';
+            
+            loserBuzzer.style.opacity = '0.5';
+            loserBuzzer.style.transform = 'scale(0.9)';
+            loserBuzzer.disabled = true;
+            
+            document.getElementById('buzzerStatus').innerHTML = `
+                🏆 <strong>${winnerName}</strong> a buzzé en premier !<br>
+                <span class="text-base">Cette équipe répond à la question</span>
+            `;
+            
+            winnerBuzzer.classList.add('buzzer-pulse');
+            setTimeout(() => {
+                winnerBuzzer.classList.remove('buzzer-pulse');
+            }, 500);
+            
+            updateGameMode(`🏆 ${winnerName} répond ! Puis vote pour valider la réponse`);
+            showNotification(`🚨 ${winnerName} a buzzé ! À eux de répondre !`);
+            
+            setTimeout(() => {
+                showBuzzerValidation(teamNumber);
+            }, 3000);
+        }
+
+        function showBuzzerValidation(teamNumber) {
+            const buzzerStatus = document.getElementById('buzzerStatus');
+            const winnerName = teamNumber === 1 ? team1Name : team2Name;
+            
+            buzzerStatus.innerHTML = `
+                <div class="bg-yellow-400 text-black rounded-lg p-4 mt-4">
+                    <p class="font-bold mb-3">🎯 ${winnerName} a donné sa réponse !</p>
+                    <p class="mb-4">L'équipe mérite-t-elle les points ?</p>
+                    <div class="flex gap-4 justify-center">
+                        <button onclick="validateBuzzerAnswer(${teamNumber}, true)" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold transition-colors">
+                            ✅ Bonne réponse !
+                        </button>
+                        <button onclick="validateBuzzerAnswer(${teamNumber}, false)" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-bold transition-colors">
+                            ❌ Réponse insuffisante
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function validateBuzzerAnswer(teamNumber, isCorrect) {
+            if (!currentCard) return;
+            
+            const points = currentCard.points;
+            const winnerName = teamNumber === 1 ? team1Name : team2Name;
+            
+            if (isCorrect) {
+                if (teamNumber === 1) {
+                    team1Score += points;
+                    updateTeamStatus(1, `+${points} points ! 🎉 (Buzzer)`);
+                    updateTeamStatus(2, "Pas assez rapide cette fois 😔");
+                } else {
+                    team2Score += points;
+                    updateTeamStatus(2, `+${points} points ! 🎉 (Buzzer)`);
+                    updateTeamStatus(1, "Pas assez rapide cette fois 😔");
+                }
+                
+                showNotification(`🎉 ${winnerName} remporte la manche au buzzer !`);
+            } else {
+                const otherTeam = teamNumber === 1 ? 2 : 1;
+                const otherName = otherTeam === 1 ? team1Name : team2Name;
+                
+                if (otherTeam === 1) {
+                    team1Score += points;
+                    updateTeamStatus(1, `+${points} points ! 🎉 (Réponse insuffisante adverse)`);
+                    updateTeamStatus(2, "Réponse insuffisante 😔");
+                } else {
+                    team2Score += points;
+                    updateTeamStatus(2, `+${points} points ! 🎉 (Réponse insuffisante adverse)`);
+                    updateTeamStatus(1, "Réponse insuffisante 😔");
+                }
+                
+                showNotification(`🎯 ${otherName} récupère les points ! Réponse insuffisante de ${winnerName}`);
+                teamNumber = otherTeam;
+            }
+            
+            gameHistory.push({
+                round: currentRound,
+                card: currentCard,
+                winner: teamNumber,
+                points: points,
+                method: 'buzzer'
+            });
+            
+            updateScoreboard();
+            updateHistoryDisplay();
+            
+            document.getElementById('buzzerArea').classList.add('hidden');
+            
+            const voteButtons = document.querySelectorAll('button[onclick^="voteTeam"]');
+            voteButtons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+        }
+
+        function resetBuzzers() {
+            const buzzer1 = document.getElementById('buzzer1');
+            const buzzer2 = document.getElementById('buzzer2');
+            
+            [buzzer1, buzzer2].forEach(buzzer => {
+                buzzer.classList.remove('buzzer-winner', 'buzzer-pulse');
+                buzzer.style.opacity = '1';
+                buzzer.style.transform = 'scale(1)';
+                buzzer.disabled = false;
+            });
+            
+            document.getElementById('buzzerStatus').textContent = 'Première équipe à buzzer répond !';
+        }
+
+        let selectedBrainstormCard = null;
+
+        function selectBrainstormCard(cardIndex) {
+            selectedBrainstormCard = battleCards[cardIndex];
+            displayBrainstormCardInModal(selectedBrainstormCard);
+            document.getElementById('brainstormModal').classList.remove('hidden');
+        }
+
+        function displayBrainstormCardInModal(card) {
+            const content = document.getElementById('brainstormCardContent');
+            
+            const cardHTML = `
+                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-600">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-4 text-white">${card.title}</h3>
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded font-bold">🧠 Brainstorming</span>
+                    </div>
+                    
+                    <div class="bg-gray-700 rounded-xl p-6 mb-6">
+                        <h4 class="text-lg font-bold mb-3 text-white">📖 Activité</h4>
+                        <p class="text-base leading-relaxed text-gray-200">${card.scenario}</p>
+                    </div>
+                    
+                    <div class="bg-blue-600 text-white rounded-xl p-6">
+                        <h4 class="text-lg font-bold mb-3">🎯 Instructions</h4>
+                        <p class="text-base font-semibold">${card.challenge}</p>
+                        ${card.action ? `<div class="mt-4 bg-blue-700 rounded-lg p-3"><p class="text-sm">${card.action}</p></div>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            content.innerHTML = cardHTML;
+        }
+
+        function useBrainstormCard() {
+            if (!selectedBrainstormCard) return;
+            
+            closeBrainstormModal();
+            
+            if (document.getElementById('battleArea').classList.contains('hidden')) {
+                startBattle();
+            }
+            
+            currentCard = selectedBrainstormCard;
+            usedCards.push(currentCard);
+            
+            displayBattleCard(currentCard);
+            
+            document.getElementById('drawButton').classList.add('hidden');
+            document.getElementById('nextRoundButton').classList.remove('hidden');
+            
+            updateGameMode(`🧠 ${currentCard.category} - Échauffement !`);
+            showNotification(`🧠 Carte Brainstorming lancée : ${currentCard.title.split(':')[1]} !`);
+        }
+
+        function closeBrainstormModal() {
+            document.getElementById('brainstormModal').classList.add('hidden');
+            selectedBrainstormCard = null;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎮 Battle IA chargée - Prêt pour la bataille !');
+            updateHistoryDisplay();
+        });
+    </script>
+</body>
+</html>
