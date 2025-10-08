@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord EAFC - Version 7</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Fonction pour extraire la date de publication fin (fin des inscriptions)
+        function extractPublicationFin(session) {
+            const possibleFields = [
+                'Publication fin',
+                'publication fin',
+                'Publication Fin',
+                'PUBLICATION FIN',
+                'Session : Publication fin',
+                'Préinscriptions : Publication fin'
+            ];
+
+            for (const field of possibleFields) {
+                if (session[field] != null && session[field] !== '') {
+                    return session[field];
+                }
+            }
+
+            // Recherche dans tous les champs
+            const keys = Object.keys(session);
+            for (const key of keys) {
+                const lowerKey = key.toLowerCase();
+                if (lowerKey.includes('publication') && lowerKey.includes('fin')) {
+                    return session[key];
+                }
+            }
+
+            return null;
+        }
+
+        // Fonction pour extraire la date de publication début (début des inscriptions)
+        function extractPublicationDebut(session) {
+            const possibleFields = [
+                'Publication début',
+                'publication début',
+                'Publication Début',
+                'Publication debut',
+                'PUBLICATION DEBUT',
+                'Session : Publication début',
+                'Préinscriptions : Publication début'
+            ];
+
+            for (const field of possibleFields) {
+                if (session[field] != null && session[field] !== '') {
+                    return session[field];
+                }
+            }
+
+            // Recherche dans tous les champs
+            const keys = Object.keys(session);
+            for (const key of keys) {
+                const lowerKey = key.toLowerCase();
+                if (lowerKey.includes('publication') && (lowerKey.includes('début') || lowerKey.includes('debut'))) {
+                    return session[key];
+                }
+            }
+
+            return null;
+        }
+
+        // Fonction pour formater une date
+        function formatDate(dateValue) {
+            if (!dateValue && dateValue !== 0) return null;
+
+            try {
+                let date;
+
+                // Si c'est un nombre (format Excel)
+                if (typeof dateValue === 'number') {
+                    // Conversion date Excel vers JavaScript
+                    date = new Date((dateValue - 25569) * 86400 * 1000);
+                } else if (typeof dateValue === 'string') {
+                    // Tenter de parser la chaîne
+                    date = new Date(dateValue);
+                } else if (dateValue instanceof Date) {
+                    date = dateValue;
+                } else {
+                    return null;
+                }
+
+                // Vérifier si la date est valide
+                if (isNaN(date.getTime())) {
+                    return null;
+                }
+
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            } catch (e) {
+                console.error('Erreur formatage date:', e, dateValue);
+                return null;
+            }
+        }
+
+        // Fonction pour vérifier si une session est fermée
+        function isSessionClosed(session) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const inscrits = Number(session['Session : Préinscriptions : Préinscrits : nombre total'] || 0);
+            const max = Number(session['Session : Préinscriptions : Préinscrits : nombre maximal'] || 0);
+
+            const publicationFin = extractPublicationFin(session);
+            if (!publicationFin && publicationFin !== 0) return false;
+
+            let dateLimit;
+            try {
+                if (typeof publicationFin === 'number') {
+                    dateLimit = new Date((publicationFin - 25569) * 86400 * 1000);
+                } else {
+                    dateLimit = new Date(publicationFin);
+                }
+                dateLimit.setHours(0, 0, 0, 0);
+
+                if (isNaN(dateLimit.getTime())) return false;
+            } catch (e) {
+                return false;
+            }
+
+            // Session fermée si max atteint OU date dépassée
+            return inscrits >= max || today > dateLimit;
+        }
+
+        // Fonction pour obtenir le statut d'une session
+        function getSessionStatus(session) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const inscrits = Number(session['Session : Préinscriptions : Préinscrits : nombre total'] || 0);
+            const max = Number(session['Session : Préinscriptions : Préinscrits : nombre maximal'] || 0);
+
+            const publicationFin = extractPublicationFin(session);
+            if (!publicationFin && publicationFin !== 0) {
+                return { status: 'unknown', label: 'Date inconnue', color: 'gray' };
+            }
+
+            let dateLimit;
+            try {
+                if (typeof publicationFin === 'number') {
+                    dateLimit = new Date((publicationFin - 25569) * 86400 * 1000);
+                } else {
+                    dateLimit = new Date(publicationFin);
+                }
+                dateLimit.setHours(0, 0, 0, 0);
+
+                if (isNaN(dateLimit.getTime())) {
+                    return { status: 'unknown', label: 'Date invalide', color: 'gray' };
+                }
+            } catch (e) {
+                return { status: 'unknown', label: 'Date invalide', color: 'gray' };
+            }
+
+            if (inscrits >= max) {
+                return { status: 'full', label: 'COMPLET', color: 'red' };
+            } else if (today > dateLimit) {
+                return { status: 'expired', label: 'EXPIRÉ', color: 'orange' };
+            } else {
+                return { status: 'open', label: 'OUVERT', color: 'green' };
+            }
+        }
+
+        function App() {
+            const [data, setData] = useState(null);
+            const [selectedModule, setSelectedModule] = useState(null);
+            const [disciplineFilter, setDisciplineFilter] = useState('all');
+            const [searchTerm, setSearchTerm] = useState('');
+            const [disciplinesExpanded, setDisciplinesExpanded] = useState(false);
+            const [loading, setLoading] = useState(false);
+
+            const handleFileUpload = async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                setLoading(true);
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const workbook = XLSX.read(arrayBuffer);
+                    const stagiaires = XLSX.utils.sheet_to_json(workbook.Sheets['Liste des stagiaires']);
+                    const modules = XLSX.utils.sheet_to_json(workbook.Sheets['Modules']);
+                    const sessions = XLSX.utils.sheet_to_json(workbook.Sheets['Sessions']);
+
+                    console.log('=== ANALYSE DES SESSIONS ===');
+                    console.log('Nombre de sessions:', sessions.length);
+                    if (sessions.length > 0) {
+                        console.log('Première session complète:', sessions[0]);
+                        console.log('\nChamps de dates trouvés:');
+                        const firstSession = sessions[0];
+                        Object.keys(firstSession).forEach(key => {
+                            const lowerKey = key.toLowerCase();
+                            if (lowerKey.includes('publication') || lowerKey.includes('date')) {
+                                console.log(`  "${key}": ${firstSession[key]} (type: ${typeof firstSession[key]})`);
+                            }
+                        });
+
+                        const pubFin = extractPublicationFin(sessions[0]);
+                        const pubDebut = extractPublicationDebut(sessions[0]);
+                        console.log('\nDates extraites:');
+                        console.log('  Publication début:', pubDebut, '-> formaté:', formatDate(pubDebut));
+                        console.log('  Publication fin:', pubFin, '-> formaté:', formatDate(pubFin));
+                    }
+
+                    setData({ stagiaires, modules, sessions });
+                    setDisciplineFilter('all');
+                    setSelectedModule(null);
+                    setLoading(false);
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    alert('Erreur de chargement du fichier: ' + error.message);
+                    setLoading(false);
+                }
+            };
+
+            if (loading) {
+                return (
+                    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+                        <div className="text-center">
+                            <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                            <p className="text-gray-700 text-lg">Chargement des données...</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (!data) {
+                return (
+                    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-indigo-100">
+                        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">Charger un fichier Excel EAFC</h2>
+                            <p className="text-gray-600 mb-6">
+                                Sélectionnez un fichier Excel avec les feuilles : Modules, Sessions et Liste des stagiaires
+                            </p>
+                            <input
+                                type="file"
+                                accept=".xlsx,.xls"
+                                onChange={handleFileUpload}
+                                className="block w-full text-sm file:mr-4 file:py-3 file:px-6 file:rounded-lg file:border-0 file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 file:cursor-pointer cursor-pointer"
+                            />
+                        </div>
+                    </div>
+                );
+            }
+
+            // Calcul des statistiques disciplines
+            const disciplineStats = {};
+            data.stagiaires.forEach(s => {
+                const discipline = s.Discipline || 'Non spécifié';
+                if (!disciplineStats[discipline]) disciplineStats[discipline] = { count: 0 };
+                disciplineStats[discipline].count++;
+            });
+
+            const disciplines = Object.keys(disciplineStats).sort();
+            const disciplineChartData = Object.entries(disciplineStats)
+                .map(([name, stats]) => ({ name: name.split('[')[0].trim(), inscrits: stats.count }))
+                .sort((a, b) => b.inscrits - a.inscrits)
+                .slice(0, 10);
+
+            // Calcul des statistiques modules avec détection fermeture
+            const moduleStats = {};
+            const sessionMap = {};
+
+            // Créer un map des sessions par identifiant
+            data.sessions.forEach(session => {
+                const id = session['Session : identifiant'];
+                if (id) sessionMap[id] = session;
+            });
+
+            data.stagiaires.forEach(s => {
+                const moduleName = s['Module : libellé'];
+                if (!moduleStats[moduleName]) {
+                    moduleStats[moduleName] = {
+                        name: moduleName,
+                        dispositif: s['Dispositif : libellé'],
+                        inscrits: 0,
+                        disciplines: new Set(),
+                        sessions: [],
+                        sessionIds: new Set(),
+                        etablissements: new Set()
+                    };
+                }
+                moduleStats[moduleName].inscrits++;
+                if (s.Discipline) moduleStats[moduleName].disciplines.add(s.Discipline);
+
+                const sessionId = s['Session : identifiant'];
+                if (sessionId && sessionMap[sessionId] && !moduleStats[moduleName].sessionIds.has(sessionId)) {
+                    moduleStats[moduleName].sessions.push(sessionMap[sessionId]);
+                    moduleStats[moduleName].sessionIds.add(sessionId);
+                }
+
+                if (s['Établissement : nom']) moduleStats[moduleName].etablissements.add(s['Établissement : nom']);
+            });
+
+            // Marquer les modules fermés et calculer dates
+            Object.values(moduleStats).forEach(m => {
+                m.isClosed = Array.isArray(m.sessions) && m.sessions.length > 0 &&
+                    m.sessions.every(sess => sess && isSessionClosed(sess));
+
+                // Trouver la date butoir la plus proche (publication fin)
+                if (m.sessions && m.sessions.length > 0) {
+                    const validDates = m.sessions
+                        .map(s => {
+                            if (!s) return null;
+                            const publicationFin = extractPublicationFin(s);
+                            if (!publicationFin && publicationFin !== 0) return null;
+
+                            try {
+                                if (typeof publicationFin === 'number') {
+                                    return new Date((publicationFin - 25569) * 86400 * 1000);
+                                } else {
+                                    return new Date(publicationFin);
+                                }
+                            } catch (e) {
+                                return null;
+                            }
+                        })
+                        .filter(d => d && !isNaN(d.getTime()))
+                        .sort((a, b) => a - b);
+
+                    if (validDates.length > 0) {
+                        m.dateButoir = validDates[0];
+                        m.dateButoirStr = formatDate(m.dateButoir);
+                    }
+                }
+            });
+
+            // Filtrage avec recherche et discipline
+            const filteredModules = Object.values(moduleStats).filter(m => {
+                const matchesDiscipline = disciplineFilter === 'all' || Array.from(m.disciplines).some(d => d === disciplineFilter);
+                const searchLower = searchTerm.toLowerCase();
+                const matchesSearch = searchTerm === '' ||
+                    m.name.toLowerCase().includes(searchLower) ||
+                    (m.dispositif && m.dispositif.toLowerCase().includes(searchLower));
+                return matchesDiscipline && matchesSearch;
+            }).sort((a, b) => b.inscrits - a.inscrits);
+
+            const topModules = filteredModules.slice(0, 15);
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+                    <div className="max-w-7xl mx-auto">
+                        {/* En-tête */}
+                        <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                            <div className="flex justify-between items-start mb-4">
+                                <div>
+                                    <h1 className="text-4xl font-bold text-gray-900 mb-2">Tableau de bord EAFC v7</h1>
+                                    <p className="text-gray-600 text-lg">Académie de Lille - Préinscriptions par sessions</p>
+                                </div>
+                                <button 
+                                    onClick={() => setData(null)} 
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                                >
+                                    Nouveau fichier
+                                </button>
+                            </div>
+
+                            {/* Statistiques */}
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                                <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-4 text-white">
+                                    <div className="text-3xl font-bold">{data.stagiaires.length}</div>
+                                    <div className="text-indigo-100 text-sm">Préinscriptions totales</div>
+                                </div>
+                                <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl p-4 text-white">
+                                    <div className="text-3xl font-bold">{Object.keys(moduleStats).length}</div>
+                                    <div className="text-cyan-100 text-sm">Modules différents</div>
+                                </div>
+                                <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-4 text-white">
+                                    <div className="text-3xl font-bold">{data.sessions.length}</div>
+                                    <div className="text-emerald-100 text-sm">Sessions organisées</div>
+                                </div>
+                                <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl p-4 text-white">
+                                    <div className="text-3xl font-bold">{disciplines.length}</div>
+                                    <div className="text-amber-100 text-sm">Disciplines représentées</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Filtre discipline */}
+                        <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                            <label className="block text-gray-700 font-semibold mb-3">Filtrer par discipline :</label>
+                            <select
+                                value={disciplineFilter}
+                                onChange={e => setDisciplineFilter(e.target.value)}
+                                className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none"
+                            >
+                                <option value="all">Toutes les disciplines</option>
+                                {disciplines.map(d => <option key={d} value={d}>{d}</option>)}
+                            </select>
+                        </div>
+
+                        {/* TOUS LES MODULES AVEC MOTEUR DE RECHERCHE */}
+                        <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">📚 Tous les modules ({filteredModules.length})</h2>
+
+                            {/* MOTEUR DE RECHERCHE */}
+                            <div className="mb-4">
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        placeholder="🔍 Rechercher un module par nom ou dispositif..."
+                                        className="w-full p-3 pl-4 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none text-gray-700"
+                                    />
+                                    {searchTerm && (
+                                        <button
+                                            onClick={() => setSearchTerm('')}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 font-bold text-xl"
+                                        >
+                                            ×
+                                        </button>
+                                    )}
+                                </div>
+                                {searchTerm && (
+                                    <p className="text-sm text-gray-600 mt-2">
+                                        {filteredModules.length} résultat(s) trouvé(s) pour "{searchTerm}"
+                                    </p>
+                                )}
+                            </div>
+
+                            <p className="text-gray-600 mb-4 text-sm">Classés du plus rempli au moins rempli - Cliquez sur un module pour voir les détails</p>
+                            <div className="space-y-3 max-h-[70vh] overflow-y-auto">
+                                {filteredModules.length === 0 ? (
+                                    <div className="text-center py-8 text-gray-500">
+                                        <p className="text-lg">Aucun module trouvé</p>
+                                        <p className="text-sm">Essayez de modifier vos critères de recherche</p>
+                                    </div>
+                                ) : (
+                                    filteredModules.map((m, i) => {
+                                        const tauxRemplissage = Array.isArray(m.sessions) && m.sessions.length > 0
+                                            ? m.sessions.reduce((acc, s) => {
+                                                if (!s) return acc;
+                                                const total = Number(s['Session : Préinscriptions : Préinscrits : nombre total'] || 0);
+                                                const max = Number(s['Session : Préinscriptions : Préinscrits : nombre maximal'] || 1);
+                                                return acc + total / Math.max(1, max);
+                                            }, 0) / m.sessions.length * 100
+                                            : 0;
+
+                                        const bgClass = m.isClosed ? "bg-red-50 border-red-300" : "bg-white border-gray-200";
+
+                                        return (
+                                            <div
+                                                key={i}
+                                                onClick={() => setSelectedModule(m)}
+                                                className={`border-2 rounded-xl p-4 flex items-center gap-4 transition-all cursor-pointer hover:shadow-lg ${bgClass} hover:border-indigo-500`}
+                                                title="Cliquez pour voir les détails"
+                                            >
+                                                <div className={`rounded-lg w-12 h-12 flex items-center justify-center font-bold text-lg flex-shrink-0 ${m.isClosed ? 'bg-red-500 text-white' : 'bg-gradient-to-br from-indigo-500 to-indigo-600 text-white'}`}>
+                                                    #{i+1}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <h3 className="font-semibold text-sm text-gray-900 truncate">{m.name}</h3>
+                                                    <p className="text-xs text-gray-600 truncate mb-2">{m.dispositif}</p>
+
+                                                    {/* Date butoir */}
+                                                    {m.dateButoirStr && (
+                                                        <p className="text-xs font-semibold text-blue-600 mb-1">
+                                                            📅 Fin inscriptions: {m.dateButoirStr}
+                                                        </p>
+                                                    )}
+
+                                                    <div className="w-full bg-gray-200 rounded-full h-2">
+                                                        <div
+                                                            className={`h-2 rounded-full ${m.isClosed ? 'bg-gradient-to-r from-red-500 to-red-600' : 'bg-gradient-to-r from-emerald-500 to-emerald-600'}`}
+                                                            style={{ width: `${Math.min(tauxRemplissage, 100)}%` }}
+                                                        ></div>
+                                                    </div>
+                                                    <p className="text-xs text-gray-500 mt-1">
+                                                        {tauxRemplissage.toFixed(0)}% rempli
+                                                        {m.isClosed && <span className="ml-2 text-red-600 font-bold">— TOUS GROUPES FERMÉS</span>}
+                                                    </p>
+                                                </div>
+                                                <div className={`px-4 py-2 rounded-lg font-bold text-xl flex-shrink-0 ${m.isClosed ? "bg-red-200 text-red-700" : "bg-indigo-100 text-indigo-700"}`}>
+                                                    {m.inscrits}
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Top 15 modules - Liste */}
+                        <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">🏆 Top 15 modules {disciplineFilter !== 'all' && '(filtrés)'}</h2>
+                            <div className="space-y-2">
+                                {topModules.map((m, i) => (
+                                    <div
+                                        key={i}
+                                        className={`flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer ${m.isClosed ? "bg-red-50" : "bg-gray-50"}`}
+                                        onClick={() => setSelectedModule(m)}
+                                        title="Cliquez pour voir les détails"
+                                    >
+                                        <span className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm flex-shrink-0 ${m.isClosed ? "bg-red-200 text-red-700" : "bg-cyan-100 text-cyan-700"}`}>
+                                            {i + 1}
+                                        </span>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-medium text-sm truncate">{m.name}</p>
+                                            {m.dateButoirStr && (
+                                                <p className="text-xs text-blue-600">📅 {m.dateButoirStr}</p>
+                                            )}
+                                        </div>
+                                        <span className={`px-3 py-1 rounded-full font-bold text-sm flex-shrink-0 ${m.isClosed ? "bg-red-300 text-red-800" : "bg-cyan-600 text-white"}`}>
+                                            {m.inscrits}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* DISCIPLINES EN BAS AVEC MENU CLIQUABLE */}
+                        <div className="bg-white rounded-2xl shadow-xl mb-6 overflow-hidden">
+                            <button 
+                                onClick={() => setDisciplinesExpanded(!disciplinesExpanded)} 
+                                className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                            >
+                                <div className="text-left">
+                                    <h2 className="text-2xl font-bold text-gray-900">🎓 Top 10 disciplines</h2>
+                                    <p className="text-gray-600 text-sm">
+                                        Cliquez pour {disciplinesExpanded ? 'masquer' : 'voir le tableau'}
+                                    </p>
+                                </div>
+                                <span className="text-3xl text-gray-600">{disciplinesExpanded ? '▲' : '▼'}</span>
+                            </button>
+                            {disciplinesExpanded && (
+                                <div className="p-6 pt-0 border-t border-gray-200">
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full">
+                                            <thead>
+                                                <tr className="border-b-2 border-gray-200">
+                                                    <th className="text-left p-3 font-semibold text-gray-700">Rang</th>
+                                                    <th className="text-left p-3 font-semibold text-gray-700">Discipline</th>
+                                                    <th className="text-right p-3 font-semibold text-gray-700">Préinscrits</th>
+                                                    <th className="text-left p-3 font-semibold text-gray-700">Visualisation</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {disciplineChartData.map((d, i) => (
+                                                    <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
+                                                        <td className="p-3">
+                                                            <span className="inline-flex items-center justify-center w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full font-bold">
+                                                                {i + 1}
+                                                            </span>
+                                                        </td>
+                                                        <td className="p-3 font-medium">{d.name}</td>
+                                                        <td className="p-3 text-right">
+                                                            <span className="inline-block bg-indigo-600 text-white px-3 py-1 rounded-full font-bold">
+                                                                {d.inscrits}
+                                                            </span>
+                                                        </td>
+                                                        <td className="p-3">
+                                                            <div className="w-full bg-gray-200 rounded-full h-3">
+                                                                <div
+                                                                    className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full"
+                                                                    style={{ width: `${(d.inscrits / disciplineChartData[0].inscrits) * 100}%` }}
+                                                                ></div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Modal détails module */}
+                        {selectedModule && (
+                            <div
+                                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+                                onClick={() => setSelectedModule(null)}
+                            >
+                                <div
+                                    className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                                    onClick={e => e.stopPropagation()}
+                                >
+                                    <div className={`sticky top-0 p-6 rounded-t-2xl text-white ${selectedModule.isClosed ? 'bg-gradient-to-r from-red-600 to-red-700' : 'bg-gradient-to-r from-indigo-600 to-indigo-700'}`}>
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex-1">
+                                                <h2 className="text-2xl font-bold mb-2">{selectedModule.name}</h2>
+                                                <p className={selectedModule.isClosed ? "text-red-100" : "text-indigo-100"}>{selectedModule.dispositif}</p>
+                                                {selectedModule.isClosed && (
+                                                    <div className="mt-2 bg-white bg-opacity-20 px-3 py-1 rounded-lg inline-block">
+                                                        <p className="font-bold text-sm">🔒 TOUS LES GROUPES FERMÉS</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <button
+                                                onClick={() => setSelectedModule(null)}
+                                                className="ml-4 text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors text-2xl font-bold"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="p-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                            <div className="bg-indigo-50 rounded-xl p-4 text-center">
+                                                <div className="text-3xl font-bold text-indigo-900">{selectedModule.inscrits}</div>
+                                                <div className="text-sm text-indigo-700">Préinscrits</div>
+                                            </div>
+                                            <div className="bg-cyan-50 rounded-xl p-4 text-center">
+                                                <div className="text-3xl font-bold text-cyan-900">{selectedModule.disciplines.size}</div>
+                                                <div className="text-sm text-cyan-700">Disciplines</div>
+                                            </div>
+                                            <div className="bg-emerald-50 rounded-xl p-4 text-center">
+                                                <div className="text-3xl font-bold text-emerald-900">{selectedModule.etablissements.size}</div>
+                                                <div className="text-sm text-emerald-700">Établissements</div>
+                                            </div>
+                                        </div>
+
+                                        {/* Détails des sessions */}
+                                        {selectedModule.sessions && selectedModule.sessions.length > 0 && (
+                                            <div className="mb-6">
+                                                <h3 className="text-xl font-bold text-gray-900 mb-3">📋 Sessions ({selectedModule.sessions.length})</h3>
+                                                <div className="space-y-3">
+                                                    {selectedModule.sessions.map((session, idx) => {
+                                                        if (!session) return null;
+
+                                                        const inscrits = Number(session['Session : Préinscriptions : Préinscrits : nombre total'] || 0);
+                                                        const max = Number(session['Session : Préinscriptions : Préinscrits : nombre maximal'] || 0);
+
+                                                        const publicationDebut = extractPublicationDebut(session);
+                                                        const publicationFin = extractPublicationFin(session);
+                                                        const dateDebutFormatted = formatDate(publicationDebut);
+                                                        const dateFinFormatted = formatDate(publicationFin);
+
+                                                        const sessionStatus = getSessionStatus(session);
+
+                                                        const bgColor = sessionStatus.status === 'full' ? 'bg-red-50 border-red-300' :
+                                                                       sessionStatus.status === 'expired' ? 'bg-orange-50 border-orange-300' :
+                                                                       sessionStatus.status === 'unknown' ? 'bg-gray-50 border-gray-300' :
+                                                                       'bg-green-50 border-green-300';
+
+                                                        const textColor = sessionStatus.status === 'full' ? 'text-red-700' :
+                                                                        sessionStatus.status === 'expired' ? 'text-orange-700' :
+                                                                        sessionStatus.status === 'unknown' ? 'text-gray-700' :
+                                                                        'text-green-700';
+
+                                                        const barColor = sessionStatus.status === 'full' ? 'bg-red-500' :
+                                                                       sessionStatus.status === 'expired' ? 'bg-orange-500' :
+                                                                       sessionStatus.status === 'unknown' ? 'bg-gray-400' :
+                                                                       'bg-green-500';
+
+                                                        return (
+                                                            <div key={idx} className={`p-4 rounded-lg border-2 ${bgColor}`}>
+                                                                <div className="flex justify-between items-start mb-3">
+                                                                    <div className="flex-1">
+                                                                        <p className="font-semibold text-base mb-2">Session {session['Session : identifiant']}</p>
+                                                                        <div className="space-y-1">
+                                                                            {dateDebutFormatted && (
+                                                                                <p className="text-sm font-medium text-gray-700 bg-white px-2 py-1 rounded inline-block mr-2">
+                                                                                    🟢 Ouverture: {dateDebutFormatted}
+                                                                                </p>
+                                                                            )}
+                                                                            {dateFinFormatted && (
+                                                                                <p className="text-sm font-medium text-gray-700 bg-white px-2 py-1 rounded inline-block">
+                                                                                    🔴 Clôture: {dateFinFormatted}
+                                                                                </p>
+                                                                            )}
+                                                                            {!dateDebutFormatted && !dateFinFormatted && (
+                                                                                <p className="text-sm text-gray-500 italic">
+                                                                                    📅 Dates non disponibles
+                                                                                </p>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className={`px-3 py-1 rounded-full font-bold text-xs ml-3 ${textColor} ${bgColor.replace('50', '200')}`}>
+                                                                        {sessionStatus.label}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex justify-between items-center mt-3">
+                                                                    <div className="flex-1 mr-4">
+                                                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                                                            <div
+                                                                                className={`h-3 rounded-full ${barColor}`}
+                                                                                style={{ width: `${Math.min((inscrits / Math.max(max, 1)) * 100, 100)}%` }}
+                                                                            ></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p className={`font-bold text-base ${textColor}`}>
+                                                                        {inscrits} / {max}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        <div className="mb-6">
+                                            <h3 className="text-xl font-bold text-gray-900 mb-3">Disciplines représentées</h3>
+                                            <div className="flex flex-wrap gap-2">
+                                                {Array.from(selectedModule.disciplines).map((d, i) => (
+                                                    <span key={i} className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm">
+                                                        {d.split('[')[0].trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => setSelectedModule(null)}
+                                            className={`w-full font-semibold py-3 px-6 rounded-xl transition-colors text-white ${selectedModule.isClosed ? 'bg-red-600 hover:bg-red-700' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+                                        >
+                                            Fermer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    </script>
+</body>
+</html>
