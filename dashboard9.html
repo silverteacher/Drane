@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord EAFC - Version 9</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        function extractPublicationFin(session) {
+            const possibleFields = ['Publication fin', 'publication fin', 'Publication Fin', 'PUBLICATION FIN'];
+            for (const field of possibleFields) {
+                if (session[field] != null && session[field] !== '') return session[field];
+            }
+            const keys = Object.keys(session);
+            for (const key of keys) {
+                if (key.toLowerCase().includes('publication') && key.toLowerCase().includes('fin')) return session[key];
+            }
+            return null;
+        }
+
+        function extractPublicationDebut(session) {
+            const possibleFields = ['Publication début', 'publication début', 'Publication Début', 'Publication debut'];
+            for (const field of possibleFields) {
+                if (session[field] != null && session[field] !== '') return session[field];
+            }
+            const keys = Object.keys(session);
+            for (const key of keys) {
+                if (key.toLowerCase().includes('publication') && (key.toLowerCase().includes('début') || key.toLowerCase().includes('debut'))) return session[key];
+            }
+            return null;
+        }
+
+        function formatDate(dateValue) {
+            if (dateValue == null) return null;
+            try {
+                let date;
+                if (typeof dateValue === 'number') {
+                    date = new Date((dateValue - 25569) * 86400 * 1000);
+                } else if (typeof dateValue === 'string') {
+                    date = new Date(dateValue);
+                } else if (dateValue instanceof Date) {
+                    date = dateValue;
+                } else {
+                    return null;
+                }
+                if (isNaN(date.getTime())) return null;
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function getDateObject(dateValue) {
+            if (dateValue == null) return null;
+            try {
+                let date;
+                if (typeof dateValue === 'number') {
+                    date = new Date((dateValue - 25569) * 86400 * 1000);
+                } else if (typeof dateValue === 'string') {
+                    date = new Date(dateValue);
+                } else if (dateValue instanceof Date) {
+                    date = dateValue;
+                } else {
+                    return null;
+                }
+                if (isNaN(date.getTime())) return null;
+                return date;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function getDaysRemaining(dateValue) {
+            const date = getDateObject(dateValue);
+            if (!date) return null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            date.setHours(0, 0, 0, 0);
+            const diffTime = date - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        function isSessionClosed(session) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const inscrits = Number(session['Session : Préinscriptions : Préinscrits : nombre total'] || 0);
+            const max = Number(session['Session : Préinscriptions : Préinscrits : nombre maximal'] || 0);
+            const publicationFin = extractPublicationFin(session);
+            if (publicationFin == null) return false;
+            const dateLimit = getDateObject(publicationFin);
+            if (!dateLimit) return false;
+            return inscrits >= max || today > dateLimit;
+        }
+
+        function getSessionStatus(session) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const inscrits = Number(session['Session : Préinscriptions : Préinscrits : nombre total'] || 0);
+            const max = Number(session['Session : Préinscriptions : Préinscrits : nombre maximal'] || 0);
+            const publicationFin = extractPublicationFin(session);
+            if (publicationFin == null) return { status: 'unknown', label: 'Date inconnue', color: 'gray' };
+            const dateLimit = getDateObject(publicationFin);
+            if (!dateLimit) return { status: 'unknown', label: 'Date invalide', color: 'gray' };
+            if (inscrits >= max) {
+                return { status: 'full', label: 'COMPLET', color: 'red' };
+            } else if (today > dateLimit) {
+                return { status: 'expired', label: 'EXPIRÉ', color: 'orange' };
+            } else {
+                return { status: 'open', label: 'OUVERT', color: 'green' };
+            }
+        }
+
+        function App() {
+            const [data, setData] = useState(null);
+            const [selectedModule, setSelectedModule] = useState(null);
+            const [disciplineFilter, setDisciplineFilter] = useState('all');
+            const [searchTerm, setSearchTerm] = useState('');
+            const [disciplinesExpanded, setDisciplinesExpanded] = useState(false);
+            const [sortBy, setSortBy] = useState('date');
+            const [loading, setLoading] = useState(false);
+
+            const handleFileUpload = async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                setLoading(true);
+
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const workbook = XLSX.read(arrayBuffer);
+                    const stagiaires = XLSX.utils.sheet_to_json(workbook.Sheets['Liste des stagiaires']);
+                    const modules = XLSX.utils.sheet_to_json(workbook.Sheets['Modules']);
+                    const sessions = XLSX.utils.sheet_to_json(workbook.Sheets['Sessions']);
+
+                    setData({ stagiaires, modules, sessions });
+                    setLoading(false);
+                } catch (error) {
+                    alert('Erreur : ' + error.message);
+                    setLoading(false);
+                }
+            };
+
+            // ÉCRAN DE CHARGEMENT
+            if (loading) {
+                return (
+                    <div style={{minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(to bottom right, #EFF6FF, #E0E7FF)'}}>
+                        <div style={{textAlign: 'center'}}>
+                            <div style={{width: '64px', height: '64px', border: '4px solid #4F46E5', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px'}}></div>
+                            <p style={{color: '#374151', fontSize: '18px', fontWeight: '600'}}>Chargement...</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            // ÉCRAN D'UPLOAD - SIMPLIFIÉ ET GARANTI DE FONCTIONNER
+            if (!data) {
+                return (
+                    <div style={{minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px', background: 'linear-gradient(to bottom right, #EFF6FF, #E0E7FF)'}}>
+                        <div style={{background: 'white', padding: '48px', borderRadius: '16px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', maxWidth: '500px', width: '100%'}}>
+                            <h1 style={{fontSize: '32px', fontWeight: 'bold', color: '#111827', marginBottom: '8px', textAlign: 'center'}}>
+                                Tableau de bord EAFC v9
+                            </h1>
+                            <p style={{color: '#6B7280', marginBottom: '32px', textAlign: 'center'}}>
+                                Académie de Lille - Préinscriptions
+                            </p>
+
+                            <div style={{background: '#DBEAFE', borderLeft: '4px solid #3B82F6', padding: '16px', marginBottom: '24px'}}>
+                                <p style={{fontSize: '14px', fontWeight: '600', color: '#1E40AF', marginBottom: '8px'}}>
+                                    📋 Fichier Excel requis avec 3 feuilles :
+                                </p>
+                                <ul style={{fontSize: '13px', color: '#1E40AF', marginLeft: '24px', listStyle: 'disc'}}>
+                                    <li>Liste des stagiaires</li>
+                                    <li>Modules</li>
+                                    <li>Sessions</li>
+                                </ul>
+                            </div>
+
+                            <input
+                                type="file"
+                                accept=".xlsx,.xls"
+                                onChange={handleFileUpload}
+                                style={{
+                                    display: 'block',
+                                    width: '100%',
+                                    padding: '12px',
+                                    border: '2px dashed #4F46E5',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    background: '#F9FAFB'
+                                }}
+                            />
+
+                            <p style={{marginTop: '16px', fontSize: '12px', color: '#9CA3AF', textAlign: 'center'}}>
+                                Cliquez pour sélectionner votre fichier
+                            </p>
+                        </div>
+                    </div>
+                );
+            }
+
+            // CALCULS ET AFFICHAGE PRINCIPAL
+            const disciplineStats = {};
+            data.stagiaires.forEach(s => {
+                const discipline = s.Discipline || 'Non spécifié';
+                if (!disciplineStats[discipline]) disciplineStats[discipline] = { count: 0 };
+                disciplineStats[discipline].count++;
+            });
+
+            const disciplines = Object.keys(disciplineStats).sort();
+            const disciplineChartData = Object.entries(disciplineStats)
+                .map(([name, stats]) => ({ name: name.split('[')[0].trim(), inscrits: stats.count }))
+                .sort((a, b) => b.inscrits - a.inscrits)
+                .slice(0, 10);
+
+            const moduleStats = {};
+            const sessionMap = {};
+
+            data.sessions.forEach(session => {
+                const id = session['Session : identifiant'];
+                if (id) sessionMap[id] = session;
+            });
+
+            data.stagiaires.forEach(s => {
+                const moduleName = s['Module : libellé'];
+                if (!moduleStats[moduleName]) {
+                    moduleStats[moduleName] = {
+                        name: moduleName,
+                        dispositif: s['Dispositif : libellé'],
+                        inscrits: 0,
+                        disciplines: new Set(),
+                        sessions: [],
+                        sessionIds: new Set(),
+                        etablissements: new Set()
+                    };
+                }
+                moduleStats[moduleName].inscrits++;
+                if (s.Discipline) moduleStats[moduleName].disciplines.add(s.Discipline);
+
+                const sessionId = s['Session : identifiant'];
+                if (sessionId && sessionMap[sessionId] && !moduleStats[moduleName].sessionIds.has(sessionId)) {
+                    moduleStats[moduleName].sessions.push(sessionMap[sessionId]);
+                    moduleStats[moduleName].sessionIds.add(sessionId);
+                }
+
+                if (s['Établissement : nom']) moduleStats[moduleName].etablissements.add(s['Établissement : nom']);
+            });
+
+            Object.values(moduleStats).forEach(m => {
+                m.isClosed = Array.isArray(m.sessions) && m.sessions.length > 0 &&
+                    m.sessions.every(sess => sess && isSessionClosed(sess));
+
+                if (m.sessions && m.sessions.length > 0) {
+                    const validDates = m.sessions
+                        .map(s => {
+                            if (!s) return null;
+                            const publicationFin = extractPublicationFin(s);
+                            return getDateObject(publicationFin);
+                        })
+                        .filter(d => d && !isNaN(d.getTime()))
+                        .sort((a, b) => a - b);
+
+                    if (validDates.length > 0) {
+                        m.dateButoir = validDates[0];
+                        m.dateButoirStr = formatDate(m.dateButoir);
+                        m.joursRestants = getDaysRemaining(m.dateButoir);
+                    }
+                }
+            });
+
+            let filteredModules = Object.values(moduleStats).filter(m => {
+                const matchesDiscipline = disciplineFilter === 'all' || Array.from(m.disciplines).some(d => d === disciplineFilter);
+                const searchLower = searchTerm.toLowerCase();
+                const matchesSearch = searchTerm === '' ||
+                    m.name.toLowerCase().includes(searchLower) ||
+                    (m.dispositif && m.dispositif.toLowerCase().includes(searchLower));
+                return matchesDiscipline && matchesSearch;
+            });
+
+            if (sortBy === 'date') {
+                filteredModules = filteredModules.sort((a, b) => {
+                    if (!a.dateButoir && !b.dateButoir) return b.inscrits - a.inscrits;
+                    if (!a.dateButoir) return 1;
+                    if (!b.dateButoir) return -1;
+                    return a.dateButoir - b.dateButoir;
+                });
+            } else {
+                filteredModules = filteredModules.sort((a, b) => b.inscrits - a.inscrits);
+            }
+
+            const topModules = filteredModules.slice(0, 15);
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                            <div className="flex justify-between items-start mb-4">
+                                <div>
+                                    <h1 className="text-4xl font-bold text-gray-900 mb-2">Tableau de bord EAFC v9</h1>
+                                    <p className="text-gray-600 text-lg">Académie de Lille - Préinscriptions</p>
+                                </div>
+                                <button 
+                                    onClick={() => {
+                                        setData(null);
+                                        setSelectedModule(null);
+                                        setSearchTerm('');
+                                        setDisciplineFilter('all');
+                                        setSortBy('date');
+                                    }} 
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg"
+                                >
+                                    Nouveau fichier
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                                <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-4 text-white">
+                                    <div className="text-3xl font-bold">{data.stagiaires.length}</div>
+                                    <div className="text-indigo-100 text-sm">Préinscriptions</div>
+                                </div>
+                                <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl p-4 text-white">
+                                    <div className="text-3xl font-bold">{Object.keys(moduleStats).length}</div>
+                                    <div className="text-cyan-100 text-sm">Modules</div>
+                                </div>
+                                <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-4 text-white">
+                                    <div className="text-3xl font-bold">{data.sessions.length}</div>
+                                    <div className="text-emerald-100 text-sm">Sessions</div>
+                                </div>
+                                <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl p-4 text-white">
+                                    <div className="text-3xl font-bold">{disciplines.length}</div>
+                                    <div className="text-amber-100 text-sm">Disciplines</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                            <label className="block text-gray-700 font-semibold mb-3">Filtrer par discipline :</label>
+                            <select
+                                value={disciplineFilter}
+                                onChange={e => setDisciplineFilter(e.target.value)}
+                                className="w-full p-3 border-2 border-gray-200 rounded-lg"
+                            >
+                                <option value="all">Toutes</option>
+                                {disciplines.map(d => <option key={d} value={d}>{d}</option>)}
+                            </select>
+                        </div>
+
+                        <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                            <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
+                                <h2 className="text-2xl font-bold text-gray-900">📚 Modules ({filteredModules.length})</h2>
+
+                                <div className="flex items-center gap-2">
+                                    <label className="text-sm font-semibold text-gray-700">Trier :</label>
+                                    <select
+                                        value={sortBy}
+                                        onChange={e => setSortBy(e.target.value)}
+                                        className="p-2 border-2 border-gray-200 rounded-lg text-sm"
+                                    >
+                                        <option value="date">⏰ Date fermeture</option>
+                                        <option value="inscrits">👥 Inscrits</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="mb-4">
+                                <input
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    placeholder="🔍 Rechercher..."
+                                    className="w-full p-3 border-2 border-gray-300 rounded-lg"
+                                />
+                            </div>
+
+                            <div className="space-y-3 max-h-[70vh] overflow-y-auto">
+                                {filteredModules.map((m, i) => {
+                                    const tauxRemplissage = Array.isArray(m.sessions) && m.sessions.length > 0
+                                        ? m.sessions.reduce((acc, s) => {
+                                            if (!s) return acc;
+                                            const total = Number(s['Session : Préinscriptions : Préinscrits : nombre total'] || 0);
+                                            const max = Number(s['Session : Préinscriptions : Préinscrits : nombre maximal'] || 1);
+                                            return acc + total / Math.max(1, max);
+                                        }, 0) / m.sessions.length * 100
+                                        : 0;
+
+                                    const bgClass = m.isClosed ? "bg-red-50 border-red-300" : "bg-white border-gray-200";
+
+                                    let urgencyBadge = null;
+                                    if (m.joursRestants != null && !m.isClosed) {
+                                        if (m.joursRestants < 0) {
+                                            urgencyBadge = <span className="text-xs bg-red-500 text-white px-2 py-1 rounded-full font-bold">EXPIRÉ</span>;
+                                        } else if (m.joursRestants === 0) {
+                                            urgencyBadge = <span className="text-xs bg-orange-500 text-white px-2 py-1 rounded-full font-bold animate-pulse">AUJOURD'HUI</span>;
+                                        } else if (m.joursRestants <= 3) {
+                                            urgencyBadge = <span className="text-xs bg-orange-500 text-white px-2 py-1 rounded-full font-bold">{m.joursRestants}j</span>;
+                                        } else if (m.joursRestants <= 7) {
+                                            urgencyBadge = <span className="text-xs bg-yellow-500 text-white px-2 py-1 rounded-full font-bold">{m.joursRestants}j</span>;
+                                        } else {
+                                            urgencyBadge = <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full">{m.joursRestants}j</span>;
+                                        }
+                                    }
+
+                                    return (
+                                        <div
+                                            key={i}
+                                            onClick={() => setSelectedModule(m)}
+                                            className={`border-2 rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:shadow-lg ${bgClass}`}
+                                        >
+                                            <div className={`rounded-lg w-12 h-12 flex items-center justify-center font-bold text-lg ${m.isClosed ? 'bg-red-500 text-white' : 'bg-indigo-600 text-white'}`}>
+                                                #{i+1}
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="font-semibold text-sm text-gray-900">{m.name}</h3>
+                                                <p className="text-xs text-gray-600">{m.dispositif}</p>
+
+                                                <div className="flex items-center gap-2 my-1">
+                                                    {m.dateButoirStr && (
+                                                        <p className="text-xs font-semibold text-blue-600">📅 {m.dateButoirStr}</p>
+                                                    )}
+                                                    {urgencyBadge}
+                                                </div>
+
+                                                <div className="w-full bg-gray-200 rounded-full h-2">
+                                                    <div
+                                                        className={`h-2 rounded-full ${m.isClosed ? 'bg-red-500' : 'bg-emerald-500'}`}
+                                                        style={{ width: `${Math.min(tauxRemplissage, 100)}%` }}
+                                                    ></div>
+                                                </div>
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    {tauxRemplissage.toFixed(0)}% rempli
+                                                    {m.isClosed && <span className="ml-2 text-red-600 font-bold">FERMÉ</span>}
+                                                </p>
+                                            </div>
+                                            <div className={`px-4 py-2 rounded-lg font-bold text-xl ${m.isClosed ? "bg-red-200 text-red-700" : "bg-indigo-100 text-indigo-700"}`}>
+                                                {m.inscrits}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {selectedModule && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={() => setSelectedModule(null)}>
+                                <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                                    <div className={`p-6 text-white ${selectedModule.isClosed ? 'bg-red-600' : 'bg-indigo-600'}`}>
+                                        <div className="flex justify-between">
+                                            <div>
+                                                <h2 className="text-2xl font-bold">{selectedModule.name}</h2>
+                                                <p>{selectedModule.dispositif}</p>
+                                            </div>
+                                            <button onClick={() => setSelectedModule(null)} className="text-white text-2xl font-bold">×</button>
+                                        </div>
+                                    </div>
+                                    <div className="p-6">
+                                        <div className="grid grid-cols-3 gap-4 mb-6">
+                                            <div className="bg-indigo-50 rounded-xl p-4 text-center">
+                                                <div className="text-3xl font-bold text-indigo-900">{selectedModule.inscrits}</div>
+                                                <div className="text-sm text-indigo-700">Préinscrits</div>
+                                            </div>
+                                            <div className="bg-cyan-50 rounded-xl p-4 text-center">
+                                                <div className="text-3xl font-bold text-cyan-900">{selectedModule.disciplines.size}</div>
+                                                <div className="text-sm text-cyan-700">Disciplines</div>
+                                            </div>
+                                            <div className="bg-emerald-50 rounded-xl p-4 text-center">
+                                                <div className="text-3xl font-bold text-emerald-900">{selectedModule.etablissements.size}</div>
+                                                <div className="text-sm text-emerald-700">Établissements</div>
+                                            </div>
+                                        </div>
+
+                                        {selectedModule.sessions && selectedModule.sessions.length > 0 && (
+                                            <div className="mb-6">
+                                                <h3 className="text-xl font-bold mb-3">📋 Sessions ({selectedModule.sessions.length})</h3>
+                                                <div className="space-y-3">
+                                                    {selectedModule.sessions.map((session, idx) => {
+                                                        if (!session) return null;
+                                                        const inscrits = Number(session['Session : Préinscriptions : Préinscrits : nombre total'] || 0);
+                                                        const max = Number(session['Session : Préinscriptions : Préinscrits : nombre maximal'] || 0);
+                                                        const dateDebut = formatDate(extractPublicationDebut(session));
+                                                        const dateFin = formatDate(extractPublicationFin(session));
+                                                        const status = getSessionStatus(session);
+                                                        const bgColor = status.status === 'full' ? 'bg-red-50' : status.status === 'expired' ? 'bg-orange-50' : 'bg-green-50';
+
+                                                        return (
+                                                            <div key={idx} className={`p-4 rounded-lg border-2 ${bgColor}`}>
+                                                                <div className="flex justify-between mb-2">
+                                                                    <div>
+                                                                        <p className="font-semibold">Session {session['Session : identifiant']}</p>
+                                                                        {dateDebut && <p className="text-sm">🟢 {dateDebut}</p>}
+                                                                        {dateFin && <p className="text-sm">🔴 {dateFin}</p>}
+                                                                    </div>
+                                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${status.status === 'full' ? 'bg-red-200 text-red-700' : status.status === 'expired' ? 'bg-orange-200 text-orange-700' : 'bg-green-200 text-green-700'}`}>
+                                                                        {status.label}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex items-center gap-4">
+                                                                    <div className="flex-1 bg-gray-200 rounded-full h-3">
+                                                                        <div className={`h-3 rounded-full ${status.status === 'full' ? 'bg-red-500' : status.status === 'expired' ? 'bg-orange-500' : 'bg-green-500'}`} style={{ width: `${Math.min((inscrits/Math.max(max,1))*100, 100)}%` }}></div>
+                                                                    </div>
+                                                                    <span className="font-bold">{inscrits}/{max}</span>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        <button onClick={() => setSelectedModule(null)} className={`w-full py-3 rounded-xl text-white font-semibold ${selectedModule.isClosed ? 'bg-red-600' : 'bg-indigo-600'}`}>
+                                            Fermer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    </script>
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</body>
+</html>
