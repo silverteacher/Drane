@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formations IA - Académie de Lille 2025-2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            display: block;
+            font-weight: 900;
+        }
+
+        .filters {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .filter-group select, .filter-group input {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .session-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-left: 5px solid #667eea;
+        }
+
+        .session-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .session-title {
+            color: #1a1a1a;
+            font-size: 1.5em;
+            font-weight: 700;
+            flex: 1;
+        }
+
+        .session-date {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .session-date .day {
+            font-size: 1.8em;
+            display: block;
+            line-height: 1;
+        }
+
+        .session-date .month {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .session-info {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .info-badge {
+            background: #f5f5f5;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .info-badge.time {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .info-badge.duration {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .info-badge.deadline {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .info-badge.deadline.urgent {
+            background: #c62828;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .session-theme {
+            color: #555;
+            font-size: 1.05em;
+            margin: 15px 0;
+            line-height: 1.8;
+        }
+
+        .btn-inscription {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            font-size: 1.05em;
+        }
+
+        .btn-inscription:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .month-separator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 40px 0 25px 0;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: 800;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 15px;
+            color: #999;
+        }
+
+        .no-results svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .session-header { flex-direction: column; }
+            .session-date { width: 100%; }
+            .filter-group { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Formations Intelligence Artificielle</h1>
+            <div class="subtitle">Académie de Lille • 2025-2026</div>
+            <div class="subtitle" style="font-size: 1em; color: #999;">Montée en compétences numériques</div>
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number">20</span>
+                    Sessions disponibles
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">14</span>
+                    Au 1er trimestre
+                </div>
+            </div>
+        </header>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>🔍 Rechercher :</label>
+                <input type="text" id="searchInput" placeholder="Thème, mots-clés..." onkeyup="filterSessions()">
+                <label>📅 Période :</label>
+                <select id="periodFilter" onchange="filterSessions()">
+                    <option value="all">Toutes les sessions</option>
+                    <option value="trimestre1" selected>1er trimestre (oct-déc)</option>
+                    <option value="novembre">Novembre 2025</option>
+                    <option value="decembre">Décembre 2025</option>
+                    <option value="trimestre2">2ème trimestre (janv-mars)</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="sessionsContainer"></div>
+    </div>
+
+    <script>
+        const sessions = [
+            {
+                id: 1,
+                date: "10-nov",
+                dateObj: new Date(2025, 10, 10),
+                heure: "17h30",
+                duree: "60'",
+                theme: "Créer des activités interactives avec l'IA",
+                deadline: "09-oct",
+                deadlineObj: new Date(2025, 9, 9),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30114/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S1|2025-11-10_17:30:00|2025-11-10_18:30:00"
+            },
+            {
+                id: 2,
+                date: "12-nov",
+                dateObj: new Date(2025, 10, 12),
+                heure: "17h45",
+                duree: "60'",
+                theme: "Oral, du collège au grand oral – Évaluer",
+                deadline: "10-oct",
+                deadlineObj: new Date(2025, 9, 10),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30116/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S2|2025-11-12_17:45:00|2025-11-12_18:45:00"
+            },
+            {
+                id: 3,
+                date: "18-nov",
+                dateObj: new Date(2025, 10, 18),
+                heure: "14h00",
+                duree: "60'",
+                theme: "Les outils numériques au service de l'inclusion scolaire",
+                deadline: "16-oct",
+                deadlineObj: new Date(2025, 9, 16),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30118/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S3|2025-11-18_18:00:00|2025-11-18_19:00:00"
+            },
+            {
+                id: 4,
+                date: "18-nov",
+                dateObj: new Date(2025, 10, 18),
+                heure: "18h00",
+                duree: "60'",
+                theme: "Les outils gratuits à disposition des enseignants",
+                deadline: "19-oct",
+                deadlineObj: new Date(2025, 9, 19),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30119/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S4|2025-11-18_17:00:00|2025-11-18_18:00:00"
+            },
+            {
+                id: 5,
+                date: "19-nov",
+                dateObj: new Date(2025, 10, 19),
+                heure: "14h00",
+                duree: "90'",
+                theme: "Premiers pas avec l'IA",
+                deadline: "13-oct",
+                deadlineObj: new Date(2025, 9, 13),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30120/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S5|2025-11-19_14:00:00|2025-11-19_15:30:00"
+            },
+            {
+                id: 6,
+                date: "19-nov",
+                dateObj: new Date(2025, 10, 19),
+                heure: "18h00",
+                duree: "60'",
+                theme: "Aider les élèves à s'approprier l'IA à partir d'un jeu sérieux",
+                deadline: "13-oct",
+                deadlineObj: new Date(2025, 9, 13),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30121/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S6|2025-11-19_18:00:00|2025-11-19_19:00:00"
+            },
+            {
+                id: 7,
+                date: "24-nov",
+                dateObj: new Date(2025, 10, 24),
+                heure: "17h30",
+                duree: "90'",
+                theme: "Recherche d'informations et ressources pédagogiques",
+                deadline: "24-oct",
+                deadlineObj: new Date(2025, 9, 24),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30122/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S7|2025-11-24_17:30:00|2025-11-24_19:00:00"
+            },
+            {
+                id: 8,
+                date: "25-nov",
+                dateObj: new Date(2025, 10, 25),
+                heure: "17h00",
+                duree: "60'",
+                theme: "Créer un classeur numérique avec « cours » et « wiki » de l'ENT",
+                deadline: "30-oct",
+                deadlineObj: new Date(2025, 9, 30),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30565/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S8|2025-11-25_17:00:00|2025-11-25_18:00:00"
+            },
+            {
+                id: 9,
+                date: "26-nov",
+                dateObj: new Date(2025, 10, 26),
+                heure: "17h45",
+                duree: "60'",
+                theme: "Le jeu avec Genially",
+                deadline: "02-nov",
+                deadlineObj: new Date(2025, 10, 2),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30123/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S9|2025-11-25_17:00:00|2025-11-25_18:00:00"
+            },
+            {
+                id: 10,
+                date: "26-nov",
+                dateObj: new Date(2025, 10, 26),
+                heure: "14h00",
+                duree: "120'",
+                theme: "Différencier sa pédagogie et faciliter l'inclusion avec l'IA",
+                deadline: "31-oct",
+                deadlineObj: new Date(2025, 9, 31),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30124/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S10|2025-11-26_14:00:00|2025-11-26_16:00:00"
+            },
+            {
+                id: 11,
+                date: "03-déc",
+                dateObj: new Date(2025, 11, 3),
+                heure: "14h30",
+                duree: "90'",
+                theme: "Deep-mind, IA générative, comment ça marche ?",
+                deadline: "03-nov",
+                deadlineObj: new Date(2025, 10, 3),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30137/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S11|2025-12-03_14:30:00|2025-12-03_16:00:00"
+            },
+            {
+                id: 12,
+                date: "03-déc",
+                dateObj: new Date(2025, 11, 3),
+                heure: "14h30",
+                duree: "60'",
+                theme: "Apprendre à penser l'IA – compétences clés pour un usage raisonné",
+                deadline: "03-nov",
+                deadlineObj: new Date(2025, 10, 3),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30138/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S12|2025-12-03_14:30:00|2025-12-03_15:30:00"
+            },
+            {
+                id: 13,
+                date: "10-déc",
+                dateObj: new Date(2025, 11, 10),
+                heure: "14h00",
+                duree: "90'",
+                theme: "Construire un projet avec les outils de l'ENT",
+                deadline: "07-nov",
+                deadlineObj: new Date(2025, 10, 7),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30139/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S13|2025-12-10_14:00:00|2025-12-10_15:00:00"
+            },
+            {
+                id: 14,
+                date: "17-déc",
+                dateObj: new Date(2025, 11, 17),
+                heure: "14h00",
+                duree: "60'",
+                theme: "Évaluer les élèves avec ELEA",
+                deadline: "07-nov",
+                deadlineObj: new Date(2025, 10, 7),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30141/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S14|2025-12-17_14:00:00|2025-12-17_15:00:00"
+            },
+            {
+                id: 15,
+                date: "21-janv",
+                dateObj: new Date(2026, 0, 21),
+                heure: "14h00",
+                duree: "120'",
+                theme: "Créer un chatbot à destination de vos élèves",
+                deadline: "15-déc",
+                deadlineObj: new Date(2025, 11, 15),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30142/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S15|2026-01-21_14:00:00|2026-01-21_16:00:00"
+            },
+            {
+                id: 16,
+                date: "03-févr",
+                dateObj: new Date(2026, 1, 3),
+                heure: "18h00",
+                duree: "60'",
+                theme: "Élaborer du contenu pédagogique basé sur la CUA avec l'IA",
+                deadline: "05-janv",
+                deadlineObj: new Date(2026, 0, 5),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30143/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S16|2026-02-03_18:00:00|2026-02-03_19:00:00"
+            },
+            {
+                id: 17,
+                date: "04-févr",
+                dateObj: new Date(2026, 1, 4),
+                heure: "17h45",
+                duree: "60'",
+                theme: "Enseigner avec l'IA",
+                deadline: "05-janv",
+                deadlineObj: new Date(2026, 0, 5),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30144/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S17|2026-02-04_17:45:00|2026-02-04_18:45:00"
+            },
+            {
+                id: 18,
+                date: "04-févr",
+                dateObj: new Date(2026, 1, 4),
+                heure: "14h00",
+                duree: "60'",
+                theme: "Outils IA et inclusion scolaire",
+                deadline: "05-janv",
+                deadlineObj: new Date(2026, 0, 5),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30145/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S18|2026-02-04_14:00:00|2026-02-04_15:00:00"
+            },
+            {
+                id: 19,
+                date: "11-févr",
+                dateObj: new Date(2026, 1, 11),
+                heure: "10h00",
+                duree: "60'",
+                theme: "IA et manipulation d'informations",
+                deadline: "09-janv",
+                deadlineObj: new Date(2026, 0, 9),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30146/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S19|2026-02-11_10:00:00|2026-02-11_11:00:00"
+            },
+            {
+                id: 20,
+                date: "09-mars",
+                dateObj: new Date(2026, 2, 9),
+                heure: "17h30",
+                duree: "60'",
+                theme: "Accompagner les élèves empêchés de scolarité avec le programme TEDi",
+                deadline: "09-févr",
+                deadlineObj: new Date(2026, 1, 9),
+                link: "https://eduline.ac-lille.fr/sofia-fmo-acad/default/session/preregistrationadd/globalSessionId/30148/tab/trainee/pill/individualTrainingPlan/infos/102549|01|S20|2026-03-09_17:30:00|2026-03-09_18:30:00"
+            }
+        ];
+
+        const monthNames = {
+            10: 'Novembre 2025',
+            11: 'Décembre 2025',
+            0: 'Janvier 2026',
+            1: 'Février 2026',
+            2: 'Mars 2026'
+        };
+
+        function filterSessions() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const periodValue = document.getElementById('periodFilter').value;
+            const container = document.getElementById('sessionsContainer');
+
+            let filtered = sessions.filter(s => {
+                const matchesSearch = s.theme.toLowerCase().includes(searchValue);
+                let matchesPeriod = true;
+
+                if (periodValue === 'trimestre1') {
+                    matchesPeriod = s.dateObj.getMonth() >= 10 || s.dateObj.getMonth() === 11;
+                } else if (periodValue === 'novembre') {
+                    matchesPeriod = s.dateObj.getMonth() === 10;
+                } else if (periodValue === 'decembre') {
+                    matchesPeriod = s.dateObj.getMonth() === 11;
+                } else if (periodValue === 'trimestre2') {
+                    matchesPeriod = s.dateObj.getMonth() >= 0 && s.dateObj.getMonth() <= 2 && s.dateObj.getFullYear() === 2026;
+                }
+
+                return matchesSearch && matchesPeriod;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="no-results"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><h2>Aucune formation trouvée</h2><p>Modifiez vos critères de recherche</p></div>';
+                return;
+            }
+
+            let html = '';
+            let currentMonth = null;
+            const today = new Date();
+
+            filtered.forEach(s => {
+                const month = s.dateObj.getMonth();
+
+                if (month !== currentMonth) {
+                    html += `<div class="month-separator">📅 ${monthNames[month]}</div>`;
+                    currentMonth = month;
+                }
+
+                const dateStr = s.date.split('-');
+                const dayNum = dateStr[0];
+                const monthStr = dateStr[1];
+
+                const daysUntilDeadline = Math.ceil((s.deadlineObj - today) / (1000 * 60 * 60 * 24));
+                const deadlineClass = daysUntilDeadline <= 7 ? 'deadline urgent' : 'deadline';
+
+                html += `
+                    <div class="session-card">
+                        <div class="session-header">
+                            <div class="session-title">${s.theme}</div>
+                            <div class="session-date">
+                                <span class="day">${dayNum}</span>
+                                <span class="month">${monthStr}</span>
+                            </div>
+                        </div>
+                        <div class="session-info">
+                            <span class="info-badge time">🕐 ${s.heure}</span>
+                            <span class="info-badge duration">⏱️ ${s.duree}</span>
+                            <span class="info-badge ${deadlineClass}">⏰ Inscription avant le ${s.deadline}</span>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <a href="${s.link}" target="_blank" class="btn-inscription">
+                                ✅ Me préinscrire sur Sofia-FMO
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Initialiser l'affichage
+        filterSessions();
+    </script>
+</body>
+</html>
