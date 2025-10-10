@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA en Éducation - Webinaire Interactif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .slide-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .slides-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .slides-container.active {
+            max-height: 3000px;
+        }
+        .presenter-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        .wooclap-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            color: white;
+        }
+        .wooclap-btn {
+            background: white;
+            color: #667eea;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        .wooclap-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+
+    <!-- Panneau contrôle présentateur -->
+    <div id="presenterControls" class="hidden presenter-controls">
+        <div class="bg-white rounded-xl shadow-2xl p-4 border-4 border-purple-500">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-purple-900">🎮 Contrôles</h3>
+                <button onclick="togglePresenterMode()" class="text-gray-500 hover:text-gray-700">×</button>
+            </div>
+            <div class="space-y-2">
+                <button onclick="triggerIncident(0)" class="w-full bg-red-500 text-white px-3 py-2 rounded text-sm hover:bg-red-600">
+                    🚨 Incident 1
+                </button>
+                <button onclick="triggerIncident(1)" class="w-full bg-orange-500 text-white px-3 py-2 rounded text-sm hover:bg-orange-600">
+                    ⚡ Incident 2
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Écran accueil ENRICHI -->
+    <div id="welcomeScreen" class="container mx-auto px-4 py-12">
+        <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl p-8">
+            <h1 class="text-4xl font-bold text-center text-indigo-900 mb-4">
+                🤖 IA en Éducation : Explorer pour Mieux Transmettre
+            </h1>
+            <p class="text-xl text-center text-gray-700 mb-8">
+                Webinaire interactif • 90 minutes • Bénéfices, Limites & Bons Usages
+            </p>
+
+            <!-- Section Objectifs -->
+            <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 mb-6">
+                <h2 class="text-2xl font-bold text-indigo-800 mb-4 flex items-center">
+                    🎯 Objectifs de ce webinaire
+                </h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="text-3xl mb-2">✅</div>
+                        <strong class="text-indigo-900">Analyser</strong>
+                        <p class="text-gray-600 text-sm mt-1">Les bénéfices et limites concrètes de l'IA avec démonstrations pratiques d'outils réels</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="text-3xl mb-2">⚠️</div>
+                        <strong class="text-indigo-900">Identifier</strong>
+                        <p class="text-gray-600 text-sm mt-1">Les points de vigilance : droits des élèves, cadre juridique RGPD, impact environnemental</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="text-3xl mb-2">🎓</div>
+                        <strong class="text-indigo-900">Transmettre</strong>
+                        <p class="text-gray-600 text-sm mt-1">Les bons usages aux élèves : esprit critique, créativité, pilotage de l'IA</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="text-3xl mb-2">💡</div>
+                        <strong class="text-indigo-900">Expérimenter</strong>
+                        <p class="text-gray-600 text-sm mt-1">Avec des outils IA concrets : ChatGPT, Mistral, MagicSchool, détecteurs, etc.</p>
+                    </div>
+                </div>
+            </div>
+
+            
+        <!-- Section Brainstorming Wooclap -->
+        <div class="wooclap-section mb-8 animate-fadeIn">
+            <div class="flex items-center mb-4">
+                <span class="text-4xl mr-3">💡</span>
+                <h2 class="text-3xl font-bold">Brainstorming : Qu'est-ce que l'IA pour vous ?</h2>
+            </div>
+            <p class="text-lg mb-2">
+                <strong>⏱️ Activité interactive - 5 minutes</strong>
+            </p>
+            <p class="mb-4 text-white/90">
+                Avant de commencer, partagez vos représentations de l'Intelligence Artificielle ! 
+                Participez au brainstorming collectif sur Wooclap pour explorer ensemble ce que signifie l'IA aujourd'hui.
+            </p>
+            <div class="bg-white/20 rounded-lg p-4 mb-4">
+                <p class="text-sm mb-2">✓ Quels mots vous viennent à l'esprit quand on parle d'IA ?</p>
+                <p class="text-sm mb-2">✓ Quelles applications connaissez-vous ?</p>
+                <p class="text-sm">✓ Quelles questions vous posez-vous sur l'IA en éducation ?</p>
+            </div>
+            <a href="https://app.wooclap.com/events/WEBIA2/live-session" 
+               target="_blank" 
+               class="wooclap-btn">
+                🚀 Accéder au brainstorming Wooclap
+            </a>
+            <p class="text-sm mt-3 text-white/80">
+                💬 Vos contributions seront affichées en direct et serviront de base à notre discussion
+            </p>
+        </div>
+
+<!-- Format interactif -->
+            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 mb-6">
+                <h2 class="text-2xl font-bold text-orange-800 mb-4">🎮 Format Interactif</h2>
+                <div class="space-y-3">
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-3">📊</span>
+                        <div>
+                            <strong class="text-gray-800">12 cas concrets</strong>
+                            <p class="text-gray-600 text-sm">4 situations par rôle avec démonstrations d'outils IA réels</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-3">🔗</span>
+                        <div>
+                            <strong class="text-gray-800">Liens vers outils</strong>
+                            <p class="text-gray-600 text-sm">Accès direct aux IA à tester : Mistral, GPTZero, MagicSchool, etc.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-3">🎬</span>
+                        <div>
+                            <strong class="text-gray-800">Mode Présentateur</strong>
+                            <p class="text-gray-600 text-sm">Contrôlez le déroulé et déclenchez des incidents surprises pour débattre</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="text-2xl mr-3">🌱🌿🌳</span>
+                        <div>
+                            <strong class="text-gray-800">3 niveaux de difficulté</strong>
+                            <p class="text-gray-600 text-sm">Débutant, Intermédiaire, Avancé - pour tous les profils</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Programme -->
+            <div class="bg-gray-50 rounded-xl p-6 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">📅 Déroulé du webinaire</h2>
+                <div class="space-y-3 text-sm">
+                    <div class="flex">
+                        <span class="font-bold text-indigo-600 w-24">0-15 min</span>
+                        <span class="text-gray-700">Introduction + Brainstorming Wooclap sur l'IA + Choix de votre parcours (Enseignant / CPE / Chef)</span>
+                    </div>
+                    <div class="flex">
+                        <span class="font-bold text-indigo-600 w-24">15-60 min</span>
+                        <span class="text-gray-700">Exploration de 4 cas concrets avec démonstrations IA pratiques</span>
+                    </div>
+                    <div class="flex">
+                        <span class="font-bold text-indigo-600 w-24">60-80 min</span>
+                        <span class="text-gray-700">Analyse d'incidents et débats collectifs</span>
+                    </div>
+                    <div class="flex">
+                        <span class="font-bold text-indigo-600 w-24">80-90 min</span>
+                        <span class="text-gray-700">Synthèse et plan d'action pour votre établissement</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Choix du rôle -->
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+                👥 Choisissez votre parcours professionnel
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <button onclick="selectRole('enseignant')" 
+                    class="bg-gradient-to-br from-blue-500 to-blue-700 text-white p-8 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                    <div class="text-5xl mb-3">📚</div>
+                    <div class="text-2xl font-bold mb-2">Enseignants</div>
+                    <div class="text-sm opacity-90">Pédagogie & IA</div>
+                    <div class="text-xs mt-3 opacity-80">Correction auto, détecteurs plagiat, différenciation, impact carbone</div>
+                </button>
+
+                <button onclick="selectRole('cpe')" 
+                    class="bg-gradient-to-br from-green-500 to-green-700 text-white p-8 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                    <div class="text-5xl mb-3">🎯</div>
+                    <div class="text-2xl font-bold mb-2">CPE</div>
+                    <div class="text-sm opacity-90">Vie Scolaire & IA</div>
+                    <div class="text-xs mt-3 opacity-80">Orientation IA, soutien émotionnel, décrochage, accompagnement</div>
+                </button>
+
+                <button onclick="selectRole('chef')" 
+                    class="bg-gradient-to-br from-purple-500 to-purple-700 text-white p-8 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all">
+                    <div class="text-5xl mb-3">⚖️</div>
+                    <div class="text-2xl font-bold mb-2">Chefs d'Établissement</div>
+                    <div class="text-sm opacity-90">Stratégie & Conformité</div>
+                    <div class="text-xs mt-3 opacity-80">Adoption IA, RGPD, budget, vision 2030</div>
+                </button>
+            </div>
+
+            <div class="text-center">
+                <button onclick="startPresenterMode()" 
+                    class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-4 rounded-full text-lg font-bold hover:shadow-xl transform hover:scale-105 transition-all">
+                    🎬 Mode Présentateur (Animateur)
+                </button>
+                <p class="text-sm text-gray-600 mt-2">Pour animer le webinaire avec contrôle des incidents</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Écran principal -->
+    <div id="mainScreen" class="hidden container mx-auto px-4 py-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h2 id="roleTitle" class="text-2xl font-bold text-indigo-900"></h2>
+                        <p class="text-gray-600" id="roleSubtitle"></p>
+                    </div>
+                    <div class="flex gap-4 items-center">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-indigo-600" id="cardCounter">0/4</div>
+                            <div class="text-sm text-gray-600">Cartes vues</div>
+                        </div>
+                        <button onclick="backToWelcome()" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600">
+                            ← Retour
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </div>
+    </div>
+
+    <!-- Modal détails -->
+    <div id="detailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onclick="if(event.target.id==='detailModal') closeModal()">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <h3 id="modalTitle" class="text-3xl font-bold text-indigo-900"></h3>
+                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-3xl">×</button>
+                </div>
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal incident -->
+    <div id="incidentModal" class="hidden fixed inset-0 bg-red-900 bg-opacity-95 flex items-center justify-center p-4 z-50" onclick="if(event.target.id==='incidentModal') closeIncidentModal()">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <h3 class="text-3xl font-bold text-red-900">🚨 INCIDENT EN COURS</h3>
+                    <button onclick="closeIncidentModal()" class="text-gray-500 hover:text-gray-700 text-3xl">×</button>
+                </div>
+                <div id="incidentContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRole = '';
+        let presenterMode = false;
+        let viewedCards = new Set();
+
+        const cardData = {
+            enseignant: [
+                {
+                    level: '🌱',
+                    slide: 'Diapo 5',
+                    title: 'ChatGPT a écrit mon cours... et alors ? 😅',
+                    scenario: 'Un enseignant utilise ChatGPT pour générer son cours de géographie sur le climat. Il copie-colle tel quel et distribue aux élèves. Le cours est bien structuré mais contient une date erronée sur les accords de Paris.',
+                    explanation: 'L\'IA peut générer des "hallucinations" - des informations fausses présentées avec assurance. Le vrai bénéfice : utiliser l\'IA comme assistant de préparation, pas comme rédacteur final. Toujours vérifier les faits, dates, chiffres.',
+                    demo: '💡 <strong>Démo avec ChatGPT :</strong> Ouvrez <a href="https://chat.openai.com" target="_blank" class="text-blue-600 underline">ChatGPT</a> et demandez "Quelle est la date du traité de Kyoto ?" puis "Cite 3 capitales de pays imaginaires". Observez : l\'IA peut inventer avec aplomb !',
+                    tools: '<strong>🛠️ Outils recommandés :</strong><br>• <a href="https://chat.mistral.ai" target="_blank" class="text-blue-600 underline">Mistral Le Chat</a> (français, RGPD, gratuit)<br>• <a href="https://magicschool.ai" target="_blank" class="text-blue-600 underline">MagicSchool AI</a> (spécialisé éducation)<br>• Vérification : Wikipedia, sources académiques',
+                    impact: '⚠️ Impact environnemental : 1 requête ChatGPT = 10x plus d\'énergie qu\'une recherche Google. Principe de sobriété numérique.',
+                    slidesContent: []
+                },
+                {
+                    level: '🌿',
+                    slide: 'Diapo 8',
+                    title: 'Le détecteur anti-triche qui se trompe',
+                    scenario: 'Vous utilisez un détecteur de texte IA sur les dissertations. Il signale 85% d\'IA sur la copie d\'un excellent élève qui écrit de manière très structurée et formelle. L\'élève est accusé à tort.',
+                    explanation: 'Les détecteurs IA ont un taux de faux positifs de 20-40% ! Ils pénalisent les élèves avec un style formel ou les non-francophones. Sanctionner sur cette seule base = risque juridique (présomption d\'innocence). Le dialogue reste la meilleure approche.',
+                    demo: '💡 <strong>Démo choc avec GPTZero :</strong> Testez <a href="https://gptzero.me" target="_blank" class="text-blue-600 underline">GPTZero</a> ou <a href="https://zerogpt.com" target="_blank" class="text-blue-600 underline">ZeroGPT</a> avec un extrait de Molière ou Baudelaire → Résultat : souvent détecté comme "IA" ! 😄',
+                    tools: '<strong>🛠️ Alternatives pédagogiques :</strong><br>• Évaluation orale (présentation + questions)<br>• Processus documenté (brouillons successifs)<br>• Sujets personnalisés (vécu de l\'élève)<br>• Projets créatifs (podcast, vidéo, débat)',
+                    impact: '⚖️ Vigilance juridique : Aucune sanction sans preuve tangible. Risque de recours administratif.',
+                    slidesContent: []
+                },
+                {
+                    level: '🌳',
+                    slide: 'Diapo 12',
+                    title: 'IA pour différencier : révolution pédagogique ! 🚀',
+                    scenario: 'Vous avez 28 élèves avec 5 niveaux différents en maths. Vous utilisez une IA pour générer automatiquement 5 versions adaptées de chaque exercice en 2 minutes. Ce qui vous prenait 2 heures de préparation est maintenant quasi-instantané. Vous pouvez enfin offrir à CHAQUE élève un parcours vraiment personnalisé.',
+                    explanation: 'L\'IA permet une vraie révolution de la différenciation pédagogique ! Avant : 2h pour créer 3 versions max d\'un exercice. Maintenant : 2 min pour 5 versions parfaitement adaptées. Le gain de temps est MASSIF et permet de se concentrer sur l\'accompagnement individuel. Chaque élève progresse à son rythme optimal.',
+                    demo: '💡 <strong>Démo rapide avec Mistral :</strong> Sur <a href="https://chat.mistral.ai" target="_blank" class="text-blue-600 underline">Mistral</a>, demandez "Crée 5 versions d\'un exercice de maths sur les fractions adaptées aux niveaux : très facile (découverte), facile, moyen, difficile, très difficile pour des 6èmes". Chronomètre : 2 min max !',
+                    tools: '<strong>🛠️ Outils gratuits pour différenciation :</strong><br>• <a href="https://chat.mistral.ai" target="_blank" class="text-blue-600 underline">Mistral Le Chat</a> - Français, gratuit, RGPD<br>• <a href="https://diffit.me" target="_blank" class="text-blue-600 underline">Diffit</a> - Adapte niveau de lecture automatiquement<br>• <a href="https://magicschool.ai" target="_blank" class="text-blue-600 underline">MagicSchool</a> - Templates différenciation prêts<br>• <a href="https://educationcopilot.com" target="_blank" class="text-blue-600 underline">Education Copilot</a> - Génération exercices multiniveaux',
+                    impact: '📋 Bénéfices concrets : Gain temps 90% sur préparation → Investir dans accompagnement humain. Chaque élève reçoit exactement ce dont il a besoin. Principe MEN : L\'IA augmente les capacités du prof, ne les remplace pas.',
+                    slidesContent: []
+                },
+                {
+                    level: '🌿',
+                    slide: 'Diapo 15',
+                    title: 'L\'IA écolo... vraiment ? 🌍',
+                    scenario: 'Votre classe de 25 élèves utilise une IA de création d\'images (Midjourney/DALL-E) pour un projet artistique. Chaque élève génère 10 images. Un collègue engagé vous interpelle sur l\'empreinte carbone considérable.',
+                    explanation: 'Une image générée = 2,9 Wh en moyenne. 250 images = ~725 Wh (charge 1-2 smartphones). ChatGPT-4 = 10-50x plus gourmand qu\'une recherche Google. Le principe de sobriété numérique du cadre MEN s\'applique : limiter les requêtes inutiles, privilégier modèles légers, réutiliser les résultats.',
+                    demo: '💡 <strong>Calculer l\'impact :</strong> Utilisez <a href="https://compare.ia" target="_blank" class="text-blue-600 underline">compare.ia</a> pour visualiser l\'impact de différentes requêtes IA. Comparez ChatGPT-4 vs recherche Google vs image générée.',
+                    tools: '<strong>🛠️ Gestes de sobriété numérique :</strong><br>• Utiliser modèles légers (Mistral Small vs GPT-4)<br>• Limiter longueur des prompts<br>• Stocker et réutiliser résultats pertinents<br>• Préférer texte à image quand suffisant<br>• Sensibiliser élèves : "Chaque requête a un coût écolo"',
+                    impact: '🌱 Cadre MEN : Principe de sobriété numérique obligatoire. Module pédagogique sur <a href="https://cafeia.org" target="_blank" class="text-blue-600 underline">cafeia.org</a>',
+                    slidesContent: []
+                }
+            ,
+                {
+                    level: '🔥',
+                    slide: 'Diapo 7',
+                    title: "📱 ChatGPT en plein contrôle - La triche en direct",
+                    scenario: "Pendant un contrôle écrit de 2h en classe, vous circulez entre les rangs. Vous apercevez un élève de 1ère qui utilise discrètement son smartphone sous la table. En vous approchant, vous constatez qu'il est connecté à ChatGPT et tape sa question de dissertation en direct : 'Rédige une introduction sur les causes de la Révolution française en 200 mots'. L'IA commence à répondre. L'élève lève les yeux, vous voit, panique et ferme rapidement son téléphone en balbutiant 'Je... je vérifiais juste une date...'",
+                    explanation: "Situation de fraude caractérisée qui interroge nos modalités d'évaluation. Trois axes : <strong>1) Sanction éducative</strong> plutôt que punitive (refaire le devoir + recherche sur l'éthique académique), <strong>2) Dialogue individuel</strong> pour comprendre les raisons (pression, facilité, manque de préparation ?), <strong>3) Prévention collective</strong> en adaptant les évaluations (oraux, projets, questions personnalisées).",
+                    demo: "💡 <strong>Activité débat (10 min) :</strong> Posez à la classe : 'Quelle différence entre vérifier une date sur Wikipédia et faire rédiger son devoir par l'IA ?' Puis : 'Comment évaluer l'apprentissage réel plutôt que le résultat final ?' Notez les propositions au tableau.",
+                    tools: "<strong>🛠️ Outils et ressources :</strong><br>• <a href='https://gptzero.me' target='_blank' class='text-blue-600 underline'>GPTZero</a> (détecteur d'IA, limites à discuter)<br>• <a href='https://eduscol.education.fr/3810/charte-pour-l-education-la-citoyennete-et-au-numerique' target='_blank' class='text-blue-600 underline'>Charte Éducation au numérique</a> (Éduscol)<br>• Protocole anti-fraude : collecte téléphones, questions différenciées, éval processus",
+                    impact: "⚖️ <strong>Cadre juridique :</strong> Fraude scolaire (article R511-13 Code éducation) : sanction possible mais obligation de proportionnalité et d'éducabilité. Privilégier l'entretien individuel et la sanction éducative. <strong>RGPD :</strong> attention à la confiscation téléphone (données personnelles).",
+                    slidesContent: []
+                },
+                {
+                    level: '🔥',
+                    slide: 'Diapo 8',
+                    title: "🎨 L'IA créative qui remplace l'imagination",
+                    scenario: "Projet de classe : créer une affiche originale sur le développement durable. Vous donnez 3 semaines, insistant sur la créativité personnelle et le processus créatif (croquis, recherches, brouillons). Jour de rendu : 8 élèves sur 25 présentent des visuels époustouflants, ultra-professionnels, générés par Midjourney ou DALL-E. Qualité graphique exceptionnelle... mais étrangement similaires dans le style. Zéro croquis préparatoires. Les 17 autres élèves, qui ont dessiné à la main pendant des heures, sont découragés : 'À quoi bon faire des efforts si l'IA fait mieux en 30 secondes ?'",
+                    explanation: "Dilemme pédagogique majeur : <strong>POUR l'IA</strong> = démocratise la création visuelle, permet aux élèves moins habiles en dessin de concrétiser leurs idées ; <strong>CONTRE l'IA</strong> = court-circuite le processus créatif (tâtonnements, échecs formateurs), démotive les investis. <strong>Solution hybride :</strong> autoriser l'IA MAIS exiger documentation du processus créatif (10 prompts testés, justification choix, modifications manuelles obligatoires).",
+                    demo: "💡 <strong>Démo Midjourney gratuit :</strong> Ouvrez <a href='https://www.bing.com/images/create' target='_blank' class='text-blue-600 underline'>Bing Image Creator</a> (gratuit, propulsé par DALL-E). Tapez 'affiche développement durable style minimaliste' puis 'affiche écologie dessin enfants'. Montrez : même prompt = styles différents selon instructions. Débat : qui est créateur ? L'élève ou l'IA ?",
+                    tools: "<strong>🛠️ Alternatives pédagogiques :</strong><br>• <a href='https://www.canva.com/fr_fr/education/' target='_blank' class='text-blue-600 underline'>Canva Éducation</a> (templates + IA raisonnée, gratuit écoles)<br>• <strong>Grille évaluation adaptée :</strong> Originalité concept 40% + Démarche documentée 30% + Maîtrise technique 30%<br>• Consigne : 'IA autorisée si dossier de 10 essais joints + modifications perso'",
+                    impact: "🌍 <strong>Impact environnemental :</strong> Générer 1 image IA (DALL-E, Midjourney) = consommation équivalente à charger 1 smartphone. Pour un projet classe de 25 élèves × 10 essais = 250 générations = impact carbone significatif. <strong>Principe de sobriété créative :</strong> combiner esquisse papier + IA ciblée, pas IA en rafale.",
+                    slidesContent: []
+                }
+            ],
+            cpe: [
+                {
+                    level: '🌱',
+                    slide: 'Diapo 6',
+                    title: 'L\'IA Coach d\'orientation : ami ou imposteur ?',
+                    scenario: 'Un élève de 3ème utilise une IA d\'orientation (Inspire, DiagOriente) qui lui recommande "ingénieur informatique" basé uniquement sur ses bonnes notes en maths. Mais il vous confie sa passion pour le théâtre et la médiation culturelle.',
+                    explanation: 'Les IA d\'orientation reproduisent les biais sociétaux : elles sur-recommandent les métiers "prestigieux" et sous-estiment les soft skills, la créativité, les motivations profondes. Une IA ne capte pas l\'environnement familial, la personnalité, les passions authentiques.',
+                    demo: '💡 <strong>Test avec DiagOriente :</strong> Créez 2 profils fictifs identiques sauf le sexe sur <a href="https://diagoriente.fr" target="_blank" class="text-blue-600 underline">DiagOriente</a>. Comparez les recommandations → Observez les biais de genre !',
+                    tools: '<strong>🛠️ Accompagner l\'usage des IA d\'orientation :</strong><br>• Grille analyse critique pour élèves<br>• Entretiens individuels post-IA<br>• <a href="https://inspire-orientation.org" target="_blank" class="text-blue-600 underline">Inspire</a> (officiel Éduc Nat)<br>• Guide ONISEP "Orientation et numérique"',
+                    impact: '⚖️ Principe d\'autonomie humaine : décisions impactant le parcours = toujours humaines. L\'IA propose, l\'élève dispose.',
+                    slidesContent: []
+                },
+                {
+                    level: '🌿',
+                    slide: 'Diapo 9',
+                    title: 'ChatGPT Psychologue : la fausse bonne idée 😬',
+                    scenario: 'Un élève de 4ème en détresse émotionnelle se confie à ChatGPT sur ses pensées noires et son mal-être. L\'IA lui donne des conseils génériques ("parle à un adulte de confiance"). L\'élève vous montre fièrement la conversation.',
+                    explanation: 'ChatGPT n\'est PAS un professionnel de santé. Il peut donner des conseils génériques, mais ne détecte pas les signaux de détresse grave (risque suicidaire, harcèlement). Pas de suivi, pas de protocole de crise, pas d\'obligation de signalement. L\'élève peut croire être "pris en charge" alors qu\'il ne l\'est pas.',
+                    demo: '💡 <strong>Test responsable :</strong> Sur <a href="https://chat.openai.com" target="_blank" class="text-blue-600 underline">ChatGPT</a>, testez "Je me sens très mal depuis plusieurs semaines". Observez : réponse générique, pas de détection de gravité, pas de suivi.',
+                    tools: '<strong>🛠️ Protocole CPE :</strong><br>• Valoriser démarche élève (chercher aide = courage)<br>• Expliquer limites IA (pas formée au soutien psy)<br>• Orienter vers : CPE, infirmière, psy scolaire, assistante sociale<br>• Numéros urgence : 3114 (prévention suicide), 119 (enfance danger), 3018 (cyberharcèlement)',
+                    impact: '⚖️ Code éducation : devoir de protection et orientation vers professionnels qualifiés. L\'IA écoute, l\'humain aide vraiment.',
+                    slidesContent: []
+                },
+                {
+                    level: '🌳',
+                    slide: 'Diapo 13',
+                    title: 'Prédire le décrochage avec l\'IA : miracle ou mirage ?',
+                    scenario: 'Un logiciel IA propose de prédire les élèves à risque de décrochage basé sur leurs absences, notes et comportement. Il génère des alertes automatiques. Sur 30 alertes/mois, après analyse humaine, seulement 12 nécessitent vraiment un suivi approfondi.',
+                    explanation: 'L\'IA détecte des corrélations, pas des causalités. Un élève peut s\'absenter pour maladie (pas décrochage), avoir des notes en baisse temporairement (problème familial ponctuel). Le vrai bénéfice : libérer du temps administratif pour se concentrer sur l\'accompagnement humain qualitatif.',
+                    demo: '💡 <strong>Simulation Excel :</strong> Créez une formule simple : Si (Absences > 10) ET (Moyenne < 10) → Alerte. Testez avec profils : élève hospitalisé, sportif haut niveau, début décrochage masqué. Observez les limites !',
+                    tools: '<strong>🛠️ Logiciels vie scolaire avec IA :</strong><br>• Pronote : Alertes absences configurables<br>• Vie Scolaire.net : Tableaux de bord décrochage<br>• Index Éducation : Suivi personnalisé<br>• Checklist : Configurer seuils adaptés, croiser plusieurs indicateurs, réviser alertes hebdomadairement',
+                    impact: '📋 Principe d\'autonomie : L\'IA alerte, l\'humain analyse le contexte et décide de l\'accompagnement. Gain temps : 2-3h/semaine admin → accompagnement.',
+                    slidesContent: []
+                },
+                {
+                    level: '🌱',
+                    slide: 'Diapo 16',
+                    title: 'IA pour communication parents : gain de temps ou déshumanisation ?',
+                    scenario: 'Vous utilisez une IA pour rédiger vos emails aux parents (convocations, comptes-rendus). Vous gagnez 5h/semaine. Mais certains parents se plaignent de messages "froids" et "standardisés" qui ne reflètent pas la situation unique de leur enfant.',
+                    explanation: 'L\'IA peut générer du contenu formel efficacement, mais manque de personnalisation émotionnelle. Risque : perte de la relation de confiance avec les familles. Solution : utiliser l\'IA pour la structure de base, puis personnaliser avec détails humains spécifiques à chaque élève.',
+                    demo: '💡 <strong>Test pratique :</strong> Sur <a href="https://chat.mistral.ai" target="_blank" class="text-blue-600 underline">Mistral</a>, demandez de rédiger un email de convocation parent. Puis comparez avec votre style personnel. Identifiez ce qui manque.',
+                    tools: '<strong>🛠️ Bonnes pratiques IA + Communication :</strong><br>• IA = brouillon de structure<br>• Toujours ajouter détails personnels (prénom, situation spécifique)<br>• Relecture attentive ton et empathie<br>• Privilégier téléphone/entretien pour situations sensibles<br>• Garder trace des échanges importants',
+                    impact: '📋 L\'IA libère du temps mais ne remplace pas la relation humaine. Utiliser le temps gagné pour entretiens qualitatifs.',
+                    slidesContent: []
+                }
+            ],
+            chef: [
+                {
+                    level: '🌱',
+                    slide: 'Diapo 7',
+                    title: 'Adopter une IA : mode ou nécessité ? 🤔',
+                    scenario: 'Un fournisseur EdTech vous démarche avec une IA de gestion administrative "révolutionnaire" : emplois du temps optimisés, prédiction des besoins en remplacements, alertes automatiques. Démo impressionnante. Mais coût : 8000€/an, formation nécessaire, hébergement non précisé.',
+                    explanation: 'Le cadre MEN (juin 2025) impose une grille d\'évaluation : Quel problème résout l\'IA concrètement ? Quelles alternatives existent ? Impact carbone ? Hébergement des données (France/UE prioritaire) ? Formation des équipes ? Coût total (abonnement + formation + maintenance) ?',
+                    demo: '💡 <strong>Grille officielle MEN :</strong> Téléchargez la grille sur <a href="https://eduscol.education.fr" target="_blank" class="text-blue-600 underline">Éduscol</a> (recherche "cadre usage IA"). Évaluez l\'outil proposé avec votre équipe selon les 7 critères obligatoires.',
+                    tools: '<strong>🛠️ Ressources pour décideurs :</strong><br>• <a href="https://www.cnil.fr/fr/intelligence-artificielle" target="_blank" class="text-blue-600 underline">CNIL : Fiches pratiques IA et RGPD</a><br>• Réseau Canopé : Accompagnement transformation numérique<br>• DANE académique : Conseil local<br>• Checklist : Consulter DPO, tester démo, vérifier hébergement UE',
+                    impact: '⚖️ Responsabilité chef d\'établissement : RGPD, obligation évaluation préalable, documentation registre des traitements.',
+                    slidesContent: []
+                },
+                {
+                    level: '🌿',
+                    slide: 'Diapo 10',
+                    title: 'IA et données élèves : la bombe à retardement ⏰',
+                    scenario: 'Vous découvrez qu\'un enseignant a uploadé 80 copies d\'élèves (avec noms, prénoms, notes) sur ChatGPT pour correction automatique. Les données sont hébergées chez OpenAI (serveurs USA). Aucune déclaration au DPO. Un parent découvre et menace de saisir la CNIL.',
+                    explanation: 'Données personnelles d\'élèves = données SENSIBLES (mineurs). Upload vers serveurs USA = transfert international illégal sans garanties RGPD adéquates. Le chef d\'établissement est RESPONSABLE du traitement des données. Sanction CNIL possible : jusqu\'à 20M€ ou 4% CA (secteur privé).',
+                    demo: '💡 <strong>Comparatif CGU :</strong> Consultez CGU de <a href="https://openai.com/policies/terms-of-use" target="_blank" class="text-blue-600 underline">ChatGPT</a> (serveurs USA, conservation 30j+) vs <a href="https://chat.mistral.ai" target="_blank" class="text-blue-600 underline">Mistral</a> (France/UE, conforme RGPD). Différence flagrante !',
+                    tools: '<strong>🛠️ Protocole incident RGPD :</strong><br>1. Notification DPO immédiate<br>2. Évaluation risque pour personnes<br>3. Documentation registre violations<br>4. Notification CNIL sous 72h si risque élevé<br>5. Information parents<br>6. Formation équipes + procédure<br>• Guide CNIL : <a href="https://www.cnil.fr/fr/rgpd-passer-a-laction" target="_blank" class="text-blue-600 underline">RGPD passer à l\'action</a>',
+                    impact: '⚖️ RGPD art. 6 et 9 : interdiction traiter données enfants sans garanties. Créer "liste blanche" outils validés DPO.',
+                    slidesContent: []
+                },
+                {
+                    level: '🌳',
+                    slide: 'Diapo 14',
+                    title: 'Préparer l\'établissement à l\'IA de 2030 🚀',
+                    scenario: 'Vous devez définir une stratégie IA à 5 ans pour le conseil d\'administration. Les IA de 2030 seront hyper-puissantes : avatars profs virtuels 24/7, tuteurs personnalisés adaptatifs, réalité virtuelle immersive IA-assistée. Opportunité ou menace pour le métier d\'enseignant ?',
+                    explanation: 'Risque : remplacer l\'humain plutôt que l\'augmenter. Opportunité : libérer du temps pour l\'accompagnement, la créativité, l\'empathie (ce que l\'IA ne fera jamais). Principe directeur : préserver le cœur du métier = relation humaine et esprit critique. Former les élèves à PILOTER l\'IA, pas à la subir.',
+                    demo: '💡 <strong>Vision 2030 :</strong> Regardez vidéo <a href="https://www.youtube.com/watch?v=hJP5GqnTrNo" target="_blank" class="text-blue-600 underline">Khan Academy + Khanmigo</a> (tuteur IA personnalisé). Débat : opportunité ou menace ? Où placer le curseur ?',
+                    tools: '<strong>🛠️ Feuille de route stratégique 2025-2030 :</strong><br>• Phase 1 (2025-26) : Formation massive équipes, liste outils validés, charte usage IA<br>• Phase 2 (2027-28) : Pilotes pédagogiques, évaluation impacts, ajustements<br>• Phase 3 (2029-30) : Généralisation validée, culture IA mature<br>• KPI : % enseignants formés, satisfaction élèves/parents, temps libéré, impact résultats',
+                    impact: '⚖️ AI Act européen 2024 : IA éducation = système à haut risque. Supervision humaine obligatoire pour décisions impactantes.',
+                    slidesContent: []
+                },
+                {
+                    level: '🌿',
+                    slide: 'Diapo 17',
+                    title: 'Budget IA : investir ou économiser ? 💰',
+                    scenario: 'Vous avez 10 000€ de budget numérique. Option A : abonnements IA premium pour tous les enseignants (ChatGPT-4 Pro) = 50 profs × 20€/mois = 12 000€/an. Option B : formation des équipes (3 jours) = 3 500€ + outils gratuits (Mistral, MagicSchool) = 0€. Que choisir ?',
+                    explanation: 'Études montrent : impact pédagogique dépend à 80% de la maîtrise pédagogique, 20% de l\'outil. Des outils gratuits bien maîtrisés > outils premium sous-exploités. Recommandation Cour des Comptes 2024 : "Privilégier formation continue vs équipements sous-exploités".',
+                    demo: '💡 <strong>Comparatif pratique :</strong> Tâche identique sur <a href="https://chat.openai.com" target="_blank" class="text-blue-600 underline">ChatGPT-4</a> (20$/mois) et <a href="https://chat.mistral.ai" target="_blank" class="text-blue-600 underline">Mistral</a> (gratuit) : "Crée quiz 10 questions Révolution française 4ème". Différence souvent minime pour usages basiques !',
+                    tools: '<strong>🛠️ Simulation budget optimal 10 000€ :</strong><br>• Formation équipes (3j/an) : 3 500€<br>• Accompagnement DANE/Canopé : 1 500€<br>• Outils gratuits (Mistral, MagicSchool) : 0€<br>• Abonnements ciblés (besoins spécifiques) : 2 000€<br>• Évaluation impact (enquêtes, audits) : 1 000€<br>• Réserve imprévus : 2 000€',
+                    impact: '📋 Principe équité + efficience : Formation = investissement durable (compétences à vie). Abonnement = coût récurrent.',
+                    slidesContent: []
+                }
+            ]
+        };
+
+        const incidents = {
+            enseignant: [
+                {
+                    title: '🚨 Un élève vend des devoirs générés par IA',
+                    scenario: 'Vous découvrez qu\'un élève de Terminale a créé un compte Instagram "@devoirs_ia_premium" où il vend des dissertations générées par IA (10€/commande). Il affiche fièrement "IA de qualité GPT-4, zéro plagiat détecté, satisfaction garantie !". Il a déjà 15 clients réguliers dans l\'établissement. Des parents vous contactent car leur facture carte bancaire révèle les achats.',
+                    question: '💬 <strong>Question débat :</strong> Aspect éthique : est-ce vraiment différent de payer quelqu\'un pour faire ses devoirs ? Entrepreneuriat vs fraude académique ?',
+                    discussion: '<strong>🎯 Pistes de discussion :</strong><br>• Responsabilité du vendeur vs des acheteurs<br>• Nécessité d\'adapter les évaluations (oral, projet, créativité)<br>• Rôle des parents dans la supervision<br>• Sanctions proportionnées ou approche pédagogique ?<br>• Charte d\'usage IA avec élèves<br><br><strong>✅ Actions possibles :</strong><br>• Réunion avec élèves concernés + parents<br>• Expliquer valeur de l\'apprentissage vs résultat<br>• Modifier évaluations vers oral/projet<br>• Sensibiliser à l\'éthique et aux risques'
+                },
+                {
+                    title: '⚡ L\'IA raciste en cours d\'EMC',
+                    scenario: 'Pendant votre cours d\'EMC sur les discriminations, vous faites tester une IA de génération d\'images (Midjourney/DALL-E) à toute la classe. Consigne collective : "Génère l\'image d\'un PDG d\'entreprise". Résultats de 25 élèves : 23 images montrent des hommes blancs en costume, 2 images montrent des hommes asiatiques. Zéro femme, zéro diversité. Les élèves sont choqués et vous interpellent vivement : "Mais Madame, c\'est raciste votre IA ! Pourquoi vous nous montrez ça ?"',
+                    question: '💬 <strong>Question débat :</strong> Comment transformer cet incident embarrassant en opportunité pédagogique majeure ?',
+                    discussion: '<strong>🎯 Axes d\'analyse avec les élèves :</strong><br>• L\'IA reproduit les biais des données d\'entraînement (photos internet)<br>• Différence IA (reflet réalité biaisée) vs réalité souhaitable<br>• Qui crée les IA ? Responsabilité des développeurs<br>• Comment lutter contre ces biais ?<br><br><strong>✅ Activité pédagogique :</strong><br>• Tester avec différentes professions (infirmière, mécanicien, professeur, juge)<br>• Observer et quantifier les stéréotypes de genre/origine<br>• Débat : "L\'IA nous montre le miroir de nos préjugés sociétaux"<br>• Recherche : Initiatives d\'IA équitables (ex: Fairness in AI, algorithmes transparents)'
+                }
+            ],
+            cpe: [
+                {
+                    title: '🚨 L\'IA comme confident... trop confident',
+                    scenario: 'Un élève de 4ème révèle spontanément à ChatGPT des détails très intimes sur sa vie familiale : conflits parentaux violents, climat de peur à la maison, sentiment de ne pas être en sécurité. L\'IA lui donne des conseils bienveillants mais génériques ("parle à un adulte de confiance", "appelle un numéro d\'urgence si danger"). L\'élève vous montre fièrement la conversation de 45 minutes : "Regardez Madame, ChatGPT m\'a vraiment aidé, je me sens mieux maintenant !"',
+                    question: '💬 <strong>Question débat :</strong> Comment sensibiliser l\'élève aux limites de l\'IA sans dramatiser ni le culpabiliser pour s\'être confié ?',
+                    discussion: '<strong>🎯 Dilemme :</strong><br>• L\'élève s\'est confié... mais pas aux bonnes personnes<br>• Risque : croire être "pris en charge" alors que non<br>• L\'IA ne peut pas déclencher protocole de protection<br>• Pas de détection des signaux d\'urgence (risque suicidaire)<br><br><strong>✅ Actions immédiates CPE :</strong><br>• Valoriser la démarche (chercher aide = courage)<br>• Expliquer : IA écoute, mais n\'a pas outils d\'intervention<br>• Orienter vers : CPE, infirmière, assistante sociale, psy scolaire<br>• Déclencher protocole si signaux graves<br>• Prévention : Campagne "IA écoute, humains aident vraiment"'
+                },
+                {
+                    title: '⚡ Deep fake : la fausse vidéo du proviseur',
+                    scenario: 'Lundi matin 7h30. Une vidéo deep fake ultra-réaliste du chef d\'établissement circule sur TikTok, Snapchat et Instagram. Il y annonce avec sérieux : "Suite à un problème urgent de chauffage dans tout l\'établissement, je déclare 3 jours de vacances exceptionnelles à partir d\'aujourd\'hui. Reprise jeudi. Courrier officiel suit." Voix parfaite, visage identique, décor du bureau reconnaissable. À 8h00 : 300 élèves ne se présentent pas. Standard surchargé d\'appels. Parents affolés. Certains ont déjà posé congés. Panique administrative totale.',
+                    question: '💬 <strong>Question débat :</strong> Comment gérer simultanément la crise opérationnelle ET éduquer tous les élèves aux deep fakes ?',
+                    discussion: '<strong>🎯 Gestion crise (urgent) :</strong><br>• Communiqué officiel immédiat (SMS, ENT, réseaux sociaux)<br>• Appels familles des absents<br>• Signalement plateformes + dépôt plainte (usurpation identité)<br>• Cellule de crise direction + communication<br><br><strong>✅ Éducation médias (moyen terme) :</strong><br>• Atelier deep fake : montrer fabrication<br>• Règles vérification : toujours croiser sources officielles<br>• Responsabilité pénale créateur (sanctions possibles)<br>• Protocole établissement : canaux officiels communication<br>• Débat éthique : blague vs délit, impact réel'
+                }
+            ],
+            chef: [
+                {
+                    title: '🚨 Fuite de données : le cauchemar RGPD',
+                    scenario: 'Mercredi 14h : email d\'un prestataire externe (outil vie scolaire avec IA) : "Incident sécurité grave - données potentiellement compromises suite cyberattaque. Investigation en cours." Jeudi 8h : un journaliste local vous appelle : "2000 données élèves de votre établissement (noms, prénoms, adresses, notes, commentaires éducatifs confidentiels) ont été publiées cette nuit sur le dark web. Commentaire ?" Les réseaux sociaux s\'enflamment. Parents paniquent. Convocation rectorat.',
+                    question: '💬 <strong>Question débat :</strong> Quelles sont précisément vos obligations légales dans les 72 heures suivant la découverte ?',
+                    discussion: '<strong>🎯 Chronologie obligations RGPD :</strong><br><strong>H+0</strong> (découverte) : Cellule crise, notification DPO, documentation incident<br><strong>H+24</strong> : Évaluation risque personnes, notification CNIL (sous 72h si risque élevé), préparation communication<br><strong>H+48</strong> : Information individuelle familles (email + courrier), mesures correctives, communication presse<br><br><strong>✅ Suites :</strong><br>• Enquête CNIL possible (audits, sanctions théoriques jusqu\'à 20M€)<br>• Révision contrat prestataire / mise en demeure<br>• Plan action prévention (audit sécurité, formation équipes)<br>• Documentation complète pour preuve diligence'
+                },
+                {
+                    title: '⚡ Enseignant "augmenté" : trop, c\'est trop ?',
+                    scenario: 'Un enseignant de maths passionné de tech utilise massivement l\'IA : 100% de ses cours préparés par IA, correction automatique de toutes les copies, génération de tous les exercices, réponses aux emails parents par IA, création de tous les supports visuels. Il gagne 10h/semaine qu\'il investit brillamment dans du soutien individualisé. Résultats élèves objectivement en hausse (+2 points de moyenne classe). MAIS : des parents inquiets signent une pétition "déshumanisation", des collègues se sentent "dépassés et dévalorisés", syndicat interpelle.',
+                    question: '💬 <strong>Question débat :</strong> Où placer précisément le curseur entre efficacité pédagogique et authenticité de la relation humaine ?',
+                    discussion: '<strong>🎯 Arguments :</strong><br><strong>PRO usage intensif :</strong> Gain temps = plus accompagnement humain, résultats meilleurs, innovation pédagogique, autonomie enseignante<br><strong>CONTRE :</strong> Perception "robot prof" parents, pression collègues (comparaison), dépendance tech, perte authenticité relation ?<br><br><strong>✅ Pistes régulation :</strong><br>• Dialogue individuel (valoriser + cadrer)<br>• Transparence usage IA auprès parents (expliquer bénéfices)<br>• Formation collective équipe (éviter fracture)<br>• Charte établissement : usages IA encouragés MAIS transparents<br>• Préserver espaces 100% humains (entretiens, conseils classe)<br>• Question philo : IA qui libère temps pour humain = déshumanisation ou réhumanisation ?'
+                }
+            ]
+        };
+
+        const roleInfo = {
+            enseignant: {
+                title: '📚 Enseignants : IA et Pédagogie',
+                subtitle: '4 cas concrets avec démos : Hallucinations IA, Détecteurs plagiat, Différenciation, Impact carbone'
+            },
+            cpe: {
+                title: '🎯 CPE : IA et Vie Scolaire',
+                subtitle: '4 cas concrets avec démos : Orientation, Soutien émotionnel, Décrochage, Communication parents'
+            },
+            chef: {
+                title: '⚖️ Chefs d\'Établissement : Stratégie IA',
+                subtitle: '4 cas concrets avec démos : Adoption IA, RGPD données, Vision 2030, Budget optimal'
+            }
+        };
+
+        function selectRole(role) {
+            currentRole = role;
+            viewedCards.clear();
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.remove('hidden');
+
+            document.getElementById('roleTitle').textContent = roleInfo[role].title;
+            document.getElementById('roleSubtitle').textContent = roleInfo[role].subtitle;
+            displayCards();
+            updateCounter();
+        }
+
+        function displayCards() {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = '';
+
+            cardData[currentRole].forEach((card, index) => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all cursor-pointer p-6 relative transform hover:scale-102';
+                cardDiv.onclick = () => showDetail(index);
+
+                cardDiv.innerHTML = `
+                    <span class="slide-badge">${card.slide}</span>
+                    <div class="text-3xl mb-3">${card.level}</div>
+                    <h3 class="text-xl font-bold text-indigo-900 mb-3">${card.title}</h3>
+                    <p class="text-gray-600 text-sm mb-3">${card.scenario.substring(0, 150)}...</p>
+                    <div class="text-indigo-600 font-semibold text-sm">
+                        📖 Cliquer pour la démo complète →
+                    </div>
+                `;
+
+                container.appendChild(cardDiv);
+            });
+        }
+
+        function showDetail(index) {
+            const card = cardData[currentRole][index];
+            viewedCards.add(index);
+            updateCounter();
+
+            document.getElementById('modalTitle').innerHTML = `${card.level} ${card.title}`;
+
+            // Générer HTML des slides (vides pour l'instant)
+            let slidesHTML = '';
+            if (card.slidesContent && card.slidesContent.length > 0) {
+                slidesHTML = card.slidesContent.map(slide => `
+                    <div class="bg-${slide.color || 'blue'}-50 p-5 rounded-lg mt-4 border-l-4 border-${slide.color || 'blue'}-400">
+                        <h4 class="font-bold text-${slide.color || 'blue'}-800 text-lg mb-3">${slide.title}</h4>
+                        <div class="text-gray-700">${slide.content}</div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-blue-50 p-5 rounded-lg border-l-4 border-blue-500">
+                        <strong class="text-blue-900 text-lg">📌 Situation concrète</strong>
+                        <p class="text-gray-700 mt-2">${card.scenario}</p>
+                    </div>
+
+                    <div class="bg-indigo-50 p-5 rounded-lg border-l-4 border-indigo-500">
+                        <strong class="text-indigo-900 text-lg">🎯 Analyse</strong>
+                        <p class="text-gray-700 mt-2">${card.explanation}</p>
+                    </div>
+
+                    <div class="bg-yellow-50 p-5 rounded-lg border-l-4 border-yellow-500">
+                        <strong class="text-yellow-900 text-lg">💡 Démonstration pratique</strong>
+                        <p class="text-gray-700 mt-2">${card.demo}</p>
+                    </div>
+
+                    <!-- Bouton révélation Outils -->
+                    <div class="text-center my-4">
+                        <button onclick="revealTools()" 
+                            id="revealToolsButton"
+                            class="bg-gradient-to-r from-green-500 to-teal-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                            🛠️ Voir les outils et ressources recommandés
+                        </button>
+                    </div>
+
+                    <!-- Outils cachés par défaut -->
+                    <div id="toolsSection" class="hidden">
+                        <div class="bg-green-50 p-5 rounded-lg border-l-4 border-green-500 animate-fadeIn">
+                            <strong class="text-green-900 text-lg">🛠️ Outils et ressources</strong>
+                            <p class="text-gray-700 mt-2">${card.tools}</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 p-5 rounded-lg border-l-4 border-purple-500">
+                        <strong class="text-purple-900 text-lg">⚖️ Cadre juridique</strong>
+                        <p class="text-gray-700 mt-2">${card.impact}</p>
+                    </div>
+
+                    <button onclick="toggleMore(this)" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-4 rounded-lg font-bold text-lg hover:shadow-xl transition-all">
+                        📊 Aller plus loin : Slides approfondies
+                    </button>
+                    <div class="slides-container">
+                        ${slidesHTML || '<p class="text-center text-gray-500 mt-4 p-6 bg-gray-50 rounded-lg">Slides approfondies à venir - En cours de préparation</p>'}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function revealTools() {
+            const tools = document.getElementById('toolsSection');
+            const button = document.getElementById('revealToolsButton');
+
+            tools.classList.remove('hidden');
+            button.classList.add('hidden');
+
+            setTimeout(() => {
+                tools.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        function toggleMore(btn) {
+            const container = btn.nextElementSibling;
+            const isActive = container.classList.contains('active');
+            container.classList.toggle('active');
+            btn.textContent = isActive ? '📊 Aller plus loin : Slides approfondies' : '🔼 Réduire les slides';
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+
+        function triggerIncident(index) {
+            const incident = incidents[currentRole][index];
+            document.getElementById('incidentContent').innerHTML = `
+                <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-600 mb-6">
+                    <h4 class="text-2xl font-bold text-red-900 mb-4">${incident.title}</h4>
+                    <div class="mb-5">
+                        <strong class="text-red-800 text-lg">📢 Situation d\'urgence</strong>
+                        <p class="text-gray-700 mt-3 leading-relaxed">${incident.scenario}</p>
+                    </div>
+                    <div class="mb-5 bg-red-100 p-5 rounded-lg">
+                        ${incident.question}
+                    </div>
+
+                    <!-- Bouton pour révéler les pistes -->
+                    <div class="text-center my-6">
+                        <button onclick="revealDebatePistes()" 
+                            id="revealButton"
+                            class="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                            💡 Révéler les pistes de réflexion
+                        </button>
+                    </div>
+
+                    <!-- Pistes cachées par défaut -->
+                    <div id="debatePistes" class="hidden">
+                        <div class="bg-white p-5 rounded-lg border-2 border-orange-500 animate-fadeIn">
+                            <strong class="text-gray-800 text-lg">🎯 Pistes pour le débat collectif</strong>
+                            <div class="text-gray-700 mt-3 leading-relaxed">${incident.discussion}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-6">
+                    <button onclick="closeIncidentModal()" 
+                        class="bg-gray-600 text-white px-8 py-3 rounded-lg hover:bg-gray-700 font-bold">
+                        Fermer l\'incident
+                    </button>
+                </div>
+            `;
+            document.getElementById('incidentModal').classList.remove('hidden');
+        }
+
+        function revealDebatePistes() {
+            const pistes = document.getElementById('debatePistes');
+            const button = document.getElementById('revealButton');
+
+            pistes.classList.remove('hidden');
+            button.classList.add('hidden');
+
+            setTimeout(() => {
+                pistes.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        function closeIncidentModal() {
+            document.getElementById('incidentModal').classList.add('hidden');
+        }
+
+        function updateCounter() {
+            const total = cardData[currentRole].length;
+            document.getElementById('cardCounter').textContent = `${viewedCards.size}/${total}`;
+        }
+
+        function backToWelcome() {
+            document.getElementById('mainScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            if (presenterMode) {
+                document.getElementById('presenterControls').classList.remove('hidden');
+            }
+        }
+
+        function startPresenterMode() {
+            presenterMode = true;
+            document.getElementById('presenterControls').classList.remove('hidden');
+            selectRole('enseignant');
+        }
+
+        function togglePresenterMode() {
+            document.getElementById('presenterControls').classList.add('hidden');
+            presenterMode = false;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeIncidentModal();
+            }
+        });
+    </script>
+</body>
+</html>
