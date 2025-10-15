@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formations Citoyen Numérique - Hauts-de-France</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+          crossorigin=""/>
+    
     <style>
         * {
             margin: 0;
@@ -119,12 +125,33 @@
             background: #fafbfc;
         }
 
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+        }
+
         .section-title {
             color: #667eea;
             font-size: 2em;
             margin-bottom: 30px;
             text-align: center;
             font-weight: bold;
+        }
+
+        #searchBar {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #667eea;
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #searchBar:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(118, 75, 162, 0.3);
         }
 
         .thematic-section {
@@ -176,6 +203,27 @@
             margin-bottom: 8px;
         }
 
+        .location-button {
+            background: none;
+            border: none;
+            color: #cce5ff;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0;
+            font-size: 1em;
+            text-decoration: underline;
+            font-family: inherit;
+        }
+
+        .location-button:hover {
+            color: #ffffff;
+        }
+
+        .location-button:focus {
+            outline: 3px solid #cce5ff;
+            outline-offset: 2px;
+        }
+
         .formation-details {
             background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
@@ -216,6 +264,114 @@
 
         .footer a:hover {
             text-decoration: underline;
+        }
+
+        /* Dialog styles - Centré sur la page */
+        dialog {
+            border: none;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+        }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .dialog-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .dialog-header h3 {
+            font-size: 1.6em;
+            margin-bottom: 5px;
+        }
+
+        .dialog-close-top {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.8em;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .dialog-close-top:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .dialog-content {
+            padding: 25px 30px;
+            max-height: calc(85vh - 200px);
+            overflow-y: auto;
+        }
+
+        .address-info {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.7;
+            font-size: 1.05em;
+        }
+
+        .address-info strong {
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .close-button:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #63378a 100%);
+            transform: scale(1.02);
+        }
+
+        .close-button:focus {
+            outline: 3px solid #764ba2;
+            outline-offset: 3px;
         }
 
         @media (min-width: 768px) {
@@ -270,6 +426,19 @@
             .formation-title {
                 font-size: 1.1em;
             }
+
+            #map {
+                height: 300px;
+            }
+
+            dialog {
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .dialog-content {
+                padding: 20px 15px;
+            }
         }
     </style>
 </head>
@@ -283,7 +452,10 @@
 
         <div class="inscription-banner">
             <h2>📝 Inscrivez-vous au concours !</h2>
-            <a href="https://dane.site.ac-lille.fr/2025/10/01/le-concours-de-la-creativite-et-de-la-citoyennete-numerique/" class="inscription-link" target="_blank">
+            <a href="https://dane.site.ac-lille.fr/2025/10/01/le-concours-de-la-creativite-et-de-la-citoyennete-numerique/" 
+               class="inscription-link" 
+               target="_blank" 
+               rel="noopener noreferrer">
                 🏆 Concours Créativité et Citoyenneté Numériques
             </a>
         </div>
@@ -292,7 +464,9 @@
             <h2>📖 À propos</h2>
             <p>
                 Les <strong>Formations Citoyen Numérique</strong> s'inscrivent dans le cadre de la
-                <a href="https://eduscol.education.fr/3730/charte-pour-l-education-la-culture-et-la-citoyennete-numeriques" target="_blank" rel="noopener noreferrer">
+                <a href="https://eduscol.education.fr/3730/charte-pour-l-education-la-culture-et-la-citoyennete-numeriques" 
+                   target="_blank" 
+                   rel="noopener noreferrer">
                     Charte pour l'éducation, la culture et la citoyenneté numériques
                 </a>
                 du Ministère de l'Éducation nationale.
@@ -304,126 +478,18 @@
 
         <div class="content">
             <h2 class="section-title">📚 Formations par thématique</h2>
-
-            <div class="thematic-section">
-                <div class="thematic-title">🔓 Ressources libres et co-création</div>
-                <div class="formations-grid">
-                    <div class="formation-card">
-                        <div class="formation-title">Co-création de ressources en licences libres</div>
-                        <div class="formation-info">📍 Lycée Guy Mollet, Arras</div>
-                        <div class="formation-details">
-                            <p>📅 Mercredi 26 novembre 2025</p>
-                            <p>🕐 13h30 - 16h30</p>
-                        </div>
-                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30332/tab/trainee/pill/individualTrainingPlan/infos/101723%7C01%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
-                    </div>
-
-                    <div class="formation-card">
-                        <div class="formation-title">Co-création de ressources en licences libres</div>
-                        <div class="formation-info">📍 Collège Verlaine, Lille</div>
-                        <div class="formation-details">
-                            <p>📅 Mercredi 14 janvier 2026</p>
-                            <p>🕐 13h30 - 16h30</p>
-                        </div>
-                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30339/tab/trainee/pill/individualTrainingPlan/infos/101723%7C02%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
-                    </div>
-                </div>
+            
+            <div class="search-container">
+                <label for="searchBar" style="display: block; margin-bottom: 10px; color: #333; font-weight: bold;">
+                    🔍 Rechercher une formation ou une ville
+                </label>
+                <input type="search" 
+                       id="searchBar" 
+                       placeholder="Ex: Lille, IA, Vidéo..." 
+                       aria-label="Recherche de formations">
             </div>
 
-            <div class="thematic-section">
-                <div class="thematic-title">💚 Bien-être et débat numérique</div>
-                <div class="formations-grid">
-                    <div class="formation-card">
-                        <div class="formation-title">Débat radio : bien-être numérique</div>
-                        <div class="formation-info">📍 Lycée du Pays de Saint-Omer, Saint-Omer</div>
-                        <div class="formation-details">
-                            <p>📅 Mercredi 12 novembre 2025</p>
-                            <p>🕐 13h30 - 16h30</p>
-                        </div>
-                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30001/tab/trainee/pill/individualTrainingPlan/infos/101724%7C01%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
-                    </div>
-
-                    <div class="formation-card">
-                        <div class="formation-title">Débat radio : bien-être numérique</div>
-                        <div class="formation-info">📍 Lycée Sannier, Boulogne-sur-Mer</div>
-                        <div class="formation-details">
-                            <p>📅 Mercredi 3 décembre 2025</p>
-                            <p>🕐 13h30 - 16h30</p>
-                        </div>
-                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30005/tab/trainee/pill/individualTrainingPlan/infos/101724%7C02%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
-                    </div>
-
-                    <div class="formation-card">
-                        <div class="formation-title">Débat radio : bien-être numérique</div>
-                        <div class="formation-info">📍 Lycée Paul Hazard, Armentières</div>
-                        <div class="formation-details">
-                            <p>📅 Mercredi 7 janvier 2026</p>
-                            <p>🕐 13h30 - 16h30</p>
-                        </div>
-                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30006/tab/trainee/pill/individualTrainingPlan/infos/101724%7C03%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="thematic-section">
-                <div class="thematic-title">🎬 Image, vidéo et identité numérique</div>
-                <div class="formations-grid">
-                    <div class="formation-card">
-                        <div class="formation-title">Vidéo et image de soi</div>
-                        <div class="formation-info">📍 Lycée Guy Mollet, Arras</div>
-                        <div class="formation-details">
-                            <p>📅 Mercredi 17 décembre 2025</p>
-                            <p>🕐 13h30 - 16h30</p>
-                        </div>
-                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30344/tab/trainee/pill/individualTrainingPlan/infos/101725%7C01%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
-                    </div>
-
-                    <div class="formation-card">
-                        <div class="formation-title">Vidéo et image de soi</div>
-                        <div class="formation-info">📍 Collège Verlaine, Lille</div>
-                        <div class="formation-details">
-                            <p>📅 Mercredi 19 novembre 2025</p>
-                            <p>🕐 13h30 - 16h30</p>
-                        </div>
-                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30348/tab/trainee/pill/individualTrainingPlan/infos/101725%7C02%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="thematic-section">
-                <div class="thematic-title">🧠 Esprit critique et intelligence artificielle</div>
-                <div class="formations-grid">
-                    <div class="formation-card">
-                        <div class="formation-title">L'esprit critique à l'ère de l'IA</div>
-                        <div class="formation-info">📍 Lycée Wallon, Valenciennes</div>
-                        <div class="formation-details">
-                            <p>📅 Mercredi 10 décembre 2025</p>
-                            <p>🕐 13h30 - 16h30</p>
-                        </div>
-                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30182/tab/trainee/pill/individualTrainingPlan/infos/101726%7C01%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
-                    </div>
-
-                    <div class="formation-card">
-                        <div class="formation-title">L'esprit critique à l'ère de l'IA</div>
-                        <div class="formation-info">📍 Lycée Giraud Sannier, Boulogne-sur-Mer</div>
-                        <div class="formation-details">
-                            <p>📅 Mercredi 17 décembre 2025</p>
-                            <p>🕐 13h30 - 16h30</p>
-                        </div>
-                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30180/tab/trainee/pill/individualTrainingPlan/infos/101726%7C02%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
-                    </div>
-
-                    <div class="formation-card">
-                        <div class="formation-title">L'esprit critique à l'ère de l'IA</div>
-                        <div class="formation-info">📍 Collège Verlaine, Lille</div>
-                        <div class="formation-details">
-                            <p>📅 Mercredi 14 janvier 2026</p>
-                            <p>🕐 13h30 - 16h30</p>
-                        </div>
-                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30179/tab/trainee/pill/individualTrainingPlan/infos/101726%7C03%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
-                    </div>
-                </div>
-            </div>
+            <div id="formationsContainer"></div>
         </div>
 
         <div class="footer">
@@ -431,5 +497,264 @@
             <p>Pour toute question : <a href="mailto:dane@ac-lille.fr">dane@ac-lille.fr</a></p>
         </div>
     </div>
+
+    <!-- Dialog popup centré -->
+    <dialog id="locationDialog" aria-labelledby="dialogTitle">
+        <div class="dialog-header">
+            <button class="dialog-close-top" id="closeDialogTop" aria-label="Fermer">×</button>
+            <h3 id="dialogTitle">Localisation</h3>
+            <p id="dialogSubtitle"></p>
+        </div>
+        <div class="dialog-content">
+            <div class="address-info" id="addressInfo"></div>
+            <div id="map"></div>
+            <button id="closeDialogBtn" class="close-button">✕ Fermer la carte</button>
+        </div>
+    </dialog>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <script>
+        const formationsData = [
+            {
+                thematic: "🔓 Ressources libres et co-création",
+                title: "Co-création de ressources en licences libres",
+                locationName: "Lycée Guy Mollet",
+                locationCity: "Arras",
+                address: "57 Rue Bocquet Flochel, 62000 Arras",
+                coordinates: [50.292177, 2.779585],
+                date: "Mercredi 26 novembre 2025",
+                time: "13h30 - 16h30",
+                inscriptionLink: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30332/tab/trainee/pill/individualTrainingPlan/infos/101723%7C01%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00"
+            },
+            {
+                thematic: "🔓 Ressources libres et co-création",
+                title: "Co-création de ressources en licences libres",
+                locationName: "Collège Verlaine",
+                locationCity: "Lille",
+                address: "13 Rue Ferdinand Mathias, 59000 Lille",
+                coordinates: [50.629354, 3.057163],
+                date: "Mercredi 14 janvier 2026",
+                time: "13h30 - 16h30",
+                inscriptionLink: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30339/tab/trainee/pill/individualTrainingPlan/infos/101723%7C02%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00"
+            },
+            {
+                thematic: "💚 Bien-être et débat numérique",
+                title: "Débat radio : bien-être numérique",
+                locationName: "Lycée du Pays de Saint-Omer",
+                locationCity: "Saint-Omer",
+                address: "796 Rue du Guindal, 62500 Saint-Omer",
+                coordinates: [50.750815, 2.253126],
+                date: "Mercredi 12 novembre 2025",
+                time: "13h30 - 16h30",
+                inscriptionLink: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30001/tab/trainee/pill/individualTrainingPlan/infos/101724%7C01%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00"
+            },
+            {
+                thematic: "💚 Bien-être et débat numérique",
+                title: "Débat radio : bien-être numérique",
+                locationName: "Lycée Giraud Sannier",
+                locationCity: "Boulogne-sur-Mer",
+                address: "1 Avenue du Président John Fitzgerald Kennedy, 62200 Boulogne-sur-Mer",
+                coordinates: [50.726482, 1.614891],
+                date: "Mercredi 3 décembre 2025",
+                time: "13h30 - 16h30",
+                inscriptionLink: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30005/tab/trainee/pill/individualTrainingPlan/infos/101724%7C02%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00"
+            },
+            {
+                thematic: "💚 Bien-être et débat numérique",
+                title: "Débat radio : bien-être numérique",
+                locationName: "Lycée Paul Hazard",
+                locationCity: "Armentières",
+                address: "37 Rue Paul Bert, 59280 Armentières",
+                coordinates: [50.687341, 2.881562],
+                date: "Mercredi 7 janvier 2026",
+                time: "13h30 - 16h30",
+                inscriptionLink: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30006/tab/trainee/pill/individualTrainingPlan/infos/101724%7C03%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00"
+            },
+            {
+                thematic: "🎬 Image, vidéo et identité numérique",
+                title: "Vidéo et image de soi",
+                locationName: "Lycée Guy Mollet",
+                locationCity: "Arras",
+                address: "57 Rue Bocquet Flochel, 62000 Arras",
+                coordinates: [50.292177, 2.779585],
+                date: "Mercredi 17 décembre 2025",
+                time: "13h30 - 16h30",
+                inscriptionLink: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30344/tab/trainee/pill/individualTrainingPlan/infos/101725%7C01%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00"
+            },
+            {
+                thematic: "🎬 Image, vidéo et identité numérique",
+                title: "Vidéo et image de soi",
+                locationName: "Collège Verlaine",
+                locationCity: "Lille",
+                address: "13 Rue Ferdinand Mathias, 59000 Lille",
+                coordinates: [50.629354, 3.057163],
+                date: "Mercredi 19 novembre 2025",
+                time: "13h30 - 16h30",
+                inscriptionLink: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30348/tab/trainee/pill/individualTrainingPlan/infos/101725%7C02%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00"
+            },
+            {
+                thematic: "🧠 Esprit critique et intelligence artificielle",
+                title: "L'esprit critique à l'ère de l'IA",
+                locationName: "Lycée Henri Wallon",
+                locationCity: "Valenciennes",
+                address: "16 Place de la République, 59300 Valenciennes",
+                coordinates: [50.359012, 3.522886],
+                date: "Mercredi 10 décembre 2025",
+                time: "13h30 - 16h30",
+                inscriptionLink: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30182/tab/trainee/pill/individualTrainingPlan/infos/101726%7C01%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00"
+            },
+            {
+                thematic: "🧠 Esprit critique et intelligence artificielle",
+                title: "L'esprit critique à l'ère de l'IA",
+                locationName: "Lycée Giraud Sannier",
+                locationCity: "Boulogne-sur-Mer",
+                address: "1 Avenue du Président John Fitzgerald Kennedy, 62200 Boulogne-sur-Mer",
+                coordinates: [50.726482, 1.614891],
+                date: "Mercredi 17 décembre 2025",
+                time: "13h30 - 16h30",
+                inscriptionLink: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30180/tab/trainee/pill/individualTrainingPlan/infos/101726%7C02%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00"
+            },
+            {
+                thematic: "🧠 Esprit critique et intelligence artificielle",
+                title: "L'esprit critique à l'ère de l'IA",
+                locationName: "Collège Verlaine",
+                locationCity: "Lille",
+                address: "13 Rue Ferdinand Mathias, 59000 Lille",
+                coordinates: [50.629354, 3.057163],
+                date: "Mercredi 14 janvier 2026",
+                time: "13h30 - 16h30",
+                inscriptionLink: "https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30179/tab/trainee/pill/individualTrainingPlan/infos/101726%7C03%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00"
+            }
+        ];
+
+        const container = document.getElementById('formationsContainer');
+        const dialog = document.getElementById('locationDialog');
+        const dialogTitle = document.getElementById('dialogTitle');
+        const dialogSubtitle = document.getElementById('dialogSubtitle');
+        const addressInfo = document.getElementById('addressInfo');
+        const closeBtn = document.getElementById('closeDialogBtn');
+        const closeBtnTop = document.getElementById('closeDialogTop');
+        const searchBar = document.getElementById('searchBar');
+
+        let map = null;
+        let marker = null;
+
+        function openLocationDialog(formation) {
+            dialogTitle.textContent = formation.locationName;
+            dialogSubtitle.textContent = formation.locationCity;
+            addressInfo.innerHTML = `<strong>📍 Adresse :</strong><br>${formation.address}`;
+
+            if (!map) {
+                map = L.map('map').setView(formation.coordinates, 16);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors',
+                    maxZoom: 19
+                }).addTo(map);
+                marker = L.marker(formation.coordinates)
+                    .bindPopup(`<strong>${formation.locationName}</strong><br>${formation.address}`)
+                    .addTo(map);
+            } else {
+                map.setView(formation.coordinates, 16);
+                marker.setLatLng(formation.coordinates);
+                marker.setPopupContent(`<strong>${formation.locationName}</strong><br>${formation.address}`);
+            }
+
+            dialog.showModal();
+            setTimeout(() => {
+                map.invalidateSize();
+                marker.openPopup();
+            }, 150);
+        }
+
+        function createFormationCard(formation) {
+            const card = document.createElement('div');
+            card.className = 'formation-card';
+
+            card.innerHTML = `
+                <div class="formation-title">${formation.title}</div>
+                <div class="formation-info">
+                    📍 <button class="location-button" type="button">${formation.locationName}, ${formation.locationCity}</button>
+                </div>
+                <div class="formation-details">
+                    <p>📅 ${formation.date}</p>
+                    <p>🕐 ${formation.time}</p>
+                </div>
+                <a href="${formation.inscriptionLink}" class="formation-link" target="_blank" rel="noopener noreferrer">
+                    ✍️ S'inscrire
+                </a>
+            `;
+
+            card.querySelector('.location-button').addEventListener('click', () => {
+                openLocationDialog(formation);
+            });
+
+            return card;
+        }
+
+        function renderFormations(filter = '') {
+            const filtered = formationsData.filter(f => {
+                const searchText = filter.toLowerCase();
+                return f.title.toLowerCase().includes(searchText) || 
+                       f.locationCity.toLowerCase().includes(searchText) ||
+                       f.locationName.toLowerCase().includes(searchText);
+            });
+
+            container.innerHTML = '';
+
+            const grouped = {};
+            filtered.forEach(f => {
+                if (!grouped[f.thematic]) {
+                    grouped[f.thematic] = [];
+                }
+                grouped[f.thematic].push(f);
+            });
+
+            for (const thematic in grouped) {
+                const section = document.createElement('div');
+                section.className = 'thematic-section';
+
+                const title = document.createElement('h3');
+                title.className = 'thematic-title';
+                title.textContent = thematic;
+                section.appendChild(title);
+
+                const grid = document.createElement('div');
+                grid.className = 'formations-grid';
+
+                grouped[thematic].forEach(formation => {
+                    grid.appendChild(createFormationCard(formation));
+                });
+
+                section.appendChild(grid);
+                container.appendChild(section);
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="text-align: center; font-size: 1.2em; color: #666; padding: 40px;">Aucune formation ne correspond à votre recherche.</p>';
+            }
+        }
+
+        searchBar.addEventListener('input', (e) => {
+            renderFormations(e.target.value);
+        });
+
+        closeBtn.addEventListener('click', () => {
+            dialog.close();
+        });
+
+        closeBtnTop.addEventListener('click', () => {
+            dialog.close();
+        });
+
+        dialog.addEventListener('cancel', (e) => {
+            e.preventDefault();
+        });
+
+        renderFormations();
+    </script>
 </body>
 </html>
