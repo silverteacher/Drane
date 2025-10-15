@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formations Citoyen Numérique - Hauts-de-France</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+            margin-bottom: 8px;
+        }
+
+        .intro {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            margin: 20px;
+        }
+
+        .intro h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .intro p {
+            font-size: 1.05em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .intro a {
+            color: #667eea;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .intro a:hover {
+            text-decoration: underline;
+        }
+
+        .content {
+            padding: 30px 40px;
+            background: #fafbfc;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .thematic-section {
+            margin-bottom: 50px;
+        }
+
+        .thematic-title {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border-radius: 15px;
+            border-left: 6px solid #667eea;
+            font-weight: bold;
+        }
+
+        .formations-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .formation-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .formation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .formation-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .formation-info {
+            font-size: 1.05em;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .formation-details {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 12px;
+            font-size: 0.95em;
+        }
+
+        .formation-link {
+            display: inline-block;
+            margin-top: 15px;
+            background: white;
+            color: #667eea;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .formation-link:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 0.95em;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (min-width: 768px) {
+            .formations-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .formations-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header .subtitle {
+                font-size: 1em;
+            }
+
+            .intro,
+            .content {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .thematic-title {
+                font-size: 1.3em;
+                padding: 15px;
+            }
+
+            .formation-card {
+                padding: 18px;
+            }
+
+            .formation-title {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Formations Citoyen Numérique</h1>
+            <div class="subtitle">Académie des Hauts-de-France</div>
+            <div class="subtitle">Année scolaire 2025-2026</div>
+        </div>
+
+        <div class="intro">
+            <h2>📖 À propos</h2>
+            <p>
+                Les <strong>Formations Citoyen Numérique</strong> s'inscrivent dans le cadre de la
+                <a href="https://eduscol.education.fr/3730/charte-pour-l-education-la-culture-et-la-citoyennete-numeriques" target="_blank" rel="noopener noreferrer">
+                    Charte pour l'éducation, la culture et la citoyenneté numériques
+                </a>
+                du Ministère de l'Éducation nationale.
+            </p>
+            <p>
+                Ces formations visent à accompagner tous les acteurs éducatifs dans une utilisation responsable, éthique et sécurisée des technologies numériques.
+            </p>
+        </div>
+
+        <div class="content">
+            <h2 class="section-title">📚 Formations par thématique</h2>
+
+            <div class="thematic-section">
+                <div class="thematic-title">🔓 Ressources libres et co-création</div>
+                <div class="formations-grid">
+                    <div class="formation-card">
+                        <div class="formation-title">Co-création de ressources en licences libres</div>
+                        <div class="formation-info">📍 Lycée Guy Mollet, Arras</div>
+                        <div class="formation-details">
+                            <p>📅 Mercredi 26 novembre 2025</p>
+                            <p>🕐 13h30 - 16h30</p>
+                        </div>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30332/tab/trainee/pill/individualTrainingPlan/infos/101723%7C01%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
+                    </div>
+
+                    <div class="formation-card">
+                        <div class="formation-title">Co-création de ressources en licences libres</div>
+                        <div class="formation-info">📍 Collège Verlaine, Lille</div>
+                        <div class="formation-details">
+                            <p>📅 Mercredi 14 janvier 2026</p>
+                            <p>🕐 13h30 - 16h30</p>
+                        </div>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30339/tab/trainee/pill/individualTrainingPlan/infos/101723%7C02%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thematic-section">
+                <div class="thematic-title">💚 Bien-être et débat numérique</div>
+                <div class="formations-grid">
+                    <div class="formation-card">
+                        <div class="formation-title">Débat radio : bien-être numérique</div>
+                        <div class="formation-info">📍 Lycée du Pays de Saint-Omer, Saint-Omer</div>
+                        <div class="formation-details">
+                            <p>📅 Mercredi 12 novembre 2025</p>
+                            <p>🕐 13h30 - 16h30</p>
+                        </div>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30001/tab/trainee/pill/individualTrainingPlan/infos/101724%7C01%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
+                    </div>
+
+                    <div class="formation-card">
+                        <div class="formation-title">Débat radio : bien-être numérique</div>
+                        <div class="formation-info">📍 Lycée Sannier, Boulogne-sur-Mer</div>
+                        <div class="formation-details">
+                            <p>📅 Mercredi 3 décembre 2025</p>
+                            <p>🕐 13h30 - 16h30</p>
+                        </div>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30005/tab/trainee/pill/individualTrainingPlan/infos/101724%7C02%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
+                    </div>
+
+                    <div class="formation-card">
+                        <div class="formation-title">Débat radio : bien-être numérique</div>
+                        <div class="formation-info">📍 Lycée Paul Hazard, Armentières</div>
+                        <div class="formation-details">
+                            <p>📅 Mercredi 7 janvier 2026</p>
+                            <p>🕐 13h30 - 16h30</p>
+                        </div>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30006/tab/trainee/pill/individualTrainingPlan/infos/101724%7C03%7CS1%7C2025-11-05_15:00:00%7C2025-11-05_16:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thematic-section">
+                <div class="thematic-title">🎬 Image, vidéo et identité numérique</div>
+                <div class="formations-grid">
+                    <div class="formation-card">
+                        <div class="formation-title">Vidéo et image de soi</div>
+                        <div class="formation-info">📍 Lycée Guy Mollet, Arras</div>
+                        <div class="formation-details">
+                            <p>📅 Mercredi 17 décembre 2025</p>
+                            <p>🕐 13h30 - 16h30</p>
+                        </div>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30344/tab/trainee/pill/individualTrainingPlan/infos/101725%7C01%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
+                    </div>
+
+                    <div class="formation-card">
+                        <div class="formation-title">Vidéo et image de soi</div>
+                        <div class="formation-info">📍 Collège Verlaine, Lille</div>
+                        <div class="formation-details">
+                            <p>📅 Mercredi 19 novembre 2025</p>
+                            <p>🕐 13h30 - 16h30</p>
+                        </div>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30348/tab/trainee/pill/individualTrainingPlan/infos/101725%7C02%7CS1%7C2025-11-04_18:00:00%7C2025-11-04_19:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thematic-section">
+                <div class="thematic-title">🧠 Esprit critique et intelligence artificielle</div>
+                <div class="formations-grid">
+                    <div class="formation-card">
+                        <div class="formation-title">L'esprit critique à l'ère de l'IA</div>
+                        <div class="formation-info">📍 Lycée Wallon, Valenciennes</div>
+                        <div class="formation-details">
+                            <p>📅 Mercredi 10 décembre 2025</p>
+                            <p>🕐 13h30 - 16h30</p>
+                        </div>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30182/tab/trainee/pill/individualTrainingPlan/infos/101726%7C01%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
+                    </div>
+
+                    <div class="formation-card">
+                        <div class="formation-title">L'esprit critique à l'ère de l'IA</div>
+                        <div class="formation-info">📍 Lycée Giraud Sannier, Boulogne-sur-Mer</div>
+                        <div class="formation-details">
+                            <p>📅 Mercredi 17 décembre 2025</p>
+                            <p>🕐 13h30 - 16h30</p>
+                        </div>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30180/tab/trainee/pill/individualTrainingPlan/infos/101726%7C02%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
+                    </div>
+
+                    <div class="formation-card">
+                        <div class="formation-title">L'esprit critique à l'ère de l'IA</div>
+                        <div class="formation-info">📍 Collège Verlaine, Lille</div>
+                        <div class="formation-details">
+                            <p>📅 Mercredi 14 janvier 2026</p>
+                            <p>🕐 13h30 - 16h30</p>
+                        </div>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30179/tab/trainee/pill/individualTrainingPlan/infos/101726%7C03%7CS1%7C2025-12-02_17:00:00%7C2025-12-02_18:00:00" class="formation-link" target="_blank">✍️ S'inscrire</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Académie des Hauts-de-France</p>
+            <p>Pour toute question : <a href="mailto:dane@ac-lille.fr">dane@ac-lille.fr</a></p>
+        </div>
+    </div>
+</body>
+</html>
