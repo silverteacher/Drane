@@ -1,0 +1,2194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Enquête Générative - Interface Enquêteur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #5B8DEE;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --success: #95E1D3;
+            --info: #6C5CE7;
+            --warning: #FFA500;
+            --dark: #2D3436;
+            --light: #DFE6E9;
+            --bg-light: #F8F9FA;
+            --purple: #A29BFE;
+            --orange: #FFEAA7;
+            --blue: #74B9FF;
+            --green: #55EFC4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6c5ce7 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Bannière d'aventure */
+        .adventure-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .adventure-banner::before {
+            content: "🎯🔍📚✨🎨🎵💡";
+            position: absolute;
+            top: 50%;
+            left: -100px;
+            font-size: 3rem;
+            opacity: 0.2;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            from { transform: translateX(0) translateY(-50%); }
+            to { transform: translateX(calc(100vw + 100px)) translateY(-50%); }
+        }
+
+        .adventure-banner h1 {
+            color: white;
+            font-size: 2.5rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .adventure-banner .mission {
+            font-size: 1.3rem;
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .adventure-banner .tagline {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            color: var(--accent);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        /* Dashboard principal */
+        .dashboard {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+
+        /* Panneau latéral - Carnet d'enquête */
+        .sidebar {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .notebook-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border: 3px solid var(--accent);
+        }
+
+        .notebook-panel h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Timer coloré */
+        .timer {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .timer-display {
+            font-size: 2.8rem;
+            color: white;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .timer-label {
+            font-size: 0.9rem;
+            color: white;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+
+        /* Compteur de fragments */
+        .fragments-counter {
+            background: linear-gradient(135deg, var(--success) 0%, var(--secondary) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .fragments-counter .count {
+            font-size: 3rem;
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .fragments-counter .label {
+            color: white;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Aventures pédagogiques */
+        .adventures-list {
+            list-style: none;
+        }
+
+        .adventure-item {
+            background: linear-gradient(135deg, var(--light) 0%, white 100%);
+            padding: 1rem;
+            margin: 0.8rem 0;
+            border-radius: 10px;
+            border-left: 5px solid var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .adventure-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .adventure-item.unlocked {
+            border-left-color: var(--success);
+            background: linear-gradient(135deg, var(--green) 0%, var(--success) 100%);
+        }
+
+        .adventure-item.active {
+            border-left-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            box-shadow: 0 5px 25px rgba(91, 141, 238, 0.5);
+        }
+
+        .adventure-icon {
+            font-size: 2.5rem;
+            filter: grayscale(100%);
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+
+        .adventure-item.unlocked .adventure-icon,
+        .adventure-item.active .adventure-icon {
+            filter: grayscale(0%);
+            opacity: 1;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .adventure-info {
+            flex: 1;
+        }
+
+        .adventure-name {
+            font-weight: bold;
+            color: var(--dark);
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .adventure-item.active .adventure-name,
+        .adventure-item.unlocked .adventure-name {
+            color: white;
+        }
+
+        .adventure-description {
+            font-size: 0.75rem;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+
+        .adventure-item.active .adventure-description,
+        .adventure-item.unlocked .adventure-description {
+            color: white;
+            opacity: 0.9;
+        }
+
+        .adventure-status {
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Zone de contenu principale */
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            min-height: 600px;
+        }
+
+        /* Section d'acte */
+        .act-section {
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .act-section.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        /* En-tête d'acte coloré */
+        .act-header {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            color: white;
+            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .act-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .act-header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .act-header .gesture-tag {
+            display: inline-block;
+            background: white;
+            color: var(--info);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        /* Message du Prompt Master */
+        .prompt-master-message {
+            background: linear-gradient(135deg, var(--info) 0%, var(--purple) 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+            color: white;
+        }
+
+        .prompt-master-message h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .transmission {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-line;
+            line-height: 1.8;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Cartes interactives */
+        .interactive-card {
+            background: linear-gradient(135deg, var(--light) 0%, white 100%);
+            border: 3px solid var(--secondary);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .interactive-card h3 {
+            color: var(--info);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .interactive-card .description {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .tool-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin: 0.2rem;
+        }
+
+        /* Cartes dilemmes */
+        .dilemma-card {
+            background: linear-gradient(135deg, var(--orange) 0%, var(--accent) 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 30px rgba(255, 230, 109, 0.5);
+            border: 3px solid var(--warning);
+        }
+
+        .dilemma-card-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .dilemma-card-header h3 {
+            color: var(--dark);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .dilemma-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .situation-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border-left: 5px solid var(--warning);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dilemma-question {
+            font-size: 1.5rem;
+            color: var(--dark);
+            font-weight: bold;
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+        }
+
+        /* Options de vote */
+        .options-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .option-item {
+            background: white;
+            padding: 1.2rem;
+            margin: 0.8rem 0;
+            border-radius: 12px;
+            border-left: 5px solid var(--secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--success) 100%);
+            color: white;
+        }
+
+        .option-item.selected {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);
+            color: white;
+            border-left-color: var(--info);
+            transform: scale(1.05);
+        }
+
+        /* Zone de réponse */
+        .response-area {
+            background: linear-gradient(135deg, var(--light) 0%, white 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 3px dashed var(--secondary);
+        }
+
+        .response-area h4 {
+            color: var(--info);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .response-area textarea,
+        .response-area input[type="text"] {
+            width: 100%;
+            background: white;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            color: var(--dark);
+            padding: 1rem;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .response-area textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .response-area textarea:focus,
+        .response-area input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
+        }
+
+        /* Codes */
+        .code-box {
+            background: var(--dark);
+            color: var(--green);
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-box.danger {
+            border: 3px solid var(--warning);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+        }
+
+        .code-box.safe {
+            border: 3px solid var(--success);
+            background: linear-gradient(135deg, var(--success) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        /* Fragment débloqué */
+        .fragment-unlocked {
+            background: linear-gradient(135deg, var(--success) 0%, var(--green) 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(85, 239, 196, 0.6);
+            animation: fragmentReveal 1s ease-out;
+            color: white;
+        }
+
+        @keyframes fragmentReveal {
+            0% { 
+                opacity: 0;
+                transform: scale(0.5) rotateY(180deg);
+            }
+            100% { 
+                opacity: 1;
+                transform: scale(1) rotateY(0);
+            }
+        }
+
+        .fragment-unlocked h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .fragment-unlocked .fragment-text {
+            font-size: 1.6rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1rem;
+        }
+
+        .fragment-unlocked .fragment-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: spin 2s ease-in-out;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Interruptions spéciales */
+        .interruption {
+            background: linear-gradient(135deg, var(--warning) 0%, var(--orange) 100%);
+            border: 5px solid var(--accent);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 10px 50px rgba(255, 230, 109, 0.7);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .interruption h3 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .interruption .description {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Quiz de révision */
+        .quiz-card {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--info) 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            color: white;
+            box-shadow: 0 8px 30px rgba(108, 92, 231, 0.5);
+        }
+
+        .quiz-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .quiz-question {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .correct-answer {
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scénarios avec votes */
+        .scenario-vote {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            color: white;
+            box-shadow: 0 5px 20px rgba(116, 185, 255, 0.4);
+        }
+
+        .scenario-vote h5 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .vote-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .vote-btn {
+            flex: 1;
+            padding: 1.2rem;
+            border: 3px solid white;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .vote-btn:hover {
+            background: white;
+            color: var(--info);
+            transform: scale(1.05);
+        }
+
+        .vote-btn.selected {
+            background: var(--success);
+            border-color: var(--success);
+            color: var(--dark);
+            box-shadow: 0 5px 20px rgba(149, 225, 211, 0.6);
+        }
+
+        /* Messages info */
+        .info-box {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            box-shadow: 0 3px 10px rgba(108, 92, 231, 0.3);
+        }
+
+        .info-box.warning {
+            background: linear-gradient(135deg, var(--warning) 0%, var(--accent) 100%);
+            color: var(--dark);
+        }
+
+        .info-box.success {
+            background: linear-gradient(135deg, var(--success) 0%, var(--green) 100%);
+        }
+
+        /* Boutons d'action */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--info) 100%);
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(91, 141, 238, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(91, 141, 238, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--success) 100%);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.6);
+        }
+
+        .validate-btn {
+            background: linear-gradient(135deg, var(--success) 0%, var(--green) 100%);
+            box-shadow: 0 5px 20px rgba(85, 239, 196, 0.5);
+            animation: pulseButton 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseButton {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .validate-btn:hover {
+            box-shadow: 0 8px 30px rgba(85, 239, 196, 0.7);
+            animation: none;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            box-shadow: 0 5px 20px rgba(91, 141, 238, 0.5);
+            font-size: 1.5rem !important;
+        }
+
+        .continue-btn {
+            background: linear-gradient(135deg, var(--orange) 0%, var(--accent) 100%);
+            box-shadow: 0 5px 20px rgba(255, 165, 0, 0.5);
+        }
+
+        /* Carnet final */
+        .final-notebook {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            color: white;
+            box-shadow: 0 15px 50px rgba(255, 107, 157, 0.5);
+        }
+
+        .final-notebook h2 {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .principle {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+            border-left: 5px solid white;
+            backdrop-filter: blur(10px);
+        }
+
+        .principle .number {
+            color: var(--accent);
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 1rem;
+        }
+
+        .principle .title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+        }
+
+        .principle .content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.95;
+        }
+
+        /* Recap final */
+        .final-recap {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .final-recap h3 {
+            color: var(--primary);
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.3);
+        }
+
+        .stat-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .notebook-panel {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .timer,
+            .fragments-counter {
+                flex: 1;
+                min-width: 200px;
+            }
+
+            .adventures-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+                flex: 1 1 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .adventure-banner h1 {
+                font-size: 1.8rem;
+            }
+
+            .dashboard {
+                padding: 0 1rem;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .vote-buttons {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bannière d'aventure -->
+    <div class="adventure-banner">
+        <h1>🎯 L'ENQUÊTE GÉNÉRATIVE 🔍</h1>
+        <p class="mission">À la recherche de l'IA responsable !</p>
+        <div class="tagline">7 Aventures Pédagogiques • 7 Gestes Professionnels • 1 Code à restaurer</div>
+    </div>
+
+    <!-- Dashboard principal -->
+    <div class="dashboard">
+        <!-- Sidebar - Carnet d'enquête -->
+        <aside class="sidebar">
+            <div class="notebook-panel">
+                <h2>📔 Carnet d'Enquête</h2>
+                
+                <!-- Timer -->
+                <div class="timer">
+                    <div class="timer-display" id="timer">90:00</div>
+                    <div class="timer-label">⏱️ Temps restant</div>
+                </div>
+
+                <!-- Compteur de fragments -->
+                <div class="fragments-counter">
+                    <div class="count"><span id="fragments-count">0</span>/7</div>
+                    <div class="label">✨ Fragments collectés</div>
+                </div>
+
+                <!-- Liste des aventures -->
+                <ul class="adventures-list">
+                    <li class="adventure-item active" data-adventure="intro">
+                        <div class="adventure-icon">📡</div>
+                        <div class="adventure-info">
+                            <div class="adventure-name">Transmission</div>
+                            <div class="adventure-description">Le message</div>
+                        </div>
+                    </li>
+                    <li class="adventure-item" data-adventure="documenter">
+                        <div class="adventure-icon">📚</div>
+                        <div class="adventure-info">
+                            <div class="adventure-name">Documenter</div>
+                            <div class="adventure-description">Organiser les savoirs</div>
+                        </div>
+                    </li>
+                    <li class="adventure-item" data-adventure="incarner">
+                        <div class="adventure-icon">🎭</div>
+                        <div class="adventure-info">
+                            <div class="adventure-name">Incarner</div>
+                            <div class="adventure-description">Donner vie aux contenus</div>
+                        </div>
+                    </li>
+                    <li class="adventure-item" data-adventure="visualiser">
+                        <div class="adventure-icon">🎨</div>
+                        <div class="adventure-info">
+                            <div class="adventure-name">Visualiser</div>
+                            <div class="adventure-description">Rendre visible l'invisible</div>
+                        </div>
+                    </li>
+                    <li class="adventure-item" data-adventure="produire">
+                        <div class="adventure-icon">✍️</div>
+                        <div class="adventure-info">
+                            <div class="adventure-name">Produire</div>
+                            <div class="adventure-description">Créer des contenus</div>
+                        </div>
+                    </li>
+                    <li class="adventure-item" data-adventure="presenter">
+                        <div class="adventure-icon">📊</div>
+                        <div class="adventure-info">
+                            <div class="adventure-name">Présenter</div>
+                            <div class="adventure-description">Structurer l'exposition</div>
+                        </div>
+                    </li>
+                    <li class="adventure-item" data-adventure="memoriser">
+                        <div class="adventure-icon">🧠</div>
+                        <div class="adventure-info">
+                            <div class="adventure-name">Mémoriser</div>
+                            <div class="adventure-description">Ancrer les apprentissages</div>
+                        </div>
+                    </li>
+                    <li class="adventure-item" data-adventure="creer">
+                        <div class="adventure-icon">🎵</div>
+                        <div class="adventure-info">
+                            <div class="adventure-name">Créer</div>
+                            <div class="adventure-description">Composer et inventer</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Contenu principal -->
+        <main class="main-content">
+            <!-- Introduction -->
+            <section class="act-section active" id="intro">
+                <div class="prompt-master-message">
+                    <h3>>>> TRANSMISSION INTERCEPTÉE <<<</h3>
+                    <div class="transmission">De : PromptMaster_404
+À : Tous les éducateurs connectés
+
+ALERTE SYSTÈME : Les règles éthiques de l'intelligence artificielle 
+éducative ont été EFFACÉES de la mémoire collective.
+
+7 gestes pédagogiques ont été corrompus.
+7 fragments du CODE DE L'IA RESPONSABLE ont été dissimulés.
+
+Vous avez 90 minutes pour les retrouver.
+
+Sans ce code, l'IA continuera de se développer... 
+sans garde-fou, sans conscience, sans vous.
+
+La chasse commence. Maintenant.
+
+— Le Prompt Master</div>
+                </div>
+
+                <div class="info-box">
+                    <strong>🎯 Votre mission :</strong> Explorez 7 aventures pédagogiques, résolvez les dilemmes éthiques et juridiques, et collectez les 7 fragments pour reconstituer le Code de l'IA responsable !
+                </div>
+
+                <div class="interactive-card">
+                    <h3>👋 Présentez-vous à l'équipe !</h3>
+                    <div class="description">
+                        Bienvenue, enquêteur ! Présentez-vous dans le <strong>CHAT BBB</strong> :
+                    </div>
+                    <div class="response-area">
+                        <h4>Format : Prénom + Fonction + Une IA que vous connaissez</h4>
+                        <input type="text" placeholder="Exemple : Sophie, CPE, ChatGPT" id="presentation-input">
+                    </div>
+                    <div class="info-box success" style="margin-top: 1rem;">
+                        ✨ L'enquête démarre dès que l'animateur donne le signal !
+                    </div>
+                </div>
+            </section>
+
+            <!-- Aventure 1 : DOCUMENTER -->
+            <section class="act-section" id="documenter">
+                <div class="act-header">
+                    <h2>📚 AVENTURE 1 : DOCUMENTER LES SAVOIRS</h2>
+                    <div class="subtitle">Le geste pédagogique : Organiser et structurer les connaissances</div>
+                    <span class="gesture-tag">🛠️ Outils : NotebookLM + Quizlet</span>
+                </div>
+
+                <div class="interactive-card">
+                    <h3>🔍 Le pouvoir de la documentation intelligente</h3>
+                    <div class="description">
+                        <strong>NotebookLM (Google)</strong> est un assistant de recherche IA qui analyse vos documents et vous aide à les synthétiser, les questionner, et les organiser. Il peut créer des podcasts audio à partir de vos sources !
+                        <br><br>
+                        <strong>Quizlet</strong> utilise l'IA pour transformer vos notes en quiz, flashcards et exercices d'apprentissage adaptatifs.
+                        <br><br>
+                        <strong>Le geste pédagogique :</strong> Documenter, c'est transformer l'information brute en savoir structuré et accessible.
+                        <br><br>
+                        <div class="tool-badge">NotebookLM</div>
+                        <div class="tool-badge">Quizlet AI</div>
+                    </div>
+
+                    <div class="info-box warning">
+                        ⚠️ <strong>Mais attention...</strong> Un témoignage anonyme a été intercepté :
+                    </div>
+
+                    <div class="code-box danger">"Je suis prof d'histoire. J'ai uploadé dans NotebookLM tous mes cours 
+de l'année + des chapitres de manuels scannés + des copies d'élèves 
+pour qu'il me génère des fiches de révision. 
+
+Je ne sais même pas où sont hébergées ces données ni qui y a accès..."</div>
+                </div>
+
+                <!-- Dilemme RGPD -->
+                <div class="dilemma-card">
+                    <div class="dilemma-card-header">
+                        <h3>🚨 DILEMME RGPD #1</h3>
+                        <span class="dilemma-badge">⚖️ Question juridique</span>
+                    </div>
+
+                    <div class="situation-box">
+                        <strong>📋 SITUATION :</strong>
+                        <p style="margin-top: 0.5rem;">
+                            Madame Legrand veut utiliser NotebookLM pour analyser 30 copies d'élèves et générer des synthèses personnalisées. Elle s'apprête à uploader les fichiers (avec prénoms) directement dans l'outil.
+                        </p>
+                    </div>
+
+                    <div class="dilemma-question">💭 A-t-elle le droit de le faire ?</div>
+
+                    <ul class="options-list">
+                        <li class="option-item" data-vote="a">
+                            A) ✅ Oui, sans restriction : c'est du matériel pédagogique
+                        </li>
+                        <li class="option-item" data-vote="b">
+                            B) ⚠️ Oui, mais en anonymisant les prénoms avant
+                        </li>
+                        <li class="option-item" data-vote="c">
+                            C) ❌ Non, c'est interdit : violation du RGPD
+                        </li>
+                        <li class="option-item" data-vote="d">
+                            D) 🤷 Ça dépend de l'outil et de l'hébergement des données
+                        </li>
+                    </ul>
+
+                    <div class="info-box">
+                        💬 <strong>Votez dans le SONDAGE BBB ou partagez votre avis dans le CHAT !</strong>
+                    </div>
+                </div>
+
+                <!-- Exercice pratique -->
+                <div class="response-area">
+                    <h4>🛠️ EXERCICE : Comment documenter de manière responsable ?</h4>
+                    <p>Dans le <strong>CHAT BBB</strong>, proposez UNE bonne pratique pour utiliser NotebookLM ou Quizlet sans violer le RGPD :</p>
+                    <textarea placeholder="Exemple : Anonymiser systématiquement les noms d'élèves avant l'upload..." id="documenter-response"></textarea>
+                </div>
+
+                <!-- Fragment -->
+                <div class="fragment-unlocked" style="display: none;" id="fragment-1">
+                    <div class="fragment-icon">🔐</div>
+                    <h3>FRAGMENT #1 DÉBLOQUÉ !</h3>
+                    <div class="fragment-text">"Protège les données, même dans le prompt."</div>
+                </div>
+            </section>
+
+            <!-- Aventure 2 : INCARNER -->
+            <section class="act-section" id="incarner">
+                <div class="act-header">
+                    <h2>🎭 AVENTURE 2 : INCARNER LES CONTENUS</h2>
+                    <div class="subtitle">Le geste pédagogique : Donner vie et voix aux savoirs</div>
+                    <span class="gesture-tag">🛠️ Outil : Hedra (avatars vidéo parlants)</span>
+                </div>
+
+                <div class="interactive-card">
+                    <h3>🎬 Le pouvoir de l'incarnation numérique</h3>
+                    <div class="description">
+                        <strong>Hedra</strong> crée des avatars vidéo réalistes qui parlent avec votre voix ou une voix synthétique. On peut faire parler Einstein, Marie Curie, ou créer un personnage imaginaire pour expliquer des concepts !
+                        <br><br>
+                        <strong>Le geste pédagogique :</strong> Incarner, c'est rendre vivant un contenu abstrait en lui donnant une forme humaine, une voix, une présence.
+                        <br><br>
+                        <div class="tool-badge">Hedra</div>
+                    </div>
+
+                    <div class="info-box warning">
+                        ⚠️ <strong>Mais attention...</strong> Un nouveau témoignage :
+                    </div>
+
+                    <div class="code-box danger">"J'ai créé un avatar vidéo du Principal avec Hedra pour annoncer 
+les nouvelles règles de vie scolaire. Les élèves adorent !
+
+Mais... je ne lui ai jamais demandé son autorisation..."</div>
+                </div>
+
+                <!-- Dilemme Droit à l'image -->
+                <div class="dilemma-card">
+                    <div class="dilemma-card-header">
+                        <h3>🚨 DILEMME #2 : DROIT À L'IMAGE</h3>
+                        <span class="dilemma-badge">⚖️ Question juridique</span>
+                    </div>
+
+                    <div class="situation-box">
+                        <strong>📋 SITUATION :</strong>
+                        <p style="margin-top: 0.5rem;">
+                            Monsieur Dubois veut créer une vidéo pédagogique avec un avatar de Victor Hugo qui récite ses poèmes. Il utilise une photo d'archive et génère la voix avec IA.
+                        </p>
+                    </div>
+
+                    <div class="dilemma-question">💭 A-t-il le droit de le faire sans autorisation ?</div>
+
+                    <ul class="options-list">
+                        <li class="option-item" data-vote="a">
+                            A) ✅ Oui, Victor Hugo est dans le domaine public
+                        </li>
+                        <li class="option-item" data-vote="b">
+                            B) ⚠️ Oui, mais il faut citer la source de la photo
+                        </li>
+                        <li class="option-item" data-vote="c">
+                            C) ❌ Non, c'est interdit d'usurper l'identité de quelqu'un
+                        </li>
+                        <li class="option-item" data-vote="d">
+                            D) 🤷 Ça dépend si c'est un usage pédagogique ou commercial
+                        </li>
+                    </ul>
+
+                    <div class="info-box">
+                        💬 <strong>Votez et discutez dans le CHAT BBB !</strong>
+                    </div>
+                </div>
+
+                <!-- Exercice pratique -->
+                <div class="response-area">
+                    <h4>🛠️ EXERCICE : Quand peut-on incarner quelqu'un ?</h4>
+                    <p>Dans le <strong>CHAT BBB</strong>, listez 2 situations OÙ l'incarnation IA est acceptable et 2 où elle NE l'est PAS :</p>
+                    <textarea placeholder="Acceptable : ... / Non acceptable : ..." id="incarner-response"></textarea>
+                </div>
+
+                <!-- Fragment -->
+                <div class="fragment-unlocked" style="display: none;" id="fragment-2">
+                    <div class="fragment-icon">🎭</div>
+                    <h3>FRAGMENT #2 DÉBLOQUÉ !</h3>
+                    <div class="fragment-text">"Respecte l'identité, même numérique."</div>
+                </div>
+            </section>
+
+            <!-- Aventure 3 : VISUALISER -->
+            <section class="act-section" id="visualiser">
+                <div class="act-header">
+                    <h2>🎨 AVENTURE 3 : VISUALISER L'INVISIBLE</h2>
+                    <div class="subtitle">Le geste pédagogique : Rendre visible les concepts abstraits</div>
+                    <span class="gesture-tag">🛠️ Outil : Napkin AI (schémas intelligents)</span>
+                </div>
+
+                <div class="interactive-card">
+                    <h3>👁️ Le pouvoir de la visualisation</h3>
+                    <div class="description">
+                        <strong>Napkin AI</strong> transforme n'importe quel texte en schéma visuel automatiquement : mindmaps, diagrammes, infographies...
+                        <br><br>
+                        <strong>Le geste pédagogique :</strong> Visualiser, c'est donner une forme graphique à l'invisible pour faciliter la compréhension.
+                        <br><br>
+                        <div class="tool-badge">Napkin AI</div>
+                    </div>
+
+                    <div class="info-box warning">
+                        ⚠️ <strong>Attention aux biais visuels !</strong>
+                    </div>
+
+                    <div class="code-box danger">"J'ai demandé à Napkin de visualiser 'l'histoire des sciences'.
+Le schéma généré ne montrait QUE des hommes blancs européens.
+
+Aucune femme. Aucun scientifique non-occidental..."</div>
+                </div>
+
+                <!-- Dilemme Biais -->
+                <div class="dilemma-card">
+                    <div class="dilemma-card-header">
+                        <h3>🚨 DILEMME #3 : BIAIS DE REPRÉSENTATION</h3>
+                        <span class="dilemma-badge">⚖️ Question éthique</span>
+                    </div>
+
+                    <div class="situation-box">
+                        <strong>📋 SITUATION :</strong>
+                        <p style="margin-top: 0.5rem;">
+                            Une enseignante génère des schémas sur "les métiers du futur". L'IA représente les ingénieurs comme des hommes et les infirmières comme des femmes.
+                        </p>
+                    </div>
+
+                    <div class="dilemma-question">💭 Que devrait-elle faire ?</div>
+
+                    <ul class="options-list">
+                        <li class="option-item" data-vote="a">
+                            A) 🤷 Rien, c'est juste un reflet de la réalité
+                        </li>
+                        <li class="option-item" data-vote="b">
+                            B) ⚠️ Modifier manuellement pour équilibrer les représentations
+                        </li>
+                        <li class="option-item" data-vote="c">
+                            C) ✅ En parler avec les élèves et les faire réfléchir aux stéréotypes
+                        </li>
+                        <li class="option-item" data-vote="d">
+                            D) ❌ Ne pas utiliser l'IA pour ce type de contenu
+                        </li>
+                    </ul>
+
+                    <div class="info-box">
+                        💬 <strong>Débattez dans le CHAT BBB !</strong>
+                    </div>
+                </div>
+
+                <!-- Exercice pratique -->
+                <div class="response-area">
+                    <h4>🛠️ EXERCICE : Détecter les biais visuels</h4>
+                    <p>Dans le <strong>CHAT BBB</strong>, donnez 2 exemples de biais que l'IA peut reproduire dans ses visualisations :</p>
+                    <textarea placeholder="Exemple : Représenter tous les scientifiques comme des hommes..." id="visualiser-response"></textarea>
+                </div>
+
+                <!-- Fragment -->
+                <div class="fragment-unlocked" style="display: none;" id="fragment-3">
+                    <div class="fragment-icon">👁️</div>
+                    <h3>FRAGMENT #3 DÉBLOQUÉ !</h3>
+                    <div class="fragment-text">"Questionne les représentations générées."</div>
+                </div>
+            </section>
+
+            <!-- Aventure 4 : PRODUIRE -->
+            <section class="act-section" id="produire">
+                <div class="act-header">
+                    <h2>✍️ AVENTURE 4 : PRODUIRE DES CONTENUS</h2>
+                    <div class="subtitle">Le geste pédagogique : Créer des supports pédagogiques</div>
+                    <span class="gesture-tag">🛠️ Outils : Mistral + Canva AI</span>
+                </div>
+
+                <div class="interactive-card">
+                    <h3>✨ Le pouvoir de la production assistée</h3>
+                    <div class="description">
+                        <strong>Mistral</strong> (IA française) génère du texte : cours, exercices, fiches...
+                        <br>
+                        <strong>Canva AI</strong> crée des visuels, infographies, posters...
+                        <br><br>
+                        <strong>Le geste pédagogique :</strong> Produire, c'est créer des supports qui facilitent l'apprentissage.
+                        <br><br>
+                        <div class="tool-badge">Mistral</div>
+                        <div class="tool-badge">Canva AI</div>
+                    </div>
+
+                    <div class="info-box warning">
+                        ⚠️ <strong>Attention à la paternité !</strong>
+                    </div>
+
+                    <div class="code-box danger">"J'ai généré toute ma séquence sur les Lumières avec Mistral.
+Je l'ai distribuée aux élèves sans mentionner l'IA.
+
+Un parent m'a écrit : 'Pourquoi ces textes sont-ils identiques 
+à ceux trouvés sur d'autres sites ?'"</div>
+                </div>
+
+                <!-- Dilemme Paternité -->
+                <div class="dilemma-card">
+                    <div class="dilemma-card-header">
+                        <h3>🚨 DILEMME #4 : PATERNITÉ DU CONTENU</h3>
+                        <span class="dilemma-badge">⚖️ Question éthique</span>
+                    </div>
+
+                    <div class="situation-box">
+                        <strong>📋 SITUATION :</strong>
+                        <p style="margin-top: 0.5rem;">
+                            Un enseignant génère 20 exercices de maths avec IA et les met sur son blog comme "ses créations originales".
+                        </p>
+                    </div>
+
+                    <div class="dilemma-question">💭 Doit-il mentionner l'utilisation de l'IA ?</div>
+
+                    <ul class="options-list">
+                        <li class="option-item" data-vote="a">
+                            A) ❌ Non, il a relu et adapté les exercices
+                        </li>
+                        <li class="option-item" data-vote="b">
+                            B) ⚠️ Oui, en note de bas de page discrète
+                        </li>
+                        <li class="option-item" data-vote="c">
+                            C) ✅ Oui, clairement et visiblement
+                        </li>
+                        <li class="option-item" data-vote="d">
+                            D) 🤷 Ça dépend du contexte
+                        </li>
+                    </ul>
+
+                    <div class="info-box">
+                        💬 <strong>Votez dans le CHAT BBB !</strong>
+                    </div>
+                </div>
+
+                <!-- Exercice pratique -->
+                <div class="response-area">
+                    <h4>🛠️ EXERCICE : Mention de l'IA</h4>
+                    <p>Rédigez une phrase type pour mentionner l'usage de l'IA dans vos documents :</p>
+                    <textarea placeholder="Exemple : 'Ce document a été co-créé avec l'assistance de...'" id="produire-response"></textarea>
+                </div>
+
+                <!-- Fragment -->
+                <div class="fragment-unlocked" style="display: none;" id="fragment-4">
+                    <div class="fragment-icon">✍️</div>
+                    <h3>FRAGMENT #4 DÉBLOQUÉ !</h3>
+                    <div class="fragment-text">"Assume l'usage de l'IA dans tes créations."</div>
+                </div>
+            </section>
+
+            <!-- Aventure 5 : PRÉSENTER -->
+            <section class="act-section" id="presenter">
+                <div class="act-header">
+                    <h2>📊 AVENTURE 5 : PRÉSENTER EFFICACEMENT</h2>
+                    <div class="subtitle">Le geste pédagogique : Structurer et exposer les savoirs</div>
+                    <span class="gesture-tag">🛠️ Outil : Gamma (présentations IA)</span>
+                </div>
+
+                <div class="interactive-card">
+                    <h3>🎤 Le pouvoir de la présentation automatique</h3>
+                    <div class="description">
+                        <strong>Gamma</strong> génère des présentations complètes (slides, mise en page, visuels) à partir d'un simple texte ou d'un plan.
+                        <br><br>
+                        <strong>Le geste pédagogique :</strong> Présenter, c'est organiser visuellement l'information pour la rendre claire et mémorable.
+                        <br><br>
+                        <div class="tool-badge">Gamma</div>
+                    </div>
+
+                    <div class="info-box warning">
+                        ⚠️ <strong>Attention à la véracité !</strong>
+                    </div>
+
+                    <div class="code-box danger">"J'ai généré une présentation sur la Révolution française avec Gamma.
+Slide 12 : 'Marie-Antoinette a dit : Qu'ils mangent de la brioche !'
+
+C'est faux. Elle n'a jamais dit ça.
+Mais je ne l'ai vu qu'APRÈS avoir projeté devant la classe..."</div>
+                </div>
+
+                <!-- Dilemme Véracité -->
+                <div class="dilemma-card">
+                    <div class="dilemma-card-header">
+                        <h3>🚨 DILEMME #5 : VÉRIFICATION DES FAITS</h3>
+                        <span class="dilemma-badge">⚖️ Question de responsabilité</span>
+                    </div>
+
+                    <div class="situation-box">
+                        <strong>📋 SITUATION :</strong>
+                        <p style="margin-top: 0.5rem;">
+                            Une enseignante génère une présentation sur le climat. L'IA inclut une citation attribuée à un scientifique qui n'existe pas.
+                        </p>
+                    </div>
+
+                    <div class="dilemma-question">💭 Qui est responsable de cette erreur ?</div>
+
+                    <ul class="options-list">
+                        <li class="option-item" data-vote="a">
+                            A) L'IA : c'est elle qui a généré l'erreur
+                        </li>
+                        <li class="option-item" data-vote="b">
+                            B) ✅ L'enseignante : elle doit vérifier AVANT d'utiliser
+                        </li>
+                        <li class="option-item" data-vote="c">
+                            C) Personne : c'est un bug technique
+                        </li>
+                        <li class="option-item" data-vote="d">
+                            D) Les deux : responsabilité partagée
+                        </li>
+                    </ul>
+
+                    <div class="info-box">
+                        💬 <strong>Débattez dans le CHAT BBB !</strong>
+                    </div>
+                </div>
+
+                <!-- Exercice pratique -->
+                <div class="response-area">
+                    <h4>🛠️ EXERCICE : Check-list de vérification</h4>
+                    <p>Listez 3 points à vérifier AVANT d'utiliser une présentation générée par IA :</p>
+                    <textarea placeholder="1. Vérifier les citations et sources..." id="presenter-response"></textarea>
+                </div>
+
+                <!-- Fragment -->
+                <div class="fragment-unlocked" style="display: none;" id="fragment-5">
+                    <div class="fragment-icon">🔍</div>
+                    <h3>FRAGMENT #5 DÉBLOQUÉ !</h3>
+                    <div class="fragment-text">"Vérifie toujours ce que l'IA produit."</div>
+                </div>
+            </section>
+
+            <!-- Aventure 6 : MÉMORISER -->
+            <section class="act-section" id="memoriser">
+                <div class="act-header">
+                    <h2>🧠 AVENTURE 6 : MÉMORISER ET ANCRER</h2>
+                    <div class="subtitle">Le geste pédagogique : Faciliter la rétention des savoirs</div>
+                    <span class="gesture-tag">🛠️ Outil : Quizlet AI + Anki</span>
+                </div>
+
+                <div class="interactive-card">
+                    <h3>💡 Le pouvoir de la répétition espacée</h3>
+                    <div class="description">
+                        <strong>Quizlet AI</strong> et <strong>Anki</strong> créent des flashcards intelligentes qui s'adaptent au rythme d'apprentissage de chaque élève.
+                        <br><br>
+                        <strong>Le geste pédagogique :</strong> Mémoriser, c'est créer des conditions pour que le savoir s'ancre durablement.
+                        <br><br>
+                        <div class="tool-badge">Quizlet AI</div>
+                        <div class="tool-badge">Anki</div>
+                    </div>
+
+                    <div class="info-box warning">
+                        ⚠️ <strong>Attention à l'autonomie !</strong>
+                    </div>
+
+                    <div class="code-box danger">"Mes élèves utilisent Quizlet pour TOUT mémoriser.
+Ils ne savent plus apprendre sans l'IA.
+
+Lors du contrôle sans outil numérique, 
+ils étaient perdus..."</div>
+                </div>
+
+                <!-- Dilemme Autonomie -->
+                <div class="dilemma-card">
+                    <div class="dilemma-card-header">
+                        <h3>🚨 DILEMME #6 : DÉPENDANCE À L'IA</h3>
+                        <span class="dilemma-badge">⚖️ Question pédagogique</span>
+                    </div>
+
+                    <div class="situation-box">
+                        <strong>📋 SITUATION :</strong>
+                        <p style="margin-top: 0.5rem;">
+                            Des élèves utilisent systématiquement l'IA pour créer leurs fiches de révision. Ils ne construisent plus leurs propres stratégies de mémorisation.
+                        </p>
+                    </div>
+
+                    <div class="dilemma-question">💭 Comment équilibrer assistance IA et autonomie ?</div>
+
+                    <ul class="options-list">
+                        <li class="option-item" data-vote="a">
+                            A) Interdire l'IA : les élèves doivent se débrouiller seuls
+                        </li>
+                        <li class="option-item" data-vote="b">
+                            B) ✅ Alterner : IA + méthodes traditionnelles
+                        </li>
+                        <li class="option-item" data-vote="c">
+                            C) Laisser libre : chacun trouve sa méthode
+                        </li>
+                        <li class="option-item" data-vote="d">
+                            D) Former aux stratégies de mémorisation AVANT l'IA
+                        </li>
+                    </ul>
+
+                    <div class="info-box">
+                        💬 <strong>Partagez vos stratégies dans le CHAT BBB !</strong>
+                    </div>
+                </div>
+
+                <!-- Exercice pratique -->
+                <div class="response-area">
+                    <h4>🛠️ EXERCICE : Équilibrer IA et autonomie</h4>
+                    <p>Proposez une activité qui combine l'utilisation de l'IA ET le développement de l'autonomie :</p>
+                    <textarea placeholder="Exemple : Faire créer des flashcards avec IA, puis les critiquer et les améliorer..." id="memoriser-response"></textarea>
+                </div>
+
+                <!-- Fragment -->
+                <div class="fragment-unlocked" style="display: none;" id="fragment-6">
+                    <div class="fragment-icon">🧠</div>
+                    <h3>FRAGMENT #6 DÉBLOQUÉ !</h3>
+                    <div class="fragment-text">"Préserve l'autonomie de l'apprenant."</div>
+                </div>
+            </section>
+
+            <!-- Aventure 7 : CRÉER -->
+            <section class="act-section" id="creer">
+                <div class="act-header">
+                    <h2>🎵 AVENTURE 7 : CRÉER ET COMPOSER</h2>
+                    <div class="subtitle">Le geste pédagogique : Stimuler la créativité et l'expression</div>
+                    <span class="gesture-tag">🛠️ Outil : Suno (musique IA)</span>
+                </div>
+
+                <div class="interactive-card">
+                    <h3>🎨 Le pouvoir de la création assistée</h3>
+                    <div class="description">
+                        <strong>Suno</strong> génère des compositions musicales complètes (mélodie, paroles, style) à partir d'un simple texte descriptif.
+                        <br><br>
+                        <strong>Le geste pédagogique :</strong> Créer, c'est permettre l'expression personnelle et l'exploration artistique.
+                        <br><br>
+                        <div class="tool-badge">Suno</div>
+                    </div>
+
+                    <div class="info-box warning">
+                        ⚠️ <strong>Attention à la créativité authentique !</strong>
+                    </div>
+
+                    <div class="code-box danger">"J'ai demandé aux élèves de composer une chanson sur l'écologie.
+Tous ont utilisé Suno.
+
+Résultat : 25 chansons générées par IA, 
+aucune création vraiment personnelle..."</div>
+                </div>
+
+                <!-- Dilemme Créativité -->
+                <div class="dilemma-card">
+                    <div class="dilemma-card-header">
+                        <h3>🚨 DILEMME #7 : CRÉATIVITÉ VS AUTOMATION</h3>
+                        <span class="dilemma-badge">⚖️ Question pédagogique</span>
+                    </div>
+
+                    <div class="situation-box">
+                        <strong>📋 SITUATION :</strong>
+                        <p style="margin-top: 0.5rem;">
+                            Lors d'un projet artistique, un élève soumet une création 100% générée par IA. Il n'a fait que taper un prompt.
+                        </p>
+                    </div>
+
+                    <div class="dilemma-question">💭 Comment évaluer cette "création" ?</div>
+
+                    <ul class="options-list">
+                        <li class="option-item" data-vote="a">
+                            A) ❌ Note 0 : ce n'est pas SA création
+                        </li>
+                        <li class="option-item" data-vote="b">
+                            B) ⚠️ Évaluer la qualité du prompt et l'intention
+                        </li>
+                        <li class="option-item" data-vote="c">
+                            C) ✅ Demander une part de création personnelle en plus
+                        </li>
+                        <li class="option-item" data-vote="d">
+                            D) Redéfinir la consigne pour imposer une création hybride
+                        </li>
+                    </ul>
+
+                    <div class="info-box">
+                        💬 <strong>Débattez de la créativité à l'ère de l'IA dans le CHAT !</strong>
+                    </div>
+                </div>
+
+                <!-- Exercice pratique -->
+                <div class="response-area">
+                    <h4>🛠️ EXERCICE FINAL : Votre position sur l'IA créative</h4>
+                    <p>Complétez cette phrase : "Pour moi, une création assistée par IA est légitime si..." :</p>
+                    <textarea placeholder="...si l'élève apporte une touche personnelle, explique ses choix, adapte le résultat..." id="creer-response"></textarea>
+                </div>
+
+                <!-- Fragment -->
+                <div class="fragment-unlocked" style="display: none;" id="fragment-7">
+                    <div class="fragment-icon">🎨</div>
+                    <h3>FRAGMENT #7 DÉBLOQUÉ !</h3>
+                    <div class="fragment-text">"L'IA suggère, l'humain crée."</div>
+                </div>
+            </section>
+
+            <!-- INTERRUPTION 1 : Quiz Tir au Sort -->
+            <section class="act-section" id="interrupt-1">
+                <div class="interruption">
+                    <h3>⚡ INTERRUPTION ! TIR AU SORT BBB ⚡</h3>
+                    <div class="description">Le Prompt Master vous met à l'épreuve !</div>
+                </div>
+
+                <div class="quiz-card">
+                    <h4>🎲 QUIZ SURPRISE : Révision Express</h4>
+                    <div class="quiz-question">
+                        <strong>L'animateur utilise le TIR AU SORT de BBB pour choisir un participant au hasard !</strong>
+                        <br><br>
+                        <strong>Question :</strong> Concernant les données personnelles d'élèves dans les outils IA, quelle est la BONNE réponse ?
+                    </div>
+                    <ul class="options-list">
+                        <li class="option-item">A) On peut tout uploader si c'est pour un usage pédagogique</li>
+                        <li class="option-item">B) ✅ Il faut toujours vérifier l'hébergement et anonymiser</li>
+                        <li class="option-item">C) Le RGPD ne s'applique pas aux enseignants</li>
+                        <li class="option-item">D) Google a tous les droits sur les données qu'on lui confie</li>
+                    </ul>
+                    <div class="correct-answer" style="display: none; margin-top: 1.5rem;" id="quiz-answer-1">
+                        <div class="info-box success">
+                            <strong>✅ Bonne réponse : B</strong><br><br>
+                            Il faut TOUJOURS vérifier où sont hébergées les données (UE ou hors UE), si elles sont conservées ou supprimées, et anonymiser les informations personnelles avant de les transmettre à un outil IA !
+                        </div>
+                    </div>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        🎯 Le participant tiré au sort répond dans le MICRO ou le CHAT !
+                    </div>
+                    <button class="btn reveal-answer-btn" onclick="document.getElementById('quiz-answer-1').style.display='block'; this.style.display='none';" style="margin-top: 1rem; width: 100%;">
+                        👁️ Révéler la bonne réponse
+                    </button>
+                </div>
+            </section>
+
+            <!-- INTERRUPTION 2 : Défense Active -->
+            <section class="act-section" id="interrupt-2">
+                <div class="interruption">
+                    <h3>⚡ ALERTE SYSTÈME ! BUG DÉTECTÉ ⚡</h3>
+                    <div class="description">Le Prompt Master tente de corrompre vos données !</div>
+                </div>
+
+                <div class="quiz-card">
+                    <h4>🔒 DÉFENSE ACTIVE : Protégez le Code !</h4>
+                    <div class="quiz-question">
+                        <strong>MINI-DÉFI :</strong><br><br>
+                        Dans les <strong>NOTES PARTAGÉES BBB</strong>, écrivez collectivement en 2 minutes :
+                        <br><br>
+                        "Les 3 questions à se poser AVANT d'utiliser une IA en classe"
+                    </div>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        ⏱️ Chrono : 2 minutes ! Tout le monde contribue dans les notes partagées !
+                    </div>
+                    <div class="info-box success" style="margin-top: 1rem;">
+                        <strong>💡 Exemples de bonnes questions :</strong><br>
+                        • Où sont hébergées mes données ?<br>
+                        • L'outil respecte-t-il le RGPD ?<br>
+                        • Ai-je le droit d'utiliser ce contenu ?<br>
+                        • Les élèves savent-ils que c'est généré par IA ?<br>
+                        • Ai-je vérifié la véracité des informations ?
+                    </div>
+                </div>
+            </section>
+
+            <!-- INTERRUPTION 3 : Énigme Collective -->
+            <section class="act-section" id="interrupt-3">
+                <div class="interruption">
+                    <h3>📡 MESSAGE CRYPTÉ DU PROMPT MASTER 📡</h3>
+                    <div class="description">Il vous envoie un dernier défi avant la fin...</div>
+                </div>
+
+                <div class="quiz-card">
+                    <h4>🧩 ÉNIGME COLLECTIVE</h4>
+                    <div class="quiz-question">
+                        <strong>Décodez ce message dans le CHAT BBB :</strong><br><br>
+                        "L'IA N'EST NI BONNE NI MAUVAISE. ELLE EST CE QUE..."
+                        <br><br>
+                        <em>Complétez cette phrase collectivement ! Chacun propose un mot dans le chat.</em>
+                    </div>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        💬 Une phrase = un mot par personne dans le CHAT !
+                    </div>
+                    <div class="correct-answer" style="display: none; margin-top: 1.5rem;">
+                        <div class="info-box success">
+                            <strong>✅ Réponse attendue :</strong><br><br>
+                            "L'IA n'est ni bonne ni mauvaise. Elle est ce que VOUS EN FAITES."
+                            <br><br>
+                            L'IA est un outil. C'est l'usage qu'on en fait qui détermine son impact : éthique ou problématique, créatif ou passif, responsable ou négligent.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CODE FINAL -->
+            <section class="act-section" id="final">
+                <div class="final-notebook">
+                    <h2>📜 LE CODE DE L'IA RESPONSABLE</h2>
+                    <p style="text-align: center; font-size: 1.3rem; margin-bottom: 2rem;">
+                        <em>Co-construit collectivement par les enquêteurs</em>
+                    </p>
+
+                    <div class="principle">
+                        <span class="number">1.</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 4rem);">
+                            <div class="title">PROTÉGER LES DONNÉES</div>
+                            <div class="content">
+                                → Ne jamais transmettre de données personnelles (élèves, familles, collègues) à une IA sans anonymisation et vérification des CGU.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="principle">
+                        <span class="number">2.</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 4rem);">
+                            <div class="title">RESPECTER LES DROITS</div>
+                            <div class="content">
+                                → Ne jamais créer de contenu IA (image, voix, texte) usurpant l'identité d'une personne sans son consentement explicite.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="principle">
+                        <span class="number">3.</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 4rem);">
+                            <div class="title">ASSUMER LA PATERNITÉ</div>
+                            <div class="content">
+                                → Toujours mentionner l'utilisation d'une IA dans la production de contenus pédagogiques. Ne jamais faire passer du contenu IA pour du contenu 100% humain.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="principle">
+                        <span class="number">4.</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 4rem);">
+                            <div class="title">EXERCER L'ESPRIT CRITIQUE</div>
+                            <div class="content">
+                                → Vérifier, valider, adapter tout contenu généré par IA avant de l'utiliser ou de le diffuser. L'IA suggère, l'humain décide.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="principle">
+                        <span class="number">5.</span>
+                        <div style="display: inline-block; vertical-align: top; width: calc(100% - 4rem);">
+                            <div class="title">ÉDUQUER À LA CONSCIENCE NUMÉRIQUE</div>
+                            <div class="content">
+                                → Former les élèves à utiliser l'IA de manière éthique, transparente et réfléchie, en comprenant ses forces, ses limites et ses enjeux.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RECAP FINAL -->
+                <div class="final-recap">
+                    <h3>🎉 RÉCAPITULATIF DE L'ENQUÊTE 🎉</h3>
+
+                    <div class="stats-grid">
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);">
+                            <div class="icon">⏱️</div>
+                            <div class="value">90 min</div>
+                            <div class="label">d'investigation</div>
+                        </div>
+
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--success) 0%, var(--secondary) 100%);">
+                            <div class="icon">📚</div>
+                            <div class="value">7</div>
+                            <div class="label">Gestes pédagogiques</div>
+                        </div>
+
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);">
+                            <div class="icon">🛠️</div>
+                            <div class="value">8</div>
+                            <div class="label">Outils IA explorés</div>
+                        </div>
+
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--orange) 0%, var(--accent) 100%);">
+                            <div class="icon">⚖️</div>
+                            <div class="value">7</div>
+                            <div class="label">Dilemmes éthiques</div>
+                        </div>
+                    </div>
+
+                    <div class="interactive-card">
+                        <h3>🎯 Ce que vous avez accompli</h3>
+                        <div class="description">
+                            ✅ <strong>Exploré 7 aventures pédagogiques</strong> : Documenter, Incarner, Visualiser, Produire, Présenter, Mémoriser, Créer
+                            <br><br>
+                            ✅ <strong>Découvert 8 outils IA</strong> : NotebookLM, Quizlet, Hedra, Napkin, Canva AI, Mistral, Gamma, Suno
+                            <br><br>
+                            ✅ <strong>Résolu des dilemmes RGPD et droits d'auteur</strong>
+                            <br><br>
+                            ✅ <strong>Co-construit un Code de l'IA responsable</strong>
+                            <br><br>
+                            ✅ <strong>Développé votre esprit critique face à l'IA</strong>
+                        </div>
+                    </div>
+
+                    <div class="info-box success" style="font-size: 1.2rem; text-align: center;">
+                        <strong>🏆 Bravo, enquêteurs ! Le Prompt Master est vaincu... pour aujourd'hui. 🏆</strong>
+                        <br><br>
+                        Restez vigilants. Restez critiques. Restez humains.
+                        <br><br>
+                        <em>Car l'IA n'est ni bonne ni mauvaise. Elle est ce que vous en faites.</em>
+                    </div>
+                </div>
+
+                <div class="prompt-master-message" style="margin-top: 2rem;">
+                    <h3>>>> MESSAGE FINAL <<<</h3>
+                    <div class="transmission">De : PromptMaster_404
+À : Les enquêteurs victorieux
+
+Vous avez gagné. Le Code est retrouvé.
+
+Mais souvenez-vous : je reviendrai.
+Car l'IA évolue chaque jour.
+Et avec elle, de nouveaux dilemmes, de nouvelles zones grises.
+
+Restez vigilants. Restez critiques. Restez humains.
+
+Bravo, enquêteurs.
+
+— Le Prompt Master (vaincu... pour aujourd'hui)</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // ========== ÉTAT DU JEU ==========
+        let gameState = {
+            currentAdventure: 'intro',
+            fragmentsCollected: 0,
+            unlockedAdventures: ['intro'],
+            completedAdventures: []
+        };
+
+        // ========== TIMER COUNTDOWN ==========
+        let timeLeft = 90 * 60;
+        const timerDisplay = document.getElementById('timer');
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft > 0) {
+                timeLeft--;
+            }
+        }
+
+        setInterval(updateTimer, 1000);
+
+        // ========== NAVIGATION ENTRE AVENTURES ==========
+        function navigateToAdventure(adventureId) {
+            console.log('Navigation vers:', adventureId);
+            console.log('Aventures débloquées:', gameState.unlockedAdventures);
+            
+            // Vérifier si l'aventure est débloquée
+            if (!gameState.unlockedAdventures.includes(adventureId)) {
+                alert('🔒 Cette aventure est encore verrouillée ! Complétez les aventures précédentes.');
+                return;
+            }
+
+            // Cacher toutes les sections
+            document.querySelectorAll('.act-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Afficher la section demandée
+            const targetSection = document.getElementById(adventureId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                gameState.currentAdventure = adventureId;
+                
+                // Mettre à jour la sidebar
+                updateSidebar();
+                
+                // Scroll en haut
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                console.error('Section non trouvée:', adventureId);
+            }
+        }
+
+        // ========== MISE À JOUR SIDEBAR ==========
+        function updateSidebar() {
+            document.querySelectorAll('.adventure-item').forEach(item => {
+                const adventureId = item.dataset.adventure;
+                
+                // Retirer toutes les classes
+                item.classList.remove('active', 'unlocked');
+                
+                // Marquer l'aventure active
+                if (adventureId === gameState.currentAdventure) {
+                    item.classList.add('active');
+                }
+                
+                // Marquer les aventures complétées
+                if (gameState.completedAdventures.includes(adventureId)) {
+                    item.classList.add('unlocked');
+                }
+            });
+        }
+
+        // ========== GESTION DES CLICS SUR AVENTURES ==========
+        document.querySelectorAll('.adventure-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const adventureId = this.dataset.adventure;
+                navigateToAdventure(adventureId);
+            });
+        });
+
+        // ========== DÉBLOQUER UNE AVENTURE ==========
+        function unlockNextAdventure() {
+            const adventureOrder = [
+                'intro',
+                'documenter',
+                'incarner',
+                'visualiser',
+                'produire',
+                'presenter',
+                'memoriser',
+                'creer',
+                'interrupt-1',
+                'interrupt-2',
+                'interrupt-3',
+                'final'
+            ];
+            
+            const currentIndex = adventureOrder.indexOf(gameState.currentAdventure);
+            console.log('Index actuel:', currentIndex, 'Aventure:', gameState.currentAdventure);
+            
+            if (currentIndex < adventureOrder.length - 1) {
+                const nextAdventure = adventureOrder[currentIndex + 1];
+                console.log('Prochaine aventure:', nextAdventure);
+                
+                if (!gameState.unlockedAdventures.includes(nextAdventure)) {
+                    gameState.unlockedAdventures.push(nextAdventure);
+                    console.log('Aventure débloquée:', nextAdventure);
+                }
+                
+                // Auto-navigation vers la prochaine aventure
+                setTimeout(() => {
+                    navigateToAdventure(nextAdventure);
+                }, 2000);
+            } else {
+                console.log('Dernière aventure atteinte !');
+            }
+        }
+
+        // ========== COLLECTER UN FRAGMENT ==========
+        function collectFragment(fragmentNumber) {
+            gameState.fragmentsCollected++;
+            gameState.completedAdventures.push(gameState.currentAdventure);
+            
+            console.log('Fragment collecté:', fragmentNumber);
+            console.log('Total fragments:', gameState.fragmentsCollected);
+            
+            // Mettre à jour l'affichage
+            document.getElementById('fragments-count').textContent = gameState.fragmentsCollected;
+            
+            // Animation du compteur
+            const counter = document.querySelector('.fragments-counter');
+            counter.style.animation = 'none';
+            setTimeout(() => {
+                counter.style.animation = 'pulse 1s ease-in-out 3';
+            }, 10);
+            
+            // Afficher le fragment dans la section actuelle
+            const fragmentDiv = document.querySelector(`#${gameState.currentAdventure} .fragment-unlocked`);
+            if (fragmentDiv) {
+                fragmentDiv.style.display = 'block';
+            }
+            
+            // Débloquer la prochaine aventure
+            unlockNextAdventure();
+            
+            // Confettis si tous les fragments sont collectés
+            if (gameState.fragmentsCollected === 7) {
+                launchConfetti();
+            }
+        }
+
+        // ========== GESTION DES OPTIONS DE VOTE ==========
+        document.querySelectorAll('.option-item').forEach(option => {
+            option.addEventListener('click', function() {
+                // Désélectionner les autres options du même groupe
+                this.parentElement.querySelectorAll('.option-item').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Sélectionner cette option
+                this.classList.add('selected');
+                
+                // Effet visuel
+                this.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // ========== GESTION DES BOUTONS DE VOTE ==========
+        document.querySelectorAll('.vote-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Désélectionner les autres boutons du même groupe
+                this.parentElement.querySelectorAll('.vote-btn').forEach(b => {
+                    b.classList.remove('selected');
+                });
+                
+                // Sélectionner ce bouton
+                this.classList.add('selected');
+                
+                // Effet visuel
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // ========== BOUTONS "VALIDER" POUR DÉBLOQUER FRAGMENTS ==========
+        function addValidationButtons() {
+            const adventures = ['documenter', 'incarner', 'visualiser', 'produire', 'presenter', 'memoriser', 'creer'];
+            
+            adventures.forEach((adventureId, index) => {
+                const section = document.getElementById(adventureId);
+                if (section) {
+                    if (!section.querySelector('.validate-btn')) {
+                        const btn = document.createElement('button');
+                        btn.className = 'btn validate-btn';
+                        btn.textContent = '✅ Valider et débloquer le fragment';
+                        btn.style.width = '100%';
+                        btn.style.marginTop = '2rem';
+                        btn.style.fontSize = '1.2rem';
+                        btn.style.padding = '1.5rem';
+                        
+                        const fragmentDiv = section.querySelector('.fragment-unlocked');
+                        if (fragmentDiv) {
+                            fragmentDiv.parentNode.insertBefore(btn, fragmentDiv);
+                            
+                            btn.addEventListener('click', function() {
+                                console.log('Bouton validé pour:', adventureId);
+                                collectFragment(index + 1);
+                                this.style.display = 'none';
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        // ========== BOUTONS POUR PASSER LES INTERRUPTIONS ==========
+        function addInterruptionButtons() {
+            ['interrupt-1', 'interrupt-2', 'interrupt-3'].forEach(interruptId => {
+                const section = document.getElementById(interruptId);
+                if (section && !section.querySelector('.continue-btn')) {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn continue-btn';
+                    btn.textContent = '➡️ Continuer l\'enquête';
+                    btn.style.width = '100%';
+                    btn.style.marginTop = '2rem';
+                    btn.style.fontSize = '1.2rem';
+                    btn.style.padding = '1.5rem';
+                    
+                    section.appendChild(btn);
+                    
+                    btn.addEventListener('click', function() {
+                        unlockNextAdventure();
+                    });
+                }
+            });
+        }
+
+        // ========== CONFETTIS ==========
+        function launchConfetti() {
+            const colors = ['#5B8DEE', '#4ECDC4', '#FFE66D', '#95E1D3', '#A29BFE', '#55EFC4'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-20px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animation = 'fall 3s linear';
+                    confetti.style.zIndex = '9999';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 50);
+            }
+            
+            // Ajouter l'animation CSS si elle n'existe pas
+            if (!document.getElementById('confetti-style')) {
+                const style = document.createElement('style');
+                style.id = 'confetti-style';
+                style.textContent = `
+                    @keyframes fall {
+                        to {
+                            transform: translateY(100vh) rotate(360deg);
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // ========== BOUTON DÉMARRER (dans l'intro) ==========
+        function addStartButton() {
+            const introSection = document.getElementById('intro');
+            if (introSection && !introSection.querySelector('.start-btn')) {
+                const btn = document.createElement('button');
+                btn.className = 'btn start-btn';
+                btn.textContent = '🚀 Démarrer l\'enquête !';
+                btn.style.width = '100%';
+                btn.style.marginTop = '2rem';
+                btn.style.fontSize = '1.5rem';
+                btn.style.padding = '1.5rem';
+                
+                introSection.appendChild(btn);
+                
+                btn.addEventListener('click', function() {
+                    // Débloquer "documenter"
+                    if (!gameState.unlockedAdventures.includes('documenter')) {
+                        gameState.unlockedAdventures.push('documenter');
+                    }
+                    navigateToAdventure('documenter');
+                    this.style.display = 'none';
+                });
+            }
+        }
+
+        // ========== INITIALISATION ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎮 L\'Enquête Générative est prête !');
+            addStartButton();
+            addValidationButtons();
+            addInterruptionButtons();
+            updateSidebar();
+            
+            console.log('💡 Cliquez sur les aventures dans la sidebar pour naviguer');
+            console.log('✨ Collectez les 7 fragments pour restaurer le Code !');
+        });
+
+        // ========== RACCOURCIS CLAVIER ==========
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') {
+                unlockNextAdventure();
+            }
+            
+            if (e.key === 'ArrowLeft') {
+                const adventureOrder = [
+                    'intro', 'documenter', 'incarner', 'visualiser', 'produire', 
+                    'presenter', 'memoriser', 'creer', 'interrupt-1', 'interrupt-2', 
+                    'interrupt-3', 'final'
+                ];
+                const currentIndex = adventureOrder.indexOf(gameState.currentAdventure);
+                if (currentIndex > 0) {
+                    navigateToAdventure(adventureOrder[currentIndex - 1]);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
