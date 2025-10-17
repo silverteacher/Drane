@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formation Innovation, IA & Pédagogie de Projet - Académie de Lille</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #0066cc;
+            --secondary-blue: #004899;
+            --accent-orange: #ff6b35;
+            --accent-purple: #7c3aed;
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+            --gray-text: #64748b;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Countdown */
+        .countdown {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            min-width: 120px;
+        }
+
+        .countdown-number {
+            font-size: 3rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-purple));
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--gray-text);
+            margin-bottom: 3rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-blue), var(--accent-purple));
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: var(--accent-orange);
+            border: 5px solid white;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 0 8px rgba(255, 107, 53, 0.2);
+        }
+
+        .timeline-date {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-location {
+            font-size: 1.2rem;
+            color: var(--accent-orange);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timeline-time {
+            color: var(--gray-text);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-register {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-orange), #ff8c5a);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Program Section */
+        .program {
+            background: var(--light-bg);
+        }
+
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .program-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .program-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .program-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .program-card h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* Accordion */
+        .accordion {
+            max-width: 900px;
+            margin: 3rem auto 0;
+        }
+
+        .accordion-item {
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .accordion-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 1.5rem;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 1000px;
+            padding: 1.5rem;
+        }
+
+        .accordion-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .accordion-content li {
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .accordion-content li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-orange);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Features Section */
+        .features {
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        /* La Station Section */
+        .la-station {
+            background: linear-gradient(135deg, #f6f8fb, #e9ecef);
+            padding: 5rem 2rem;
+        }
+
+        .station-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .station-image {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .station-image::before {
+            content: '🚂';
+            font-size: 8rem;
+            position: absolute;
+            opacity: 0.2;
+        }
+
+        .station-text h2 {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .station-text p {
+            color: var(--gray-text);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .station-highlight {
+            background: white;
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent-orange);
+            border-radius: 5px;
+            margin-top: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+            color: white;
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-cta {
+            background: white;
+            color: var(--primary-blue);
+            padding: 1.2rem 3rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-text);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .footer-credit {
+            margin-top: 1rem;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .timeline::before {
+                left: 0;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+            }
+
+            .timeline-content {
+                width: 100%;
+                margin-left: 40px;
+            }
+
+            .timeline-marker {
+                left: 0;
+                transform: translateX(0);
+            }
+
+            .station-content {
+                grid-template-columns: 1fr;
+            }
+
+            .countdown {
+                gap: 1rem;
+            }
+
+            .countdown-item {
+                min-width: 90px;
+                padding: 1rem;
+            }
+
+            .countdown-number {
+                font-size: 2rem;
+            }
+
+            section {
+                padding: 3rem 1.5rem;
+            }
+        }
+
+        /* Scroll animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Académie de Lille</div>
+            <h1>Innovation, IA & Pédagogie de Projet</h1>
+            <p class="subtitle">Deux journées de formation pour transformer vos pratiques pédagogiques</p>
+            
+            <div class="countdown" id="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="days">00</span>
+                    <span class="countdown-label">Jours</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">00</span>
+                    <span class="countdown-label">Heures</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">00</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">00</span>
+                    <span class="countdown-label">Secondes</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- La Station Section -->
+    <section class="la-station">
+        <div class="station-content scroll-reveal">
+            <div class="station-image">
+                <div>
+                    <h3>La Station</h3>
+                    <p>Ancienne gare de Saint-Omer<br>transformée en tiers-lieu d'innovation</p>
+                </div>
+            </div>
+            <div class="station-text">
+                <h2>Bienvenue à La Station</h2>
+                <p>
+                    Située dans l'ancienne gare historique de Saint-Omer, <strong>La Station</strong> est un tiers-lieu d'innovation qui incarne parfaitement l'esprit de transformation et de renouveau que nous souhaitons apporter à l'éducation.
+                </p>
+                <p>
+                    Ce lieu emblématique, alliant patrimoine architectural et modernité technologique, offre un cadre inspirant pour découvrir les outils et méthodes pédagogiques de demain.
+                </p>
+                <div class="station-highlight">
+                    <strong>🎯 Un lieu unique</strong> où l'histoire rencontre l'innovation pour créer les pédagogies du futur
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">Deux Journées, Deux Lieux</h2>
+            <p class="section-subtitle">Choisissez la session la plus proche de vous</p>
+            
+            <div class="timeline">
+                <div class="timeline-item scroll-reveal">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">14 Janvier 2026</div>
+                        <div class="timeline-location">📍 Saint-Omer - La Station</div>
+                        <div class="timeline-time">🕐 9h00 - 16h30</div>
+                        <p>
+                            Découvrez l'innovation pédagogique dans le cadre exceptionnel de La Station, 
+                            tiers-lieu d'innovation installé dans l'ancienne gare de Saint-Omer.
+                        </p>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30427/tab/trainee/pill/individualTrainingPlan/infos/102610|01|S1|2026-01-14_09:00:00|2026-01-14_16:30:00" 
+                           class="btn-register" target="_blank">
+                            S'inscrire à Saint-Omer →
+                        </a>
+                    </div>
+                </div>
+
+                <div class="timeline-item scroll-reveal">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">11 Mars 2026</div>
+                        <div class="timeline-location">📍 Valenciennes</div>
+                        <div class="timeline-time">🕐 9h00 - 16h30</div>
+                        <p>
+                            Rejoignez-nous à Valenciennes pour une journée identique, 
+                            axée sur l'innovation, l'intelligence artificielle et la pédagogie de projet.
+                        </p>
+                        <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30429/tab/trainee/pill/individualTrainingPlan/infos/102610|02|S1|2026-03-11_09:00:00|2026-03-11_16:30:00" 
+                           class="btn-register" target="_blank">
+                            S'inscrire à Valenciennes →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Section -->
+    <section class="program">
+        <div class="container">
+            <h2 class="section-title">Programme de la Journée</h2>
+            <p class="section-subtitle">Un parcours complet de la théorie à la pratique</p>
+
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>☀️ Matinée : Découverte et Démonstrations</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <ul>
+                            <li><strong>Conférence d'ouverture</strong> : Les fondamentaux de la pédagogie de projets</li>
+                            <li><strong>Intelligence Artificielle</strong> : Applications concrètes en classe</li>
+                            <li><strong>WeTV</strong> : Création de contenus vidéo éducatifs</li>
+                            <li><strong>Kits EPS</strong> : Innovation dans l'éducation physique et sportive</li>
+                            <li><strong>Robots éducatifs</strong> : Programmation et créativité</li>
+                            <li><strong>Jeux de cartes pédagogiques</strong> : Gamification de l'apprentissage</li>
+                            <li><strong>Ludification</strong> : Rendre l'apprentissage plus engageant</li>
+                            <li><strong>WeRadio</strong> : Créer une webradio en classe</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>🍽️ Midi : Pause Déjeuner</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p>
+                            Repas convivial au <strong>Lypso</strong>, moment d'échanges informels 
+                            avec les formateurs et les autres participants.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>🌆 Après-midi : Ateliers Pratiques</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <ul>
+                            <li><strong>Ateliers en petits groupes</strong> : Approfondissement des outils découverts le matin</li>
+                            <li><strong>Mise en pratique</strong> : Conception de scénarios pédagogiques adaptés à vos classes</li>
+                            <li><strong>Accompagnement personnalisé</strong> : Conseils pour l'intégration des outils</li>
+                            <li><strong>Partage d'expériences</strong> : Échanges entre pairs et retours d'expérience</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Pourquoi Participer ?</h2>
+            <p class="section-subtitle">Les bénéfices de cette formation</p>
+
+            <div class="features-grid">
+                <div class="feature-card scroll-reveal">
+                    <span class="feature-icon">🚀</span>
+                    <h3>Innovation Pédagogique</h3>
+                    <p>Découvrez les dernières approches pour dynamiser vos cours et engager vos élèves</p>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <span class="feature-icon">🤖</span>
+                    <h3>Maîtrise de l'IA</h3>
+                    <p>Apprenez à utiliser l'intelligence artificielle comme outil pédagogique efficace</p>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <span class="feature-icon">🎯</span>
+                    <h3>Pédagogie de Projet</h3>
+                    <p>Mettez en place des projets motivants qui développent les compétences du 21e siècle</p>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <span class="feature-icon">🔧</span>
+                    <h3>Outils Pratiques</h3>
+                    <p>Repartez avec des ressources concrètes et immédiatement applicables</p>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <span class="feature-icon">👥</span>
+                    <h3>Communauté</h3>
+                    <p>Rejoignez un réseau d'enseignants innovants et partagez vos expériences</p>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <span class="feature-icon">💡</span>
+                    <h3>Inspiration</h3>
+                    <p>Découvrez de nouvelles perspectives pour enrichir votre pratique pédagogique</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="program">
+        <div class="container">
+            <h2 class="section-title">Outils et Technologies</h2>
+            <p class="section-subtitle">Découvrez les ressources pédagogiques innovantes</p>
+
+            <div class="program-grid">
+                <div class="program-card scroll-reveal">
+                    <div class="program-icon">🤖</div>
+                    <h3>Intelligence Artificielle</h3>
+                    <p>Explorez les applications de l'IA en éducation : assistants virtuels, génération de contenu, personnalisation de l'apprentissage</p>
+                </div>
+
+                <div class="program-card scroll-reveal">
+                    <div class="program-icon">📺</div>
+                    <h3>WeTV</h3>
+                    <p>Créez des contenus vidéo pédagogiques captivants pour enrichir vos cours</p>
+                </div>
+
+                <div class="program-card scroll-reveal">
+                    <div class="program-icon">⚽</div>
+                    <h3>Kits EPS</h3>
+                    <p>Innovations technologiques pour l'éducation physique et sportive</p>
+                </div>
+
+                <div class="program-card scroll-reveal">
+                    <div class="program-icon">🤖</div>
+                    <h3>Robots Éducatifs</h3>
+                    <p>Initiez vos élèves à la programmation et à la robotique de manière ludique</p>
+                </div>
+
+                <div class="program-card scroll-reveal">
+                    <div class="program-icon">🎴</div>
+                    <h3>Jeux de Cartes</h3>
+                    <p>Utilisez la gamification pour rendre l'apprentissage plus engageant</p>
+                </div>
+
+                <div class="program-card scroll-reveal">
+                    <div class="program-icon">🎮</div>
+                    <h3>Ludification</h3>
+                    <p>Transformez vos cours en expériences ludiques et motivantes</p>
+                </div>
+
+                <div class="program-card scroll-reveal">
+                    <div class="program-icon">📻</div>
+                    <h3>WeRadio</h3>
+                    <p>Créez une webradio avec vos élèves pour développer leurs compétences orales</p>
+                </div>
+
+                <div class="program-card scroll-reveal">
+                    <div class="program-icon">💻</div>
+                    <h3>Outils Numériques</h3>
+                    <p>Découvrez d'autres ressources numériques pour enrichir votre enseignement</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Prêt à Innover ?</h2>
+            <p>Inscrivez-vous dès maintenant à la session de votre choix</p>
+            <div class="cta-buttons">
+                <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30427/tab/trainee/pill/individualTrainingPlan/infos/102610|01|S1|2026-01-14_09:00:00|2026-01-14_16:30:00" 
+                   class="btn-cta" target="_blank">
+                    📅 Saint-Omer - 14 Janvier
+                </a>
+                <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30429/tab/trainee/pill/individualTrainingPlan/infos/102610|02|S1|2026-03-11_09:00:00|2026-03-11_16:30:00" 
+                   class="btn-cta" target="_blank">
+                    📅 Valenciennes - 11 Mars
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Académie de Lille - Formation Innovation, IA & Pédagogie de Projet</p>
+        <p class="footer-credit">Images générées par IA - nano Banana</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">
+            <a href="https://la-station.co" target="_blank" style="color: #ff6b35; text-decoration: none;">La Station Saint-Omer</a> | 
+            <a href="https://nanobanana.ai" target="_blank" style="color: #ff6b35; text-decoration: none;">nano Banana AI</a>
+        </p>
+    </footer>
+
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            const targetDate = new Date('2026-01-14T09:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = '<p style="font-size: 1.5rem;">La formation a commencé !</p>';
+            }
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Accordion functionality
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const accordionItem = header.parentElement;
+                const isActive = accordionItem.classList.contains('active');
+                
+                // Close all accordions
+                document.querySelectorAll('.accordion-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Open clicked accordion if it wasn't active
+                if (!isActive) {
+                    accordionItem.classList.add('active');
+                }
+            });
+        });
+
+        // Open first accordion by default
+        document.querySelector('.accordion-item').classList.add('active');
+
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
