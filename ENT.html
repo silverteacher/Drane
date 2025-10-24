@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - Activation ENT Collèges 59/62</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            padding: 25px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .controls input, .controls select {
+            padding: 12px 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .controls button {
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .controls button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 25px;
+            background: #f8f9fa;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card h3 {
+            color: #6c757d;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            padding: 25px;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        #map {
+            height: 600px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .college-list {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        .college-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+        
+        .college-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .college-item.tres-bonnes {
+            border-left-color: #28a745;
+        }
+        
+        .college-item.bonnes {
+            border-left-color: #17a2b8;
+        }
+        
+        .college-item.assez-bonnes {
+            border-left-color: #ffc107;
+        }
+        
+        .college-item.moyennes {
+            border-left-color: #fd7e14;
+        }
+        
+        .college-item.mauvaises {
+            border-left-color: #dc3545;
+        }
+        
+        .college-item h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .college-item p {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin: 3px 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-top: 5px;
+        }
+        
+        .badge.alerte-eleves {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .badge.alerte-parents {
+            background: #fd7e14;
+            color: white;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Tableau de Bord ENT - Collèges 59/62</h1>
+            <p>Suivi des activations de comptes ENT - Départements Nord et Pas-de-Calais</p>
+        </header>
+        
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="🔍 Rechercher un collège...">
+            <select id="departementFilter">
+                <option value="all">Tous les départements</option>
+                <option value="59">Nord (59)</option>
+                <option value="62">Pas-de-Calais (62)</option>
+            </select>
+            <select id="categorieFilter">
+                <option value="all">Toutes les catégories</option>
+                <option value="Très bonnes">Très bonnes (90-100%)</option>
+                <option value="Bonnes">Bonnes (70-90%)</option>
+                <option value="Assez bonnes">Assez bonnes (50-70%)</option>
+                <option value="Moyennes">Moyennes (30-50%)</option>
+                <option value="Mauvaises">Mauvaises (&lt;30%)</option>
+            </select>
+            <button onclick="resetFilters()">Réinitialiser</button>
+        </div>
+        
+        <div class="stats-overview">
+            <div class="stat-card">
+                <h3>Total Collèges</h3>
+                <div class="number" id="totalColleges">57</div>
+            </div>
+            <div class="stat-card">
+                <h3>Très Bonnes Stats</h3>
+                <div class="number" id="tresBonnes" style="color: #28a745;">8</div>
+            </div>
+            <div class="stat-card">
+                <h3>Alertes Élèves</h3>
+                <div class="number" id="alertesEleves" style="color: #dc3545;">6</div>
+            </div>
+            <div class="stat-card">
+                <h3>Alertes Parents</h3>
+                <div class="number" id="alertesParents" style="color: #fd7e14;">10</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="section full-width">
+                <h2>🗺️ Carte Interactive des Collèges</h2>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #28a745;"></div>
+                        <span>Très bonnes</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #17a2b8;"></div>
+                        <span>Bonnes</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ffc107;"></div>
+                        <span>Assez bonnes</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #fd7e14;"></div>
+                        <span>Moyennes</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #dc3545;"></div>
+                        <span>Mauvaises</span>
+                    </div>
+                </div>
+                <div id="map"></div>
+            </div>
+            
+            <div class="section">
+                <h2>📈 Répartition par Catégorie</h2>
+                <div class="chart-container">
+                    <canvas id="categorieChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🏫 Répartition par Département</h2>
+                <div class="chart-container">
+                    <canvas id="departementChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="section full-width">
+                <h2>⚠️ Collèges Nécessitant une Attention Particulière</h2>
+                <div id="alertesList" class="college-list"></div>
+            </div>
+            
+            <div class="section full-width">
+                <h2>📋 Liste Complète des Collèges</h2>
+                <div id="collegesList" class="college-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const collegesData = [
+            {"Code_RNE":"0590046E","Nom_College":"CLG-JEAN MONNET-CAUDRY","Commentaires":"705 parents non activités mauvaise statistiques","Categorie":"Mauvaises","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"CAUDRY","Latitude":50.125,"Longitude":3.4111},
+            {"Code_RNE":"0590057S","Nom_College":"CLG-PAUL ELUARD-CYSOING","Commentaires":"très bonnes statistiques  0 élève non activé","Categorie":"Très bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"CYSOING","Latitude":50.5667,"Longitude":3.2167},
+            {"Code_RNE":"0590088A","Nom_College":"CLG-JULES VERNE-GRANDE-SYNTHE","Commentaires":"très bonnes statistiques","Categorie":"Très bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"GRANDE","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0590107W","Nom_College":"CLG-JEAN MOULIN-IWUY","Commentaires":"144 parents non activés 0 enseignant non activé","Categorie":"Moyennes","Eleves_non_actives":0,"Parents_non_actives":144,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"59","Ville":"IWUY","Latitude":50.2333,"Longitude":3.3333},
+            {"Code_RNE":"0590109Y","Nom_College":"CLG-EUGENE THOMAS-JEUMONT","Commentaires":"point faible les parents","Categorie":"Moyennes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"59","Ville":"JEUMONT","Latitude":50.2967,"Longitude":4.1022},
+            {"Code_RNE":"0590142J","Nom_College":"CLG-MARGUERITE YOURCENAR-MARCHIENNES","Commentaires":"0 élèves non activés bonne activation","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"MARCHIENNES","Latitude":50.4086,"Longitude":3.2844},
+            {"Code_RNE":"0590151U","Nom_College":"CLG-ERNEST COUTELLE-MAUBEUGE","Commentaires":"Bonnne activation","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"MAUBEUGE","Latitude":50.2778,"Longitude":3.9733},
+            {"Code_RNE":"0590159C","Nom_College":"CLG-DU PEVELE-ORCHIES","Commentaires":"mauvaises statistiques 820 parents non activés","Categorie":"Mauvaises","Eleves_non_actives":0,"Parents_non_actives":820,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"59","Ville":"ORCHIES","Latitude":50.4733,"Longitude":3.24},
+            {"Code_RNE":"0592715F","Nom_College":"CLG-CHARLES EISEN-VALENCIENNES","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"VALENCIENNES","Latitude":50.3589,"Longitude":3.5239},
+            {"Code_RNE":"0593168Y","Nom_College":"CLG-INTERNATIONAL CARNOT-LILLE","Commentaires":"assez bonnes statistiques mieux possible avec les parents","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"59","Ville":"LILLE","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0593185S","Nom_College":"CLG-ANATOLE FRANCE-SIN-LE-NOBLE","Commentaires":"très bonnes statistiques","Categorie":"Très bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"SIN","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0593235W","Nom_College":"CLG-BORIS VIAN-LILLE","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"LILLE","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0593241C","Nom_College":"CLG-ALBERT CALMETTE-WASQUEHAL","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"59","Ville":"WASQUEHAL","Latitude":50.67,"Longitude":3.13},
+            {"Code_RNE":"0593255T","Nom_College":"CLG-ALBERT SAMAIN-ROUBAIX","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"ROUBAIX","Latitude":50.6942,"Longitude":3.1746},
+            {"Code_RNE":"0593417M","Nom_College":"CLG-JULES VERNE-MAUBEUGE","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"59","Ville":"MAUBEUGE","Latitude":50.2778,"Longitude":3.9733},
+            {"Code_RNE":"0593418N","Nom_College":"CLG-EMILE LITTRE-DOUCHY-LES-MINES","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"59","Ville":"DOUCHY","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0593452A","Nom_College":"CLG-JEAN ZAY-LOMME","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"LOMME","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0593483J","Nom_College":"CLG-LUCIE AUBRAC-DUNKERQUE","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"59","Ville":"DUNKERQUE","Latitude":51.0342,"Longitude":2.377},
+            {"Code_RNE":"0594196W","Nom_College":"CLG-ROMAIN ROLLAND-SOMAIN","Commentaires":"très bonnes statistiques","Categorie":"Très bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"SOMAIN","Latitude":50.3536,"Longitude":3.2797},
+            {"Code_RNE":"0595509X","Nom_College":"CLG-JEAN MOULIN-LOUVROIL","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"LOUVROIL","Latitude":50.2614,"Longitude":3.9522},
+            {"Code_RNE":"0595536C","Nom_College":"CLG-MONTGOLFIER-MONS-EN-BAROEUL","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"MONS","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0595824J","Nom_College":"CLG-ANDRE CANIVEZ-DOUAI","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"59","Ville":"DOUAI","Latitude":50.3714,"Longitude":3.0797},
+            {"Code_RNE":"0596336P","Nom_College":"CLG-JEAN MOULIN-WATTIGNIES","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"59","Ville":"WATTIGNIES","Latitude":50.5897,"Longitude":3.0428},
+            {"Code_RNE":"0596448L","Nom_College":"CLG-FERNAND LEGER-LILLE","Commentaires":"très bonnes statistiques","Categorie":"Très bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"LILLE","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0597097Z","Nom_College":"CLG-CALMETTE-WASQUEHAL","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"WASQUEHAL","Latitude":50.67,"Longitude":3.13},
+            {"Code_RNE":"0597114U","Nom_College":"CLG-PAUL LANGEVIN-WAZIERS","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"WAZIERS","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0597225R","Nom_College":"CLG-ROGER SALENGRO-HOUPLINES","Commentaires":"bonnes statistiques 22 élèves non activés","Categorie":"Bonnes","Eleves_non_actives":22,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":true,"Departement":"59","Ville":"HOUPLINES","Latitude":50.6933,"Longitude":2.9083},
+            {"Code_RNE":"0597242K","Nom_College":"CLG-JULES VERNE-NEUVILLE-EN-FERRAIN","Commentaires":"bonnes statistiques mais 22 élèves non activés","Categorie":"Moyennes","Eleves_non_actives":22,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":true,"Departement":"59","Ville":"NEUVILLE","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0597243L","Nom_College":"CLG-LAVOISIER-LAMBERSART","Commentaires":"bonnes statistiques mais 31 élèves non activés","Categorie":"Bonnes","Eleves_non_actives":31,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":true,"Departement":"59","Ville":"LAMBERSART","Latitude":50.65,"Longitude":3.0264},
+            {"Code_RNE":"0597287J","Nom_College":"CLG-NADAUD-WATTRELOS","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"WATTRELOS","Latitude":50.7022,"Longitude":3.2117},
+            {"Code_RNE":"0597551K","Nom_College":"CLG-BLANQUI-TOURCOING","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"TOURCOING","Latitude":50.7236,"Longitude":3.1606},
+            {"Code_RNE":"0597558T","Nom_College":"CLG-BORIS VIAN-LILLE","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"LILLE","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0597613B","Nom_College":"CLG-PABLO NERUDA-WATTRELOS","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"WATTRELOS","Latitude":50.7022,"Longitude":3.2117},
+            {"Code_RNE":"0597685D","Nom_College":"CLG-MOLIERE-LILLE","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"LILLE","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0597692L","Nom_College":"CLG-THEODORE MONOD-LILLE","Commentaires":"très bonnes statistiques","Categorie":"Très bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"LILLE","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0597739M","Nom_College":"CLG-JACQUES PREVERT-WAZEMMES","Commentaires":"très bonnes statistiques","Categorie":"Très bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"WAZEMMES","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0597785M","Nom_College":"CLG-JEAN-JACQUES ROUSSEAU-CARVIN","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"59","Ville":"CARVIN","Latitude":50.6292,"Longitude":3.0573},
+            {"Code_RNE":"0620051Y","Nom_College":"CLG-GERARD PHILIPE-HENIN-BEAUMONT","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"HENIN","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0620074V","Nom_College":"CLG-CHARLOTTE PERRIAND-BULLY-LES-MINES","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"BULLY","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0620077Y","Nom_College":"CLG-HENRI WALLON-BRUAY-LA-BUISSIERE","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"BRUAY","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622200L","Nom_College":"CLG-MAURICE PIQUET-ISBERGUES","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"ISBERGUES","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622495U","Nom_College":"CLG-DE L EUROPE-ARDRES","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"ARDRES","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622548D","Nom_College":"CLG-ALBERT CAMUS-BULLY-LES-MINES","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"BULLY","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622552H","Nom_College":"CLG-PAUL LANGEVIN-MARLES-LES-MINES","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"MARLES","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622844E","Nom_College":"CLG-BLAISE PASCAL-SAINT-OMER","Commentaires":"très bonnes statistiques","Categorie":"Très bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"SAINT","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622846G","Nom_College":"CLG-PIERRE DAUNOU-BOULOGNE-SUR-MER","Commentaires":"bonnes statistiques 20 élèves non activés","Categorie":"Bonnes","Eleves_non_actives":20,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":true,"Departement":"62","Ville":"BOULOGNE","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622847H","Nom_College":"CLG-PAUL VERLAINE-CALAIS","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"CALAIS","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622850L","Nom_College":"CLG-PAUL ELUARD-ARQUES","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"ARQUES","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622864B","Nom_College":"CLG-JEAN ROSTAND-MARQUISE","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"MARQUISE","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622867E","Nom_College":"CLG-LANGEVIN-WALLON-GRENAY","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"GRENAY","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622868F","Nom_College":"CLG-PAUL VERLAINE-BETHUNE","Commentaires":"assez bonnes statistiques mieux possible avec les parents 47 élèves non activés","Categorie":"Bonnes","Eleves_non_actives":47,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":true,"Departement":"62","Ville":"BETHUNE","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0622950V","Nom_College":"CLG-BELREM-BEAURAINVILLE","Commentaires":"très bonnes statistiques","Categorie":"Très bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"BEAURAINVILLE","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0623023Z","Nom_College":"CLG-FRANCOIS MITTERRAND-ARRAS","Commentaires":"assez bonnes statistiques mieux possible avec les parents 55 élèves non activés","Categorie":"Bonnes","Eleves_non_actives":55,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":true,"Departement":"62","Ville":"ARRAS","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"0623865P","Nom_College":"CLG-ANTOINE DE SAINT EXUPERY-DOUVRIN","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"62","Ville":"DOUVRIN","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"","Nom_College":"CLG-JEAN JAURES-LENS","Commentaires":"bonnes statistiques parents peu activés","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"Inconnu","Ville":"LENS","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"","Nom_College":"CLG-LE TRION-SAMER","Commentaires":"bonnes statistiques parents peu activés","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":true,"Alerte_eleves":false,"Departement":"Inconnu","Ville":"SAMER","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"","Nom_College":"CLG-DU CARAQUET-DESVRES","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"Inconnu","Ville":"DESVRES","Latitude":50.5,"Longitude":2.5},
+            {"Code_RNE":"","Nom_College":"CLG-LOUIS BLERIOT-SANGATTE","Commentaires":"bonnes statistiques ","Categorie":"Bonnes","Eleves_non_actives":0,"Parents_non_actives":0,"Enseignants_non_actives":0,"Alerte_parents":false,"Alerte_eleves":false,"Departement":"Inconnu","Ville":"SANGATTE","Latitude":50.5,"Longitude":2.5}
+        ];
+
+        let filteredData = [...collegesData];
+        let map, markers = [];
+
+        // Couleurs par catégorie
+        const categorieColors = {
+            'Très bonnes': '#28a745',
+            'Bonnes': '#17a2b8',
+            'Assez bonnes': '#ffc107',
+            'Moyennes': '#fd7e14',
+            'Mauvaises': '#dc3545',
+            'Non renseigné': '#6c757d'
+        };
+
+        // Initialiser la carte
+        function initMap() {
+            map = L.map('map').setView([50.5, 2.8], 9);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+
+            updateMarkers();
+        }
+
+        // Mettre à jour les marqueurs sur la carte
+        function updateMarkers() {
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            filteredData.forEach(college => {
+                if (college.Latitude && college.Longitude) {
+                    const color = categorieColors[college.Categorie] || '#6c757d';
+                    
+                    const icon = L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>`,
+                        iconSize: [20, 20]
+                    });
+
+                    let alertes = '';
+                    if (college.Alerte_eleves) {
+                        alertes += `<br><span style="color: #dc3545;">⚠️ ${college.Eleves_non_actives} élèves non activés</span>`;
+                    }
+                    if (college.Alerte_parents) {
+                        alertes += `<br><span style="color: #fd7e14;">⚠️ Problème activation parents</span>`;
+                    }
+
+                    const marker = L.marker([college.Latitude, college.Longitude], { icon })
+                        .bindPopup(`
+                            <strong>${college.Nom_College}</strong><br>
+                            Catégorie: <span style="color: ${color}; font-weight: bold;">${college.Categorie}</span><br>
+                            Département: ${college.Departement}
+                            ${alertes}
+                        `)
+                        .addTo(map);
+                    
+                    markers.push(marker);
+                }
+            });
+        }
+
+        // Créer les graphiques
+        function createCharts() {
+            // Graphique par catégorie
+            const categorieCount = {};
+            filteredData.forEach(college => {
+                categorieCount[college.Categorie] = (categorieCount[college.Categorie] || 0) + 1;
+            });
+
+            const ctxCategorie = document.getElementById('categorieChart').getContext('2d');
+            new Chart(ctxCategorie, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categorieCount),
+                    datasets: [{
+                        data: Object.values(categorieCount),
+                        backgroundColor: Object.keys(categorieCount).map(cat => categorieColors[cat])
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Graphique par département
+            const deptCount = {};
+            filteredData.forEach(college => {
+                if (college.Departement !== 'Inconnu') {
+                    deptCount[college.Departement] = (deptCount[college.Departement] || 0) + 1;
+                }
+            });
+
+            const ctxDept = document.getElementById('departementChart').getContext('2d');
+            new Chart(ctxDept, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(deptCount),
+                    datasets: [{
+                        label: 'Nombre de collèges',
+                        data: Object.values(deptCount),
+                        backgroundColor: ['#667eea', '#764ba2']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Afficher la liste des collèges avec alertes
+        function displayAlertes() {
+            const alertesList = document.getElementById('alertesList');
+            const alertes = filteredData.filter(c => c.Alerte_eleves || c.Alerte_parents);
+            
+            if (alertes.length === 0) {
+                alertesList.innerHTML = '<p style="text-align: center; color: #28a745; padding: 20px;">✅ Aucune alerte particulière</p>';
+                return;
+            }
+
+            alertesList.innerHTML = alertes.map(college => {
+                const catClass = college.Categorie.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                let badges = '';
+                if (college.Alerte_eleves) {
+                    badges += `<span class="badge alerte-eleves">⚠️ ${college.Eleves_non_actives} élèves non activés</span>`;
+                }
+                if (college.Alerte_parents) {
+                    badges += `<span class="badge alerte-parents">⚠️ Problème activation parents</span>`;
+                }
+                
+                return `
+                    <div class="college-item ${catClass}">
+                        <h4>${college.Nom_College}</h4>
+                        <p><strong>Département:</strong> ${college.Departement} | <strong>Catégorie:</strong> ${college.Categorie}</p>
+                        <p>${college.Commentaires}</p>
+                        <div>${badges}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Afficher la liste complète des collèges
+        function displayColleges() {
+            const collegesList = document.getElementById('collegesList');
+            
+            collegesList.innerHTML = filteredData.map(college => {
+                const catClass = college.Categorie.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                let badges = '';
+                if (college.Alerte_eleves) {
+                    badges += `<span class="badge alerte-eleves">⚠️ Élèves</span>`;
+                }
+                if (college.Alerte_parents) {
+                    badges += `<span class="badge alerte-parents">⚠️ Parents</span>`;
+                }
+                
+                return `
+                    <div class="college-item ${catClass}">
+                        <h4>${college.Nom_College}</h4>
+                        <p><strong>Code RNE:</strong> ${college.Code_RNE || 'N/A'} | <strong>Département:</strong> ${college.Departement} | <strong>Catégorie:</strong> ${college.Categorie}</p>
+                        <p><em>${college.Commentaires}</em></p>
+                        ${badges ? `<div>${badges}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Mettre à jour les statistiques
+        function updateStats() {
+            document.getElementById('totalColleges').textContent = filteredData.length;
+            document.getElementById('tresBonnes').textContent = filteredData.filter(c => c.Categorie === 'Très bonnes').length;
+            document.getElementById('alertesEleves').textContent = filteredData.filter(c => c.Alerte_eleves).length;
+            document.getElementById('alertesParents').textContent = filteredData.filter(c => c.Alerte_parents).length;
+        }
+
+        // Filtrer les données
+        function filterData() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const dept = document.getElementById('departementFilter').value;
+            const categorie = document.getElementById('categorieFilter').value;
+
+            filteredData = collegesData.filter(college => {
+                const matchSearch = !search || 
+                    college.Nom_College.toLowerCase().includes(search) ||
+                    college.Commentaires.toLowerCase().includes(search);
+                const matchDept = dept === 'all' || college.Departement === dept;
+                const matchCategorie = categorie === 'all' || college.Categorie === categorie;
+                
+                return matchSearch && matchDept && matchCategorie;
+            });
+
+            updateMarkers();
+            updateStats();
+            displayAlertes();
+            displayColleges();
+        }
+
+        // Réinitialiser les filtres
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('departementFilter').value = 'all';
+            document.getElementById('categorieFilter').value = 'all';
+            filterData();
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterData);
+        document.getElementById('departementFilter').addEventListener('change', filterData);
+        document.getElementById('categorieFilter').addEventListener('change', filterData);
+
+        // Initialisation
+        window.onload = function() {
+            initMap();
+            createCharts();
+            updateStats();
+            displayAlertes();
+            displayColleges();
+        };
+    </script>
+</body>
+</html>
