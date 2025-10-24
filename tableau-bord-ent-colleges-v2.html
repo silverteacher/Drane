@@ -139,6 +139,18 @@
             border-bottom: 3px solid #667eea;
         }
 
+        .author-credit {
+            text-align: right;
+            color: #6c757d;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .author-credit strong {
+            color: #667eea;
+        }
+
         #map {
             height: 600px;
             border-radius: 10px;
@@ -355,6 +367,9 @@
 
         <div class="content">
             <div class="section full-width">
+                <div class="author-credit">
+                    Créé par <strong>Amélie Silvert</strong>
+                </div>
                 <h2>🗺️ Carte Interactive des Collèges</h2>
                 <div class="legend">
                     <div class="legend-item">
@@ -1512,7 +1527,7 @@
             }
 
             alertesList.innerHTML = alertes.map(college => {
-                const catClass = college.Categorie.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[̀-ͯ]/g, "");
+                const catClass = college.Categorie.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 let badges = '';
                 if (college.Alerte_eleves) {
                     badges += `<span class="badge alerte-eleves">⚠️ ${college.Eleves_non_actives} élèves non activés</span>`;
@@ -1537,7 +1552,7 @@
             const collegesList = document.getElementById('collegesList');
 
             collegesList.innerHTML = filteredData.map(college => {
-                const catClass = college.Categorie.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[̀-ͯ]/g, "");
+                const catClass = college.Categorie.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 let badges = '';
 
                 if (college.Profil_inquietant) {
