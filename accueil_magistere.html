@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Collaboratif - Réseau des Référents Ressources</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #E8F4F8 0%, #D4E9F7 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(74, 144, 164, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6FB3D2 0%, #4A90A4 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .charte-box {
+            background: linear-gradient(135deg, #F0F8FB 0%, #E8F4F8 100%);
+            border-left: 5px solid #6FB3D2;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .charte-box h2 {
+            color: #4A90A4;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .charte-box h2::before {
+            content: "📋";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .charte-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .charte-list li {
+            padding: 15px 0;
+            padding-left: 35px;
+            position: relative;
+            color: #2C5F6F;
+            line-height: 1.6;
+            border-bottom: 1px solid #D4E9F7;
+        }
+
+        .charte-list li:last-child {
+            border-bottom: none;
+        }
+
+        .charte-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #6FB3D2;
+            font-weight: bold;
+            font-size: 1.3em;
+            top: 12px;
+        }
+
+        .message-box {
+            background: white;
+            border: 2px solid #D4E9F7;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .message-box h3 {
+            color: #4A90A4;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .message-box h3::before {
+            content: "💬";
+            margin-right: 10px;
+        }
+
+        .message-box p {
+            color: #2C5F6F;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: #F0F8FB;
+            padding: 25px 30px;
+            text-align: center;
+            color: #4A90A4;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .footer::before {
+            content: "🚀";
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .charte-box {
+                padding: 20px;
+            }
+        }
+
+        /* Animation d'entrée */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤝 Bienvenue dans cet espace collaboratif !</h1>
+            <p>Réseau des Référents Ressources</p>
+        </div>
+
+        <div class="content">
+            <div class="charte-box">
+                <h2>Charte d'accueil du réseau</h2>
+                <ul class="charte-list">
+                    <li>Partagez vos idées, ressources et bonnes pratiques dans le respect de chacun.</li>
+                    <li>Utilisez les rubriques thématiques pour organiser et retrouver facilement les informations.</li>
+                    <li>Protégez la confidentialité des échanges et des documents partagés.</li>
+                    <li>La participation active et bienveillante de tous fait la richesse du réseau.</li>
+                    <li>En cas de difficulté, contactez vos animateurs ou consultez les espaces d'aide.</li>
+                </ul>
+            </div>
+
+            <div class="message-box">
+                <h3>Message de Caroline Guédan</h3>
+                <p>Vous trouverez de plus amples informations sur les forums, le salon Tchap, et l'agenda...</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            Bonne navigation dans votre espace de mutualisation !
+        </div>
+    </div>
+</body>
+</html>
