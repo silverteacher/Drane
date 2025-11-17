@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formations disponibles - DRANE Lille</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header-section {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 0;
+        }
+
+        .formations-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .formation-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .formation-card:hover {
+            border-color: #666;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .formation-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .formation-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .formation-info:last-of-type {
+            margin-bottom: 16px;
+        }
+
+        .formation-description {
+            font-size: 14px;
+            color: #4a4a4a;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .icon {
+            font-size: 16px;
+        }
+
+        .btn-inscription {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #003d82;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-inscription:hover {
+            background-color: #005bb5;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 10px;
+            }
+
+            .header-section {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            .formation-card {
+                padding: 20px 16px;
+            }
+
+            .formation-title {
+                font-size: 16px;
+            }
+
+            .formation-description {
+                font-size: 13px;
+            }
+
+            .formation-info {
+                font-size: 13px;
+                flex-wrap: wrap;
+            }
+
+            .btn-inscription {
+                width: 100%;
+                text-align: center;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <h1>Formations disponibles</h1>
+            <p class="subtitle">Proposées par la DRANE de Lille et l'EAFC</p>
+        </div>
+
+        <div class="formations-grid">
+            
+            <!-- Formation 1 -->
+            <div class="formation-card">
+                <h2 class="formation-title">Classe inversée : une pédagogie renversante</h2>
+                <p class="formation-description">
+                    Découvrez les principes et la mise en œuvre pratique de la classe inversée pour dynamiser vos enseignements. 
+                    Cette formation vous permettra d'acquérir les outils et méthodes pour faire travailler vos élèves en autonomie et renforcer l'engagement en classe.
+                </p>
+                <div class="formation-info">
+                    <span class="icon">📍</span>
+                    <span>Collège Paul Verlaine, 1 rue Berthelot, 59000 Lille</span>
+                </div>
+                <div class="formation-info">
+                    <span class="icon">📅</span>
+                    <span>7 janvier 2026</span>
+                </div>
+                <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/29902/tab/trainee/pill/individualTrainingPlan/infos/102612|01|S1|2026-01-07_14:00:00|2026-01-07_17:00:00" 
+                   target="_blank" 
+                   class="btn-inscription">
+                    S'inscrire
+                </a>
+            </div>
+
+            <!-- Formation 2 -->
+            <div class="formation-card">
+                <h2 class="formation-title">Engager les élèves dans la certification - Entrées pédagogiques</h2>
+                <p class="formation-description">
+                    Explorez les différentes approches pédagogiques pour accompagner vos élèves dans leur parcours de certification. 
+                    Apprenez à créer des situations d'apprentissage motivantes et adaptées aux référentiels de compétences.
+                </p>
+                <div class="formation-info">
+                    <span class="icon">💻</span>
+                    <span>À distance</span>
+                </div>
+                <div class="formation-info">
+                    <span class="icon">📅</span>
+                    <span>22 janvier 2026</span>
+                </div>
+                <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30192/tab/trainee/pill/individualTrainingPlan/infos/102547|01|S1|2026-01-22_18:00:00|2026-01-22_18:30:00" 
+                   target="_blank" 
+                   class="btn-inscription">
+                    S'inscrire
+                </a>
+            </div>
+
+            <!-- Formation 3 -->
+            <div class="formation-card">
+                <h2 class="formation-title">Valoriser ses compétences numériques par la préparation de la certification Pix+édu</h2>
+                <p class="formation-description">
+                    Préparez-vous efficacement à la certification Pix+édu qui atteste de vos compétences numériques professionnelles. 
+                    Cette formation vous accompagne dans la découverte du référentiel et des modalités de certification pour les enseignants.
+                </p>
+                <div class="formation-info">
+                    <span class="icon">💻</span>
+                    <span>À distance</span>
+                </div>
+                <div class="formation-info">
+                    <span class="icon">📅</span>
+                    <span>20 janvier 2026</span>
+                </div>
+                <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30184/tab/trainee/pill/individualTrainingPlan/infos/102546|01|S1|2026-01-20_17:30:00|2026-01-20_18:30:00" 
+                   target="_blank" 
+                   class="btn-inscription">
+                    S'inscrire
+                </a>
+            </div>
+
+            <!-- Formation 4 -->
+            <div class="formation-card">
+                <h2 class="formation-title">Groupe 2 - Valoriser ses compétences numériques par la préparation de la certification Pix+édu</h2>
+                <p class="formation-description">
+                    Préparez-vous efficacement à la certification Pix+édu qui atteste de vos compétences numériques professionnelles. 
+                    Cette formation vous accompagne dans la découverte du référentiel et des modalités de certification pour les enseignants.
+                </p>
+                <div class="formation-info">
+                    <span class="icon">💻</span>
+                    <span>À distance</span>
+                </div>
+                <div class="formation-info">
+                    <span class="icon">📅</span>
+                    <span>13 janvier 2026</span>
+                </div>
+                <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/30185/tab/trainee/pill/individualTrainingPlan/infos/102546|02|S1|2026-01-13_17:30:00|2026-01-13_18:30:00" 
+                   target="_blank" 
+                   class="btn-inscription">
+                    S'inscrire
+                </a>
+            </div>
+
+            <!-- Formation 5 -->
+            <div class="formation-card">
+                <h2 class="formation-title">Collaborer et publier avec la Suite de l'État - Portail Apps, une suite gratuite pour les enseignants</h2>
+                <p class="formation-description">
+                    Découvrez les outils collaboratifs gratuits mis à disposition des enseignants via le portail Apps.education.fr : messagerie, cloud, visioconférence, édition collaborative de documents, et bien plus encore.
+                    Cette formation vous permettra de maîtriser ces services numériques souverains, sécurisés et respectueux du RGPD pour faciliter votre travail au quotidien et améliorer la collaboration avec vos collègues.
+                </p>
+                <div class="formation-info">
+                    <span class="icon">💻</span>
+                    <span>À distance</span>
+                </div>
+                <div class="formation-info">
+                    <span class="icon">📅</span>
+                    <span>6 janvier 2026</span>
+                </div>
+                <a href="https://eduline.ac-lille.fr/sofia-fmo-acad//default/session/preregistrationadd/globalSessionId/29979/tab/trainee/pill/individualTrainingPlan/infos/101650|01|S1|2026-01-06_17:00:00|2026-01-06_18:30:00" 
+                   target="_blank" 
+                   class="btn-inscription">
+                    S'inscrire
+                </a>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Amélie Silvert @DRANE de Lille
+        </div>
+    </div>
+</body>
+</html>
