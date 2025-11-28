@@ -22,6 +22,7 @@
             cursor: pointer; 
         }
         
+        /* Désactive le survol/transformation pour les cartes inactives */
         .card-container:hover {
              transform: translateY(-5px) rotate(1deg);
         }
@@ -48,13 +49,13 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 1rem; /* Diminué légèrement pour donner plus d'espace au contenu */
+            padding: 1rem; 
         }
 
         .card-back {
             transform: rotateY(180deg);
             justify-content: space-between; 
-            padding: 1.5rem; /* Maintenu pour le bouton */
+            padding: 1.5rem; 
         }
         
         /* Correction du débordement du bouton sur la face arrière */
@@ -80,8 +81,6 @@
         .card-container.col-span-2.row-span-2 .text-6xl {
             font-size: 5rem; /* Jour sur les grandes cartes */
         }
-        /* Suppression du nom de la ressource sur toutes les cartes, donc pas besoin de ce style */
-        /* .card-container.col-span-2.row-span-2 .text-lg */
         .card-container.col-span-2.row-span-2 .text-3xl {
             font-size: 2.5rem; /* "JOUR" sur les grandes cartes */
         }
@@ -146,25 +145,35 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-    <!-- En-tête : Nouveau look avec fond de neige et texte simple --><header class="header-bg-snow text-white p-10 md:p-16 rounded-b-3xl shadow-2xl overflow-hidden">
-        <div class="header-overlay"></div> <!-- Overlay pour la transparence --><div class="max-w-7xl mx-auto text-center header-content">
-            <!-- Changement de text-yellow-300 à text-white pour une meilleure harmonie -->
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-2 tracking-tight text-white">
+    <!-- En-tête : Nouveau look avec fond de neige et texte simple -->
+    <header class="header-bg-snow text-white p-10 md:p-16 rounded-b-3xl shadow-2xl overflow-hidden">
+        <div class="header-overlay"></div> <!-- Overlay pour la transparence -->
+        <div class="max-w-7xl mx-auto text-center header-content">
+            
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-1 tracking-tight text-white">
                 Calendrier numérique de Décembre
-                Une surprise numérique par jour. Rendez-vous le 1er décembre !
             </h1>
+            
+            <!-- SOUS-TITRE AVEC LA NOUVELLE TAILLE ET STYLE -->
+            <p class="text-2xl md:text-3xl font-light italic text-yellow-300 mb-2">
+                Une surprise numérique par jour. Rendez-vous le 1er décembre !
+            </p>
+            
             <p class="text-lg md:text-xl font-light italic mt-2 text-white">
                 Drane
             </p>
         </div>
     </header>
 
-    <!-- Grille du Calendrier Patchwork --><main class="py-12 px-4">
+    <!-- Grille du Calendrier Patchwork -->
+    <main class="py-12 px-4">
         <div id="calendarGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 md:gap-8 max-w-7xl mx-auto grid-flow-dense auto-rows-min grid-patchwork">
-            <!-- Les cartes seront injectées ici par JavaScript --></div>
+            <!-- Les cartes seront injectées ici par JavaScript -->
+        </div>
     </main>
 
-    <!-- Pied de page simplifié --><footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-10">
+    <!-- Pied de page simplifié -->
+    <footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-10">
         <p>
             Crédit original : <strong><a href="/cdn-cgi/l/email-protection#8eefe3ebe2e7eba0fde7e2f8ebfcfacefcebe9e7e1e0a3efedefeaebe3e7fffbeba3e6eae8a0e8fc" class="text-red-600 hover:text-red-800 transition-colors font-semibold">Amélie Silvert</a></strong>
         </p>
@@ -172,6 +181,8 @@
 
     <script>
         // --- DONNÉES ET LOGIQUE DU CALENDRIER ---
+
+        let activeCard = null; // Variable globale pour suivre la carte actuellement retournée
 
         const calendarData = [
             { day: 1, title: 'Nuage', desc: 'Stockage et partage sécurisé', url: 'https://nuage.apps.education.fr', emoji: '☁️' },
@@ -236,12 +247,84 @@
             }
             return array;
         }
+        
+        /**
+         * Charge les données du calendrier (mélangées et persistantes) depuis localStorage.
+         * Si un ordre mélangé n'existe pas, on le crée et le sauvegarde.
+         */
+        function getPersistentCalendarData() {
+            const storageKey = 'shuffledCalendarData';
+            const storedData = localStorage.getItem(storageKey);
+            
+            if (storedData) {
+                try {
+                    const parsedData = JSON.parse(storedData);
+                    // Vérifie si les données parsées ressemblent aux données originales (même longueur)
+                    if (parsedData.length === calendarData.length) {
+                        return parsedData;
+                    }
+                } catch (e) {
+                    console.error("Erreur de parsing des données stockées, mélange à nouveau.", e);
+                }
+            }
+
+            // Si aucune donnée stockée ou erreur de parsing, mélanger et sauvegarder
+            let shuffled = shuffleArray([...calendarData]); // Clonage avant mélange
+            
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(shuffled));
+            } catch (e) {
+                console.error("Impossible de sauvegarder l'ordre des cartes dans localStorage.", e);
+            }
+            
+            return shuffled;
+        }
+        
+        // Récupère les données persistantes (mélangées une seule fois)
+        const PERSISTENT_CALENDAR_DATA = getPersistentCalendarData();
+
+        /**
+         * Sauvegarde l'état "flipped" (retourné) d'une carte dans localStorage.
+         * @param {number} day - Le numéro du jour de la carte.
+         * @param {boolean} isFlipped - Vrai si la carte est retournée, faux sinon.
+         */
+        function saveFlipState(day, isFlipped) {
+            try {
+                const storageKey = 'cardFlipStates';
+                const states = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                states[day] = isFlipped;
+                localStorage.setItem(storageKey, JSON.stringify(states));
+            } catch (e) {
+                console.error("Impossible de sauvegarder l'état de retournement.", e);
+            }
+        }
+
+        /**
+         * Charge tous les états "flipped" depuis localStorage.
+         * @returns {Object} Un objet où la clé est le jour (number) et la valeur est un boolean.
+         */
+        function loadFlipState() {
+            try {
+                const storageKey = 'cardFlipStates';
+                return JSON.parse(localStorage.getItem(storageKey) || '{}');
+            } catch (e) {
+                console.error("Impossible de charger les états de retournement.", e);
+                return {};
+            }
+        }
+        
+        const FLIP_STATES = loadFlipState();
+
 
         /**
          * Génère le HTML pour une carte du calendrier.
          */
         function createCard(card, index) {
             const day = card.day;
+            
+            // État initial chargé depuis localStorage
+            const isInitiallyFlipped = FLIP_STATES[day] === true;
+            
             const palette = colorPalettes[index % colorPalettes.length];
             const bgClass = `bg-gradient-to-br ${palette.front} ${palette.border}`;
             const backBorder = `${palette.backColor} border-4`;
@@ -249,8 +332,11 @@
             const layout = layoutClasses[index % layoutClasses.length];
             const gridClass = layout.grid;
             const heightClass = layout.height; 
-            const isLargeSquare = gridClass.includes('col-span-2 row-span-2'); // C'est la carte 2x2
+            const isLargeSquare = gridClass.includes('col-span-2 row-span-2'); 
             const buttonText = isLargeSquare ? 'Accéder à la ressource' : 'Accéder';
+            
+            // Ajoute la classe 'flipped' si l'état est mémorisé
+            const flipClass = isInitiallyFlipped ? 'flipped' : '';
             
             // Contenu de la Face Avant (RECTO)
             const frontContent = `
@@ -267,21 +353,26 @@
 
             // Retrait de "(Jour X)" du titre au verso
             return `
-                <div class="card-container ${gridClass} ${heightClass} 
+                <div class="card-container ${gridClass} ${heightClass} ${flipClass} 
                             hover:shadow-xl ${palette.hover} rounded-xl" 
+                            data-day="${day}"
                             onclick="flipCard(this)">
                     
                     <div class="data-card">
-                        <!-- Face avant (RECTO) --><div class="card-front ${bgClass} text-white rounded-xl shadow-lg border-4">
+                        <!-- Face avant (RECTO) -->
+                        <div class="card-front ${bgClass} text-white rounded-xl shadow-lg border-4">
                             ${frontContent}
                         </div>
                         
-                        <!-- Face arrière (VERSO) --><div class="card-back bg-white text-gray-800 rounded-xl shadow-xl ${backBorder}">
-                            <!-- Titre sans (Jour X) --><div class="flex flex-col flex-grow relative z-10 w-full">
+                        <!-- Face arrière (VERSO) -->
+                        <div class="card-back bg-white text-gray-800 rounded-xl shadow-xl ${backBorder}">
+                            <!-- Titre sans (Jour X) -->
+                            <div class="flex flex-col flex-grow relative z-10 w-full">
                                 <h3 class="text-lg font-bold ${palette.backColor.replace('border-', 'text-')} mb-2">${card.title}</h3>
                                 <p class="text-sm text-gray-600 mb-4 line-clamp-3 overflow-hidden">${card.desc}</p>
                             </div>
-                            <!-- Bouton avec texte adapté à la taille de la carte --><a href="${card.url}" target="_blank" 
+                            <!-- Bouton avec texte adapté à la taille de la carte -->
+                            <a href="${card.url}" target="_blank" 
                                class="flex-shrink-0 w-full py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition-colors text-xs uppercase tracking-wider mt-auto relative z-10"
                                onclick="event.stopPropagation()">
                                 ${buttonText}
@@ -295,13 +386,34 @@
         /** Affiche toutes les cartes dans la grille. */
         function renderCards() {
             const grid = document.getElementById('calendarGrid');
-            const shuffledData = shuffleArray([...calendarData]);
-            grid.innerHTML = shuffledData.map((card, index) => createCard(card, index)).join('');
+            // Utilise les données persistantes (mélangées une seule fois)
+            grid.innerHTML = PERSISTENT_CALENDAR_DATA.map((card, index) => createCard(card, index)).join('');
         }
 
-        /** Gère le retournement de la carte. */
+        /** Gère le retournement de la carte et sauvegarde l'état. */
         function flipCard(container) {
+            const day = parseInt(container.getAttribute('data-day'), 10);
+            const isFlipped = container.classList.contains('flipped');
+
+            // 1. Si une autre carte est déjà active et différente de celle-ci, on la ferme.
+            if (activeCard && activeCard !== container) {
+                const activeDay = parseInt(activeCard.getAttribute('data-day'), 10);
+                activeCard.classList.remove('flipped');
+                saveFlipState(activeDay, false); // Sauvegarde l'état fermé
+                activeCard = null; 
+            }
+
+            // 2. Retourner la carte actuelle
             container.classList.toggle('flipped');
+            const newFlippedState = container.classList.contains('flipped');
+            
+            // 3. Mettre à jour la carte active et sauvegarder le nouvel état
+            if (newFlippedState) {
+                activeCard = container;
+            } else {
+                activeCard = null; 
+            }
+            saveFlipState(day, newFlippedState); // Sauvegarde le nouvel état (ouvert/fermé)
         }
 
         // Exécution du rendu
