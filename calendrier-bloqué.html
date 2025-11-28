@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier de Décembre Numérique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #c92a2a 0%, #A50021 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(165, 0, 33, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #ffeaa7;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 150px);
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+            justify-content: center;
+        }
+        
+        .card-container {
+            perspective: 1000px;
+            height: 150px;
+            transition: transform 0.3s;
+            position: relative;
+        }
+        
+        .card-container:hover:not(.flipped):not(.locked) {
+            transform: translateY(-8px);
+        }
+        
+        .card-container.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .card-container.locked:hover {
+            transform: none;
+        }
+        
+        .locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            flex-direction: column;
+            color: white;
+        }
+        
+        .card-container.locked .locked-overlay {
+            display: flex;
+        }
+        
+        .card-container.today {
+            animation: pulse-gold 2s infinite alternate;
+        }
+        
+        @keyframes pulse-gold {
+            from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), 0 0 40px rgba(255, 215, 0, 0.5); }
+        }
+        
+        .locked-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .locked-text {
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .data-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        
+        .card-container.flipped .data-card {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-front {
+            background: linear-gradient(135deg, #A50021 0%, #d63447 100%);
+            border: 4px solid #FFD700;
+            color: white;
+        }
+        
+        /* Variation de couleurs pour les cartes */
+        .card-container:nth-child(6n+1) .card-front {
+            background: linear-gradient(135deg, #A50021 0%, #d63447 100%);
+        }
+        
+        .card-container:nth-child(6n+2) .card-front {
+            background: linear-gradient(135deg, #006837 0%, #00a651 100%);
+        }
+        
+        .card-container:nth-child(6n+3) .card-front {
+            background: linear-gradient(135deg, #c23616 0%, #e84118 100%);
+        }
+        
+        .card-container:nth-child(6n+4) .card-front {
+            background: linear-gradient(135deg, #005c3e 0%, #007749 100%);
+        }
+        
+        .card-container:nth-child(6n+5) .card-front {
+            background: linear-gradient(135deg, #8b0000 0%, #b22222 100%);
+        }
+        
+        .card-container:nth-child(6n+6) .card-front {
+            background: linear-gradient(135deg, #0f6938 0%, #27ae60 100%);
+        }
+        
+        .emoji {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
+        }
+        
+        .day-number {
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .day-text {
+            font-size: 0.6em;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            transform: rotateY(180deg);
+            border: 4px solid #007749;
+            padding: 12px;
+            justify-content: space-between;
+        }
+        
+        .card-back h3 {
+            color: #007749;
+            font-size: 0.95em;
+            margin: 0 0 5px 0;
+            line-height: 1.15;
+            font-weight: 700;
+        }
+        
+        .card-back p {
+            font-size: 0.7em;
+            margin: 0;
+            line-height: 1.2;
+            color: #555;
+            flex-grow: 1;
+        }
+        
+        .card-back a {
+            display: block;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #FFD700 0%, #ffa502 100%);
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            font-size: 0.75em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+            margin-top: 8px;
+        }
+        
+        .card-back a:hover {
+            background: linear-gradient(135deg, #A50021 0%, #c92a2a 100%);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(165, 0, 33, 0.4);
+        }
+        
+        @media (max-width: 1100px) {
+            .calendar-grid {
+                grid-template-columns: repeat(4, 140px);
+                gap: 25px;
+            }
+            .card-container {
+                height: 140px;
+            }
+            h1 {
+                font-size: 2.5em;
+            }
+        }
+        
+        @media (max-width: 700px) {
+            .calendar-grid {
+                grid-template-columns: repeat(3, 110px);
+                gap: 20px;
+            }
+            .card-container {
+                height: 110px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .subtitle {
+                font-size: 1em;
+            }
+            .emoji {
+                font-size: 2em;
+            }
+            .day-number {
+                font-size: 2.2em;
+            }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            color: #666;
+        }
+        
+        footer a {
+            color: #A50021;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>✨ Calendrier de Décembre Numérique ✨</h1>
+        <p class="subtitle">Une surprise numérique tous les jours. Rendez-vous le 1er décembre !</p>
+    </div>
+
+    <div id="calendarGrid" class="calendar-grid">
+        <!-- Les cartes seront générées par JavaScript -->
+    </div>
+
+    <footer>
+        <p>
+            Conçu par <strong><a href="/cdn-cgi/l/email-protection#b5d4d8d0d9dcd09bc6dcd9c3d0c7c1f5c7d0d2dcdadb98d4d6d4d1d0d8dcc4c0d098ddd1d39bd3c7">Amélie Silvert</a></strong> à l'aide de l'IA
+        </p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        const calendarData = [
+            { day: 1, title: 'Nuage', desc: 'Stockage et partage sécurisé', url: 'https://nuage.apps.education.fr', emoji: '☁️' },
+            { day: 2, title: 'Tchap', desc: 'Messagerie sécurisée', url: 'https://www.tchap.gouv.fr/', emoji: '💬' },
+            { day: 3, title: 'Visio Agents', desc: 'Visioconférence', url: 'https://portail.apps.education.fr/services/visio-agents', emoji: '📹' },
+            { day: 4, title: 'Fichiers (DINUM)', desc: 'Envoi de fichiers', url: 'https://fichiers.numerique.gouv.fr', emoji: '📤' },
+            { day: 5, title: 'FranceTransfert', desc: 'Transfert de documents', url: 'https://francetransfert.numerique.gouv.fr/upload', emoji: '📦' },
+            { day: 6, title: 'CodiMD', desc: 'Éditeur collaboratif', url: 'https://portail.apps.education.fr/services/pad-avance-codimd', emoji: '✍️' },
+            { day: 7, title: 'Tribu', desc: 'Espace de travail commun', url: 'https://tribu.phm.education.gouv.fr/', emoji: '🏕️' },
+            { day: 8, title: 'Portail Tubes', desc: 'Hébergement vidéo', url: 'https://portail.apps.education.fr/services/portail-tubes', emoji: '📺' },
+            { day: 9, title: 'PodEduc', desc: 'Création de podcasts', url: 'https://podeduc.apps.education.fr/', emoji: '🎙️' },
+            { day: 10, title: 'Questionnaire', desc: 'Recueil de réponses', url: 'https://questionnaire.apps.education.fr', emoji: '✅' },
+            { day: 11, title: 'Sondage', desc: 'Vote en ligne', url: 'https://sondage.apps.education.fr/', emoji: '📊' },
+            { day: 12, title: 'Éléa', desc: 'Plateforme pédagogique', url: 'https://dane.site.ac-lille.fr/2024/09/20/simplifiez-votre-enseignement-avec-elea/', emoji: '💻' },
+            { day: 13, title: 'Scratch', desc: 'Programmation créative', url: 'https://scratch.mit.edu/', emoji: '🎮' },
+            { day: 14, title: 'OpenBoard', desc: 'Tableau numérique', url: 'https://openboard.ch/', emoji: '📝' },
+            { day: 15, title: 'Édugéo', desc: 'Cartographie', url: 'https://www.edugeo.fr/', emoji: '🗺️' },
+            { day: 16, title: 'Générateur Cartes', desc: 'Création de cartes mentales', url: 'http://generateur-cartes-pdf.tapeps.fr', emoji: '🃏' },
+            { day: 17, title: 'LearningApps', desc: 'Activités interactives', url: 'https://learningapps.org/', emoji: '🧩' },
+            { day: 18, title: 'Lumni', desc: 'Contenus éducatifs', url: 'https://www.lumni.fr/', emoji: '🎓' },
+            { day: 19, title: 'Marble', desc: 'Globe numérique', url: 'https://marble.kde.org/', emoji: '🌍' },
+            { day: 20, title: 'Capytale', desc: 'Activités interactives', url: 'https://capytale2.ac-paris.fr', emoji: '⌨️' },
+            { day: 21, title: 'Les Pépites', desc: 'Chatbot pédagogique', url: 'https://docs.forge.apps.education.fr/pepites/', emoji: '🤖' },
+            { day: 22, title: 'Labo IA Didaklab', desc: 'Expérimentation IA', url: 'https://novapeda.eu/didaklab', emoji: '📋' },
+            { day: 23, title: 'Shotcut', desc: 'Montage vidéo', url: 'https://shotcut.org/', emoji: '🎬' },
+            { day: 24, title: 'Tournesol', desc: 'Évaluation IA', url: 'https://tournesol.app/', emoji: '🌻' }
+        ];
+
+        function createCard(card) {
+            const now = new Date();
+            const currentMonth = now.getMonth(); // 0-11 (11 = décembre)
+            const currentDay = now.getDate();
+            const currentYear = now.getFullYear();
+            
+            // Vérifier si la carte doit être déverrouillée
+            let isUnlocked = false;
+            let isToday = false;
+            
+            // Si nous sommes en décembre et que le jour actuel >= jour de la carte
+            if (currentMonth === 11 && currentDay >= card.day) {
+                isUnlocked = true;
+                // Vérifier si c'est la carte du jour
+                if (currentDay === card.day) {
+                    isToday = true;
+                }
+            }
+            // Si nous sommes après décembre (janvier ou plus)
+            else if (currentMonth > 11 || (currentMonth === 0 && currentYear > now.getFullYear())) {
+                isUnlocked = true;
+            }
+            
+            const lockedClass = isUnlocked ? '' : 'locked';
+            const todayClass = isToday ? 'today' : '';
+            const onclickAttr = isUnlocked ? 'onclick="flipCard(this)"' : '';
+            
+            return `
+                <div class="card-container ${lockedClass} ${todayClass}" ${onclickAttr}>
+                    <div class="locked-overlay">
+                        <div class="locked-icon">🔒</div>
+                        <div class="locked-text">RDV le ${card.day} déc.</div>
+                    </div>
+                    <div class="data-card">
+                        <div class="card-front">
+                            <div class="emoji">${card.emoji}</div>
+                            <div class="day-number">${card.day}</div>
+                            <div class="day-text">Décembre</div>
+                        </div>
+                        <div class="card-back">
+                            <h3>${card.title}</h3>
+                            <p>${card.desc}</p>
+                            <a href="${card.url}" target="_blank" onclick="event.stopPropagation()">Accéder</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCards() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = calendarData.map(card => createCard(card)).join('');
+        }
+
+        function flipCard(container) {
+            container.classList.toggle('flipped');
+        }
+
+        // Initialiser le calendrier
+        renderCards();
+    </script>
+
+</body>
+</html>
