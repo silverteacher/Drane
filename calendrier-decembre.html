@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier de l'Avent Numérique</title>
+    <!-- Chargement de Tailwind CSS pour un style moderne et light --><script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Configuration de la police Inter (recommandée par défaut avec Tailwind) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Styles spécifiques pour la carte à retourner (flip) */
+        .card-container {
+            perspective: 1000px;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer; 
+        }
+        
+        /* Désactive le survol/transformation pour les cartes inactives */
+        .card-container:hover {
+             transform: translateY(-5px) rotate(1deg);
+        }
+        .card-container.inactive-card:hover {
+             transform: none; /* Annule la transformation au survol */
+        }
+        .card-container.inactive-card {
+            opacity: 0.4; /* Opacité réduite pour les jours non débloqués */
+            cursor: default; /* Curseur par défaut */
+            /* J'ai retiré pointer-events: none pour permettre le clic et le message d'erreur */
+            filter: grayscale(100%); /* Optionnel : pour renforcer l'idée que c'est "fermé" */
+        }
+
+        .data-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transform-style: preserve-3d;
+        }
+
+        .card-container.flipped .data-card {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1rem; 
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            justify-content: space-between; 
+            padding: 1.5rem; 
+        }
+        
+        /* Correction du débordement du bouton sur la face arrière */
+        .card-back a {
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        /* --- STYLES PATCHWORK (Tailles et Espacement) --- */
+
+        /* Ajustements pour les cartes 1x1, 2x1, 1x2 */
+        .card-container.h-44 .text-5xl,
+        .card-container.h-80 .text-5xl {
+            font-size: 3.5rem; /* Taille du jour sur les cartes plus petites */
+        }
+        .card-container.h-44 .text-2xl {
+             font-size: 1.25rem; /* Taille de "JOUR" sur les petites cartes */
+        }
+
+        /* Spécifique pour les cartes 2x2 (grande tuile) */
+        .card-container.col-span-2.row-span-2 .text-6xl {
+            font-size: 5rem; /* Jour sur les grandes cartes */
+        }
+        .card-container.col-span-2.row-span-2 .text-3xl {
+            font-size: 2.5rem; /* "JOUR" sur les grandes cartes */
+        }
+
+
+        /* Ajustement du gap de la grille */
+        .grid-patchwork {
+            gap: 1.5rem; /* Augmente l'espace entre les tuiles */
+        }
+        
+        /* Assurer que la grille s'adapte bien */
+        @media (max-width: 640px) {
+            .grid-patchwork {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 0.75rem; /* Réduit le gap sur mobile pour optimiser l'espace */
+                auto-rows: auto !important; /* Hauteur automatique des lignes */
+            }
+            
+            /* Toutes les cartes deviennent 1x1 sur mobile pour uniformité */
+            .card-container {
+                grid-column: span 1 !important;
+                grid-row: span 1 !important;
+                height: auto !important;
+                min-height: 160px; /* Hauteur minimale pour éviter les cartes trop écrasées */
+            }
+            
+            /* Ajustement du contenu des cartes */
+            .card-front, .card-back {
+                padding: 1rem; /* Padding uniforme sur mobile */
+                min-height: 160px; /* Assure une hauteur minimale cohérente */
+            }
+            
+            /* Tailles de texte optimisées pour mobile */
+            .card-front .text-5xl, 
+            .card-front .text-6xl {
+                font-size: 2.5rem !important; 
+            }
+            .card-front .text-2xl, 
+            .card-front .text-3xl {
+                font-size: 1rem !important; 
+            }
+            
+            /* Face arrière : ajustements */
+            .card-back h3 {
+                font-size: 1rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            .card-back p {
+                font-size: 0.75rem !important;
+                margin-bottom: 0.75rem !important;
+                line-height: 1.3;
+            }
+            .card-back a {
+                font-size: 0.7rem !important;
+                padding: 0.5rem !important;
+            }
+            
+            /* Header responsive */
+            .header-bg-snow {
+                padding: 2rem 1rem !important;
+            }
+            .header-bg-snow h1 {
+                font-size: 1.75rem !important;
+                line-height: 1.2;
+            }
+            .header-bg-snow p {
+                font-size: 1rem !important;
+                line-height: 1.3;
+            }
+        }
+        
+        /* NOUVEAU STYLE HEADER pour fond de neige en transparence */
+        .header-bg-snow {
+            background-color: #011f4b; /* Couleur de base pour le fond, un bleu nuit par exemple */
+            background-image: url('http://silverteacher.github.io/Drane/christmas-6781762_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative; /* Nécessaire pour l'overlay */
+            z-index: 0; /* Pour que le contenu soit au-dessus */
+        }
+
+        .header-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(1, 31, 75, 0.7); /* Overlay bleu nuit avec 70% d'opacité */
+            z-index: 1; /* Au-dessus de l'image de fond, en dessous du texte */
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2; /* Pour que le texte soit au-dessus de l'overlay et de l'image */
+        }
+        
+        /* Style pour la boîte de message temporaire (Revenez demain) */
+        #messageBox {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f87171; /* red-400 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none; /* Important pour ne pas bloquer les clics */
+            max-width: 90%; /* Évite le débordement sur mobile */
+            text-align: center;
+        }
+
+        #messageBox.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- En-tête : Nouveau look avec fond de neige et texte simple --><header class="header-bg-snow text-white p-10 md:p-16 rounded-b-3xl shadow-2xl overflow-hidden">
+        <div class="header-overlay"></div> <!-- Overlay pour la transparence --><div class="max-w-7xl mx-auto text-center header-content">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-2 tracking-tight text-white">
+                Calendrier de l'Avent Numérique
+            </h1>
+            <!-- SOUS-TITRE : Augmentation de la taille de text-xl/md:text-2xl à text-2xl/md:text-3xl --><p class="text-2xl md:text-3xl font-light italic text-yellow-300 mb-2">
+                Une surprise numérique par jour. Rendez-vous le 1er décembre !
+            </p>
+            <p class="text-lg md:text-xl font-light italic mt-2 text-white">
+                Drane
+            </p>
+        </div>
+    </header>
+
+    <!-- Grille du Calendrier Patchwork --><main class="py-12 px-4">
+        <div id="calendarGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 md:gap-8 max-w-7xl mx-auto grid-flow-dense auto-rows-min grid-patchwork">
+            <!-- Les cartes seront injectées ici par JavaScript --></div>
+    </main>
+    
+    <!-- Boîte de message temporaire --><div id="messageBox" class="text-center font-bold"></div>
+
+    <!-- Pied de page simplifié --><footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-10">
+        <p>
+            Crédit original : <strong><a href="mailto:amelie.silvert@ac-lille.fr" class="text-red-600 hover:text-red-800 transition-colors font-semibold">Amélie Silvert</a></strong>
+        </p>
+    </footer>
+
+    <script>
+        // --- DONNÉES ET LOGIQUE DU CALENDRIER ---
+
+        /**
+         * Calcule le jour maximum déverrouillé.
+         * En dehors de décembre, on utilise le jour 0 (tout est verrouillé).
+         * En décembre, on utilise le jour actuel pour déverrouiller au fur et à mesure.
+         * @returns {number} Le jour maximum visible (entre 0 et 24).
+         */
+        function getUnlockedDay() {
+            const today = new Date();
+            const currentMonth = today.getMonth(); // 0 pour Janvier, 11 pour Décembre
+            
+            // Si c'est Décembre (mois 11) et avant le 25
+            if (currentMonth === 11 && today.getDate() >= 1 && today.getDate() <= 24) {
+                return today.getDate();
+            }
+            
+            // Sinon (hors décembre ou avant le 1er décembre), tout est verrouillé (Jour 0)
+            return 0; 
+        }
+
+        const UNLOCKED_DAY = getUnlockedDay();
+        
+        let activeCard = null; // Variable globale pour suivre la carte actuellement retournée
+
+        // Données originales (dans l'ordre 1-24)
+        const calendarData = [
+            { day: 1, title: 'Nuage', desc: 'Stockage et partage sécurisé', url: 'https://nuage.apps.education.fr', emoji: '☁️' },
+            { day: 2, title: 'Tchap', desc: 'Messagerie sécurisée', url: 'https://www.tchap.gouv.fr/', emoji: '💬' },
+            { day: 3, title: 'Visio Agents', desc: 'Visioconférence', url: 'https://portail.apps.education.fr/services/visio-agents', emoji: '📹' },
+            { day: 4, title: 'Fichiers (DINUM)', desc: 'Envoi de fichiers', url: 'https://fichiers.numerique.gouv.fr', emoji: '📤' },
+            { day: 5, title: 'FranceTransfert', desc: 'Transfert de documents', url: 'https://francetransfert.numerique.gouv.fr/upload', emoji: '📦' },
+            { day: 6, title: 'CodiMD', desc: 'Éditeur collaboratif', url: 'https://portail.apps.education.fr/services/pad-avance-codimd', emoji: '✍️' },
+            { day: 7, title: 'Tribu', desc: 'Espace de travail commun', url: 'https://tribu.phm.education.gouv.fr/', emoji: '🏕️' },
+            { day: 8, title: 'Portail Tubes', desc: 'Hébergement vidéo', url: 'https://portail.apps.education.fr/services/portail-tubes', emoji: '📺' },
+            { day: 9, title: 'PodEduc', desc: 'Plateforme de vidéos et podcasts éducatifs', url: 'https://podeduc.apps.education.gouv.fr/', emoji: '🎙️' },
+            { day: 10, title: 'Questionnaire', desc: 'Recueil de réponses', url: 'https://questionnaire.apps.education.fr', emoji: '✅' },
+            { day: 11, title: 'Sondage', desc: 'Vote en ligne', url: 'https://sondage.apps.education.fr/', emoji: '📊' },
+            { day: 12, title: 'Éléa', desc: 'Plateforme pédagogique', url: 'https://dane.site.ac-lille.fr/2024/09/20/simplifiez-votre-enseignement-avec-elea/', emoji: '💻' },
+            { day: 13, title: 'Scratch', desc: 'Programmation créative', url: 'https://scratch.mit.edu/', emoji: '🎮' },
+            { day: 14, title: 'OpenBoard', desc: 'Tableau numérique', url: 'https://openboard.ch/', emoji: '📝' },
+            { day: 15, title: 'Édugéo', desc: 'Cartographie', url: 'https://www.edugeo.fr/', emoji: '🗺️' },
+            { day: 16, title: 'Générateur Cartes', desc: 'Création de cartes mentales', url: 'http://generateur-cartes-pdf.tapeps.fr', emoji: '🃏' },
+            { day: 17, title: 'LearningApps', desc: 'Activités interactives', url: 'https://learningapps.org/', emoji: '🧩' },
+            { day: 18, title: 'Lumni', desc: 'Contenus éducatifs', url: 'https://www.lumni.fr/', emoji: '🎓' },
+            { day: 19, title: 'Marble', desc: 'Globe numérique', url: 'https://marble.kde.org/', emoji: '🌍' },
+            { day: 20, title: 'Capytale', desc: 'Activités interactives', url: 'https://capytale2.ac-paris.fr', emoji: '⌨️' },
+            { day: 21, title: 'Les Pépites', desc: 'Chatbot pédagogique', url: 'https://docs.forge.apps.education.fr/pepites/', emoji: '🤖' },
+            { day: 22, title: 'Labo IA Didaklab', desc: 'Expérimentation IA', url: 'https://novapeda.eu/didaklab', emoji: '🔬' },
+            { day: 23, title: 'Shotcut', desc: 'Montage vidéo', url: 'https://shotcut.org/', emoji: '🎬' },
+            { day: 24, title: 'Tournesol', desc: 'Évaluation IA', url: 'https://tournesol.app/', emoji: '🌻' }
+        ];
+
+        /** Palettes de couleurs et classes de mise en page (h-44 pour les petites) */
+        const colorPalettes = [
+            { front: 'from-red-600 to-red-800', border: 'border-yellow-300', hover: 'hover:shadow-red-300', backColor: 'border-red-600' },
+            { front: 'from-green-700 to-green-900', border: 'border-red-300', hover: 'hover:shadow-green-300', backColor: 'border-green-700' },
+            { front: 'from-blue-700 to-blue-900', border: 'border-gray-300', hover: 'hover:shadow-blue-300', backColor: 'border-blue-700' },
+            { front: 'from-pink-500 to-purple-600', border: 'border-cyan-300', hover: 'hover:shadow-pink-300', backColor: 'border-purple-600' },
+            { front: 'from-orange-500 to-yellow-600', border: 'border-red-500', hover: 'hover:shadow-orange-300', backColor: 'border-orange-500' },
+            { front: 'from-red-900 to-red-700', border: 'border-yellow-100', hover: 'hover:shadow-red-200', backColor: 'border-red-900' },
+            { front: 'from-indigo-700 to-indigo-900', border: 'border-green-300', hover: 'hover:shadow-indigo-300', backColor: 'border-indigo-700' },
+        ];
+        
+        const layoutClasses = [
+            { grid: 'col-span-1 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: true }, // 1x1
+            { grid: 'col-span-1 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: true },
+            { grid: 'col-span-1 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: true },
+            { grid: 'col-span-2 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: false }, // 2x1 (Wide)
+            { grid: 'col-span-1 row-span-2', height: 'h-80', isLarge: true, isNarrow: true, isSquare: false }, // 1x2 (Narrow/Tall)
+            { grid: 'col-span-2 row-span-2', height: 'h-80', isLarge: true, isNarrow: false, isSquare: true }, // 2x2 (Large Square)
+        ];
+
+
+        /**
+         * Fonction pour mélanger un tableau (Algorithme de Fisher-Yates).
+         */
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [
+                    array[randomIndex], array[currentIndex]
+                ];
+            }
+            return array;
+        }
+        
+        /** Affiche un message temporaire en bas de l'écran (remplace alert()). */
+        function showMessage(text) {
+            const msgBox = document.getElementById('messageBox');
+            msgBox.textContent = text;
+            msgBox.classList.add('show');
+            
+            setTimeout(() => {
+                msgBox.classList.remove('show');
+            }, 3000); // Message visible pendant 3 secondes
+        }
+
+        /**
+         * Charge les données du calendrier (mélangées et persistantes) depuis localStorage.
+         * Si un ordre mélangé n'existe pas, on le crée et le sauvegarde.
+         */
+        function getPersistentCalendarData() {
+            const storageKey = 'shuffledCalendarData';
+            const storedData = localStorage.getItem(storageKey);
+            
+            if (storedData) {
+                // Utilise les données stockées si elles existent et sont valides
+                try {
+                    const parsedData = JSON.parse(storedData);
+                    // Vérifie si les données parsées ressemblent aux données originales (même longueur)
+                    if (parsedData.length === calendarData.length) {
+                        return parsedData;
+                    }
+                    // Si la structure est mauvaise, on continue pour regénérer
+                } catch (e) {
+                    console.error("Erreur de parsing des données stockées, mélange à nouveau.", e);
+                    // Laisse la fonction continuer pour générer un nouvel ordre
+                }
+            }
+
+            // Si aucune donnée stockée ou erreur de parsing, mélanger et sauvegarder
+            let shuffled = shuffleArray([...calendarData]); // Clonage avant mélange
+            
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(shuffled));
+                console.log("Nouvel ordre de cartes mélangé et sauvegardé dans localStorage.");
+            } catch (e) {
+                console.error("Impossible de sauvegarder dans localStorage.", e);
+            }
+            
+            return shuffled;
+        }
+
+        // Récupère les données persistantes (mélangées une seule fois)
+        const PERSISTENT_CALENDAR_DATA = getPersistentCalendarData();
+
+
+        /**
+         * Génère le HTML pour une carte du calendrier.
+         */
+        function createCard(card, index) {
+            const day = card.day;
+            const isUnlocked = day <= UNLOCKED_DAY;
+            
+            // On utilise l'index de la carte dans le tableau PERSISTENT_CALENDAR_DATA pour choisir la couleur/le layout,
+            // garantissant que la même couleur est toujours attribuée à la même POSITION sur la grille.
+            const palette = colorPalettes[index % colorPalettes.length];
+            const bgClass = `bg-gradient-to-br ${palette.front} ${palette.border}`;
+            const backBorder = `${palette.backColor} border-4`;
+
+            const layoutIndex = index % layoutClasses.length; // Layout basé sur la position (index)
+            const layout = layoutClasses[layoutIndex];
+
+            const gridClass = layout.grid;
+            const heightClass = layout.height; 
+            const isLargeSquare = gridClass.includes('col-span-2 row-span-2'); 
+            const buttonText = isLargeSquare ? 'Accéder à la ressource' : 'Accéder';
+            
+            // Si la carte est déverrouillée, 'flipCard(this)' est l'action. Sinon, c'est le message d'erreur.
+            let statusClass = isUnlocked ? '' : 'inactive-card';
+            let clickHandler = isUnlocked ? `flipCard(this)` : `showLockedMessage(${day})`;
+            
+            // Contenu de la Face Avant (RECTO)
+            const frontContent = `
+                <div class="text-2xl font-light mb-0.5 opacity-80 
+                            ${isLargeSquare ? 'text-3xl mb-1' : 'text-2xl mb-0.5'}">
+                    JOUR
+                </div>
+                <div class="font-black 
+                            ${isLargeSquare ? 'text-6xl' : 'text-5xl'}">
+                    ${day}
+                </div>
+            `;
+
+
+            return `
+                <div class="card-container ${gridClass} ${heightClass} ${statusClass}
+                            hover:shadow-xl ${palette.hover} rounded-xl" 
+                            data-day="${day}"
+                            onclick="${clickHandler}">
+                    
+                    <div class="data-card">
+                        
+                        <!-- Face avant (RECTO) -->
+                        <div class="card-front ${bgClass} text-white rounded-xl shadow-lg border-4">
+                            ${frontContent}
+                        </div>
+                        
+                        <!-- Face arrière (VERSO) -->
+                        <div class="card-back bg-white text-gray-800 rounded-xl shadow-xl ${backBorder}">
+                            
+                            <!-- Titre et description -->
+                            <div class="flex flex-col flex-grow relative z-10 w-full">
+                                <h3 class="text-lg font-bold ${palette.backColor.replace('border-', 'text-')} mb-2">${card.title}</h3>
+                                <p class="text-sm text-gray-600 mb-4 line-clamp-3 overflow-hidden">${card.desc}</p>
+                            </div>
+                            
+                            <!-- Bouton avec texte adapté à la taille de la carte -->
+                            <a href="${card.url}" target="_blank" 
+                               class="flex-shrink-0 w-full py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition-colors text-xs uppercase tracking-wider mt-auto relative z-10"
+                               onclick="event.stopPropagation()">
+                                ${buttonText}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        /** Affiche le message de carte verrouillée. */
+        function showLockedMessage(day) {
+            // Empêche le clic sur un jour non déverrouillé et affiche le message
+            showMessage(`Patience ! La surprise du jour ${day} sera disponible le ${day} décembre.`);
+        }
+
+
+        /** Affiche toutes les cartes dans la grille, en utilisant les données persistantes. */
+        function renderCards() {
+            const grid = document.getElementById('calendarGrid');
+            // Utilisation des données persistantes (mélangées une seule fois et stockées)
+            grid.innerHTML = PERSISTENT_CALENDAR_DATA.map((card, index) => createCard(card, index)).join('');
+        }
+
+        /** Gère le retournement de la carte. */
+        function flipCard(container) {
+            // Si la carte est inactive (jour futur), le showLockedMessage est déjà géré par l'onclick dans createCard.
+            if (container.classList.contains('inactive-card')) return;
+            
+            const isFlipped = container.classList.contains('flipped');
+
+            // 1. Si une autre carte est déjà active et différente de celle-ci, on la ferme.
+            if (activeCard && activeCard !== container) {
+                activeCard.classList.remove('flipped');
+                activeCard = null; // L'ancienne carte est fermée
+            }
+
+            // 2. Retourner la carte actuelle
+            container.classList.toggle('flipped');
+            
+            // 3. Mettre à jour la carte active
+            if (container.classList.contains('flipped')) {
+                activeCard = container;
+            } else {
+                activeCard = null; // La carte vient d'être refermée
+            }
+        }
+
+        // Exécution du rendu
+        renderCards();
+    </script>
+</body>
+</html>
