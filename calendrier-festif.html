@@ -3,162 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendrier de Décembre Numérique</title>
+    <title>Calendrier Numérique Patchwork (Dévérouillé)</title>
+    <!-- Chargement de Tailwind CSS pour un style moderne et light --><script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Configuration de la police Inter (recommandée par défaut avec Tailwind) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         
         body {
-            font-family: 'Georgia', 'Segoe UI', serif;
-            padding: 20px;
-            background: linear-gradient(135deg, #f5e6d3 0%, #d4a574 100%);
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        
-        .header {
-            background: linear-gradient(135deg, #8b3a3a 0%, #c92a2a 100%);
-            color: white;
-            padding: 50px 40px;
-            border-radius: 25px;
-            text-align: center;
-            margin-bottom: 50px;
-            box-shadow: 0 15px 40px rgba(139, 58, 58, 0.4);
-            position: relative;
-            overflow: hidden;
-            border: 5px solid #d4a574;
-        }
-        
-        .header::before {
-            content: '❄️ ⭐ ✨ 🎄 ❄️ ⭐ ✨ 🎄 ❄️ ⭐ ✨ 🎄';
-            position: absolute;
-            top: 10px;
-            left: 0;
-            right: 0;
-            font-size: 1.5em;
-            opacity: 0.3;
-            animation: float 20s linear infinite;
-        }
-        
-        @keyframes float {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
-        
-        h1 {
-            font-size: 3.5em;
-            margin-bottom: 15px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 1;
-            font-family: 'Georgia', serif;
-            font-weight: bold;
-        }
-        
-        .subtitle {
-            font-size: 1.3em;
-            color: #ffeaa7;
-            font-weight: 500;
-            position: relative;
-            z-index: 1;
-            font-style: italic;
-        }
-        
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 160px);
-            gap: 15px;
-            max-width: 1100px;
-            margin: 0 auto;
-            justify-content: center;
-        }
-        
+
+        /* Styles spécifiques pour la carte à retourner (flip) */
         .card-container {
             perspective: 1000px;
-            height: 160px;
-            transition: transform 0.3s;
-            position: relative;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer; 
         }
         
-        .card-container:hover:not(.flipped):not(.locked) {
-            transform: translateY(-10px) rotate(2deg);
+        .card-container:hover {
+             transform: translateY(-5px) rotate(1deg);
         }
-        
-        .card-container.locked {
-            opacity: 0.6;
-            cursor: not-allowed;
-            filter: grayscale(40%);
-        }
-        
-        .card-container.locked:hover {
-            transform: none;
-        }
-        
-        .locked-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            border-radius: 20px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            flex-direction: column;
-            color: white;
-            backdrop-filter: blur(3px);
-        }
-        
-        .card-container.locked .locked-overlay {
-            display: flex;
-        }
-        
-        .card-container.today:not(.locked) {
-            animation: sparkle 2s infinite alternate;
-        }
-        
-        @keyframes sparkle {
-            from { 
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-                transform: scale(1);
-            }
-            to { 
-                box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.6);
-                transform: scale(1.05);
-            }
-        }
-        
-        .locked-icon {
-            font-size: 3.5em;
-            margin-bottom: 8px;
-            animation: shake 2s infinite;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
-        }
-        
-        .locked-text {
-            font-size: 0.9em;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        
+
         .data-card {
             width: 100%;
             height: 100%;
             position: relative;
             transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             transform-style: preserve-3d;
-            cursor: pointer;
         }
-        
+
         .card-container.flipped .data-card {
             transform: rotateY(180deg);
         }
@@ -168,248 +43,135 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 15px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            padding: 1rem; /* Diminué légèrement pour donner plus d'espace au contenu */
         }
-        
-        .card-front {
-            background: linear-gradient(135deg, #A50021 0%, #d63447 100%);
-            border: 4px solid #FFD700;
-            color: white;
-            z-index: 2;
-        }
-        
-        /* Motifs décoratifs variés pour chaque carte */
-        .card-front::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.15;
-            background-repeat: repeat;
-            background-size: 30px;
-        }
-        
-        /* Variations de couleurs et motifs - style plus organique */
-        .card-container:nth-child(1) .card-front { background: linear-gradient(135deg, #8b1e1e 0%, #c92a2a 100%); border-color: #ffd700; }
-        .card-container:nth-child(1) .card-front::before { 
-            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 2px, transparent 2px);
-        }
-        
-        .card-container:nth-child(2) .card-front { background: linear-gradient(135deg, #0a5f3f 0%, #0d8058 100%); border-color: #ff6b6b; }
-        .card-container:nth-child(2) .card-front::before {
-            content: '❄️';
-            font-size: 80px;
-            opacity: 0.1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .card-container:nth-child(3) .card-front { background: linear-gradient(135deg, #862e4f 0%, #b8385e 100%); border-color: #90d5ff; }
-        .card-container:nth-child(3) .card-front::before {
-            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 10px);
-        }
-        
-        .card-container:nth-child(4) .card-front { background: linear-gradient(135deg, #5c7a8a 0%, #7ba3b8 100%); border-color: #ffd700; }
-        .card-container:nth-child(4) .card-front::before {
-            content: '⭐';
-            font-size: 100px;
-            opacity: 0.15;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .card-container:nth-child(5) .card-front { background: linear-gradient(135deg, #a83232 0%, #d63447 100%); border-color: #c8e6c9; }
-        .card-container:nth-child(5) .card-front::before {
-            background-image: radial-gradient(circle, rgba(255,255,255,0.2) 1px, transparent 1px);
-            background-size: 15px 15px;
-        }
-        
-        .card-container:nth-child(6) .card-front { background: linear-gradient(135deg, #0f6841 0%, #16a168 100%); border-color: #f8e5d2; }
-        .card-container:nth-child(6) .card-front::before {
-            content: '🎄';
-            font-size: 90px;
-            opacity: 0.12;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .card-container:nth-child(7) .card-front { background: linear-gradient(135deg, #7e3b5f 0%, #a84d7b 100%); border-color: #ffd700; }
-        .card-container:nth-child(8) .card-front { background: linear-gradient(135deg, #4a7c8f 0%, #6ba5ba 100%); border-color: #ff8787; }
-        .card-container:nth-child(9) .card-front { background: linear-gradient(135deg, #b42d3b 0%, #d63447 100%); border-color: #90d5ff; }
-        .card-container:nth-child(10) .card-front { background: linear-gradient(135deg, #0e5c3c 0%, #168f5f 100%); border-color: #ffd700; }
-        .card-container:nth-child(11) .card-front { background: linear-gradient(135deg, #903555 0%, #c4486d 100%); border-color: #c8e6c9; }
-        .card-container:nth-child(12) .card-front { background: linear-gradient(135deg, #91222c 0%, #c92a2a 100%); border-color: #90d5ff; }
-        
-        .card-container:nth-child(13) .card-front { background: linear-gradient(135deg, #5a8596 0%, #7cb4c9 100%); border-color: #ffd700; }
-        .card-container:nth-child(14) .card-front { background: linear-gradient(135deg, #0d6845 0%, #17a168 100%); border-color: #f8e5d2; }
-        .card-container:nth-child(15) .card-front { background: linear-gradient(135deg, #8b2d4a 0%, #b8385e 100%); border-color: #90d5ff; }
-        .card-container:nth-child(16) .card-front { background: linear-gradient(135deg, #a73030 0%, #d63447 100%); border-color: #c8e6c9; }
-        .card-container:nth-child(17) .card-front { background: linear-gradient(135deg, #116a48 0%, #1a9d6a 100%); border-color: #ffd700; }
-        .card-container:nth-child(18) .card-front { background: linear-gradient(135deg, #7d3961 0%, #a84d7b 100%); border-color: #ff8787; }
-        
-        .card-container:nth-child(19) .card-front { background: linear-gradient(135deg, #4e7a8c 0%, #6fa4b8 100%); border-color: #ffd700; }
-        .card-container:nth-child(20) .card-front { background: linear-gradient(135deg, #991f2d 0%, #c92a2a 100%); border-color: #90d5ff; }
-        .card-container:nth-child(21) .card-front { background: linear-gradient(135deg, #0c5e3f 0%, #14875a 100%); border-color: #f8e5d2; }
-        .card-container:nth-child(22) .card-front { background: linear-gradient(135deg, #893657 0%, #b8385e 100%); border-color: #c8e6c9; }
-        .card-container:nth-child(23) .card-front { background: linear-gradient(135deg, #b02e3a 0%, #d63447 100%); border-color: #ffd700; }
-        .card-container:nth-child(24) .card-front { background: linear-gradient(135deg, #0f6744 0%, #17a168 100%); border-color: #ff8787; }
-        
-        .emoji {
-            font-size: 3em;
-            margin-bottom: 8px;
-            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.4));
-            position: relative;
-            z-index: 1;
-        }
-        
-        .day-number {
-            font-size: 3.5em;
-            font-weight: bold;
-            text-shadow: 4px 4px 8px rgba(0,0,0,0.4);
-            position: relative;
-            z-index: 1;
-            font-family: 'Georgia', serif;
-        }
-        
-        .day-text {
-            font-size: 0.55em;
-            margin-top: 2px;
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-            font-style: italic;
-        }
-        
+
         .card-back {
-            background: #ffffff;
-            background-color: #ffffff;
             transform: rotateY(180deg);
-            border: 4px solid #8b3a3a;
-            padding: 12px;
-            justify-content: space-between;
-            z-index: 10;
+            justify-content: space-between; 
+            padding: 1.5rem; /* Maintenu pour le bouton */
         }
         
-        .card-back h3 {
-            color: #8b3a3a;
-            font-size: 1em;
-            margin: 0 0 5px 0;
-            line-height: 1.15;
-            font-weight: 700;
-        }
-        
-        .card-back p {
-            font-size: 0.72em;
-            margin: 0;
-            line-height: 1.2;
-            color: #555;
-            flex-grow: 1;
-        }
-        
+        /* Correction du débordement du bouton sur la face arrière */
         .card-back a {
-            display: block;
-            padding: 7px 12px;
-            background: linear-gradient(135deg, #c92a2a 0%, #8b1e1e 100%);
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 12px;
-            font-size: 0.75em;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(139, 30, 30, 0.3);
-            margin-top: 8px;
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        /* --- STYLES PATCHWORK (Tailles et Espacement) --- */
+
+        /* Ajustements pour les cartes 1x1, 2x1, 1x2 */
+        .card-container.h-44 .text-5xl,
+        .card-container.h-80 .text-5xl {
+            font-size: 3.5rem; /* Taille du jour sur les cartes plus petites */
+        }
+        .card-container.h-44 .text-2xl {
+             font-size: 1.25rem; /* Taille de "JOUR" sur les petites cartes */
+        }
+
+        /* Spécifique pour les cartes 2x2 (grande tuile) */
+        .card-container.col-span-2.row-span-2 .text-6xl {
+            font-size: 5rem; /* Jour sur les grandes cartes */
+        }
+        /* Suppression du nom de la ressource sur toutes les cartes, donc pas besoin de ce style */
+        /* .card-container.col-span-2.row-span-2 .text-lg */
+        .card-container.col-span-2.row-span-2 .text-3xl {
+            font-size: 2.5rem; /* "JOUR" sur les grandes cartes */
+        }
+
+
+        /* Ajustement du gap de la grille */
+        .grid-patchwork {
+            gap: 1.5rem; /* Augmente l'espace entre les tuiles */
         }
         
-        .card-back a:hover {
-            background: linear-gradient(135deg, #ffd700 0%, #ffa502 100%);
-            color: #333;
-            transform: scale(1.08);
-            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.5);
-        }
-        
-        @media (max-width: 1100px) {
-            .calendar-grid {
-                grid-template-columns: repeat(4, 150px);
-                gap: 12px;
+        /* Assurer que la grille s'adapte bien */
+        @media (max-width: 640px) {
+            .grid-patchwork {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 1rem; /* Réduit un peu le gap sur mobile */
             }
             .card-container {
-                height: 150px;
+                height: auto !important; 
             }
-            h1 {
-                font-size: 2.8em;
+            .card-front, .card-back {
+                padding: 0.75rem; /* Plus petit padding sur mobile */
             }
-        }
-        
-        @media (max-width: 700px) {
-            .calendar-grid {
-                grid-template-columns: repeat(3, 120px);
-                gap: 10px;
+            .text-5xl, .text-6xl {
+                font-size: 2.5rem !important; 
             }
-            .card-container {
-                height: 120px;
+            .text-2xl, .text-3xl {
+                font-size: 1rem !important; 
             }
-            h1 {
-                font-size: 2.2em;
+            .text-xs, .text-sm {
+                font-size: 0.75rem !important;
             }
-            .subtitle {
-                font-size: 1em;
+            .text-lg {
+                font-size: 1rem !important;
             }
-            .emoji {
-                font-size: 2.2em;
-            }
-            .day-number {
-                font-size: 2.8em;
+            .card-back p {
+                 font-size: 0.75rem !important;
             }
         }
         
-        footer {
-            text-align: center;
-            padding: 30px;
-            margin-top: 50px;
-            color: #8b3a3a;
-            font-weight: 500;
+        /* NOUVEAU STYLE HEADER pour fond de neige en transparence */
+        .header-bg-snow {
+            background-color: #011f4b; /* Couleur de base pour le fond, un bleu nuit par exemple */
+            background-image: url('http://silverteacher.github.io/Drane/christmas-6781762_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative; /* Nécessaire pour l'overlay */
+            z-index: 0; /* Pour que le contenu soit au-dessus */
         }
-        
-        footer a {
-            color: #c92a2a;
-            text-decoration: none;
-            font-weight: bold;
+
+        .header-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(1, 31, 75, 0.7); /* Overlay bleu nuit avec 70% d'opacité */
+            z-index: 1; /* Au-dessus de l'image de fond, en dessous du texte */
         }
-        
-        footer a:hover {
-            text-decoration: underline;
+
+        .header-content {
+            position: relative;
+            z-index: 2; /* Pour que le texte soit au-dessus de l'overlay et de l'image */
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen">
 
-    <div class="header">
-        <h1>✨ Calendrier de Décembre numérique ✨</h1>
-        <p class="subtitle">Une surprise numérique tous les jours. Rendez-vous le 1er décembre !</p>
-    </div>
+    <!-- En-tête : Nouveau look avec fond de neige et texte simple --><header class="header-bg-snow text-white p-10 md:p-16 rounded-b-3xl shadow-2xl overflow-hidden">
+        <div class="header-overlay"></div> <!-- Overlay pour la transparence --><div class="max-w-7xl mx-auto text-center header-content">
+            <!-- Changement de text-yellow-300 à text-white pour une meilleure harmonie -->
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-2 tracking-tight text-white">
+                Calendrier numérique de Décembre
+            </h1>
+            <p class="text-lg md:text-xl font-light italic mt-2 text-white">
+                Drane
+            </p>
+        </div>
+    </header>
 
-    <div id="calendarGrid" class="calendar-grid">
-        <!-- Les cartes seront générées par JavaScript -->
-    </div>
+    <!-- Grille du Calendrier Patchwork --><main class="py-12 px-4">
+        <div id="calendarGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 md:gap-8 max-w-7xl mx-auto grid-flow-dense auto-rows-min grid-patchwork">
+            <!-- Les cartes seront injectées ici par JavaScript --></div>
+    </main>
 
-    <footer>
+    <!-- Pied de page simplifié --><footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-10">
         <p>
-            Conçu par <strong><a href="/cdn-cgi/l/email-protection#8eefe3ebe2e7eba0fde7e2f8ebfcfacefcebe9e7e1e0a3efedefeaebe3e7fffbeba3e6eae8a0e8fc">Amélie Silvert</a></strong> à l'aide de l'IA
+            Crédit original : <strong><a href="/cdn-cgi/l/email-protection#8eefe3ebe2e7eba0fde7e2f8ebfcfacefcebe9e7e1e0a3efedefeaebe3e7fffbeba3e6eae8a0e8fc" class="text-red-600 hover:text-red-800 transition-colors font-semibold">Amélie Silvert</a></strong>
         </p>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
+        // --- DONNÉES ET LOGIQUE DU CALENDRIER ---
+
         const calendarData = [
             { day: 1, title: 'Nuage', desc: 'Stockage et partage sécurisé', url: 'https://nuage.apps.education.fr', emoji: '☁️' },
             { day: 2, title: 'Tchap', desc: 'Messagerie sécurisée', url: 'https://www.tchap.gouv.fr/', emoji: '💬' },
@@ -419,14 +181,14 @@
             { day: 6, title: 'CodiMD', desc: 'Éditeur collaboratif', url: 'https://portail.apps.education.fr/services/pad-avance-codimd', emoji: '✍️' },
             { day: 7, title: 'Tribu', desc: 'Espace de travail commun', url: 'https://tribu.phm.education.gouv.fr/', emoji: '🏕️' },
             { day: 8, title: 'Portail Tubes', desc: 'Hébergement vidéo', url: 'https://portail.apps.education.fr/services/portail-tubes', emoji: '📺' },
-            { day: 9, title: 'PodEduc', desc: 'Création de podcasts', url: 'https://podeduc.apps.education.fr/', emoji: '🎙️' },
+            { day: 9, title: 'PodEduc', desc: 'Plateforme de vidéos et podcasts éducatifs', url: 'https://podeduc.apps.education.gouv.fr/', emoji: '🎙️' },
             { day: 10, title: 'Questionnaire', desc: 'Recueil de réponses', url: 'https://questionnaire.apps.education.fr', emoji: '✅' },
             { day: 11, title: 'Sondage', desc: 'Vote en ligne', url: 'https://sondage.apps.education.fr/', emoji: '📊' },
             { day: 12, title: 'Éléa', desc: 'Plateforme pédagogique', url: 'https://dane.site.ac-lille.fr/2024/09/20/simplifiez-votre-enseignement-avec-elea/', emoji: '💻' },
             { day: 13, title: 'Scratch', desc: 'Programmation créative', url: 'https://scratch.mit.edu/', emoji: '🎮' },
             { day: 14, title: 'OpenBoard', desc: 'Tableau numérique', url: 'https://openboard.ch/', emoji: '📝' },
             { day: 15, title: 'Édugéo', desc: 'Cartographie', url: 'https://www.edugeo.fr/', emoji: '🗺️' },
-            { day: 16, title: 'Générateur Cartes', desc: 'Création de cartes à jouer', url: 'http://generateur-cartes-pdf.tapeps.fr', emoji: '🃏' },
+            { day: 16, title: 'Générateur Cartes', desc: 'Création de cartes mentales', url: 'http://generateur-cartes-pdf.tapeps.fr', emoji: '🃏' },
             { day: 17, title: 'LearningApps', desc: 'Activités interactives', url: 'https://learningapps.org/', emoji: '🧩' },
             { day: 18, title: 'Lumni', desc: 'Contenus éducatifs', url: 'https://www.lumni.fr/', emoji: '🎓' },
             { day: 19, title: 'Marble', desc: 'Globe numérique', url: 'https://marble.kde.org/', emoji: '🌍' },
@@ -437,48 +199,112 @@
             { day: 24, title: 'Tournesol', desc: 'Évaluation IA', url: 'https://tournesol.app/', emoji: '🌻' }
         ];
 
-        function createCard(card) {
-            // Version débloquée - toutes les cartes sont accessibles
-            const isUnlocked = true;
-            const isToday = false;
+        /** Palettes de couleurs et classes de mise en page (h-44 pour les petites) */
+        const colorPalettes = [
+            { front: 'from-red-600 to-red-800', border: 'border-yellow-300', hover: 'hover:shadow-red-300', backColor: 'border-red-600' },
+            { front: 'from-green-700 to-green-900', border: 'border-red-300', hover: 'hover:shadow-green-300', backColor: 'border-green-700' },
+            { front: 'from-blue-700 to-blue-900', border: 'border-gray-300', hover: 'hover:shadow-blue-300', backColor: 'border-blue-700' },
+            { front: 'from-pink-500 to-purple-600', border: 'border-cyan-300', hover: 'hover:shadow-pink-300', backColor: 'border-purple-600' },
+            { front: 'from-orange-500 to-yellow-600', border: 'border-red-500', hover: 'hover:shadow-orange-300', backColor: 'border-orange-500' },
+            { front: 'from-red-900 to-red-700', border: 'border-yellow-100', hover: 'hover:shadow-red-200', backColor: 'border-red-900' },
+            { front: 'from-indigo-700 to-indigo-900', border: 'border-green-300', hover: 'hover:shadow-indigo-300', backColor: 'border-indigo-700' },
+        ];
+        
+        const layoutClasses = [
+            { grid: 'col-span-1 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: true }, // 1x1
+            { grid: 'col-span-1 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: true },
+            { grid: 'col-span-1 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: true },
+            { grid: 'col-span-2 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: false }, // 2x1 (Wide)
+            { grid: 'col-span-1 row-span-2', height: 'h-80', isLarge: true, isNarrow: true, isSquare: false }, // 1x2 (Narrow/Tall)
+            { grid: 'col-span-2 row-span-2', height: 'h-80', isLarge: true, isNarrow: false, isSquare: true }, // 2x2 (Large Square)
+        ];
+
+
+        /**
+         * Fonction pour mélanger un tableau (Algorithme de Fisher-Yates).
+         * @param {Array} array - Le tableau à mélanger.
+         */
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [
+                    array[randomIndex], array[currentIndex]
+                ];
+            }
+            return array;
+        }
+
+        /**
+         * Génère le HTML pour une carte du calendrier.
+         */
+        function createCard(card, index) {
+            const day = card.day;
+            const palette = colorPalettes[index % colorPalettes.length];
+            const bgClass = `bg-gradient-to-br ${palette.front} ${palette.border}`;
+            const backBorder = `${palette.backColor} border-4`;
+
+            const layout = layoutClasses[index % layoutClasses.length];
+            const gridClass = layout.grid;
+            const heightClass = layout.height; 
+            const isLargeSquare = gridClass.includes('col-span-2 row-span-2'); // C'est la carte 2x2
+            const buttonText = isLargeSquare ? 'Accéder à la ressource' : 'Accéder';
             
-            const lockedClass = '';
-            const todayClass = '';
-            const onclickAttr = 'onclick="flipCard(this)"';
-            
+            // Contenu de la Face Avant (RECTO)
+            const frontContent = `
+                <div class="text-2xl font-light mb-0.5 opacity-80 
+                            ${isLargeSquare ? 'text-3xl mb-1' : 'text-2xl mb-0.5'}">
+                    JOUR
+                </div>
+                <div class="font-black 
+                            ${isLargeSquare ? 'text-6xl' : 'text-5xl'}">
+                    ${day}
+                </div>
+            `;
+
+
+            // Retrait de "(Jour X)" du titre au verso
             return `
-                <div class="card-container ${lockedClass} ${todayClass}" ${onclickAttr}>
-                    <div class="locked-overlay">
-                        <div class="locked-icon">🔒</div>
-                        <div class="locked-text">RDV le ${card.day} déc.</div>
-                    </div>
+                <div class="card-container ${gridClass} ${heightClass} 
+                            hover:shadow-xl ${palette.hover} rounded-xl" 
+                            onclick="flipCard(this)">
+                    
                     <div class="data-card">
-                        <div class="card-front">
-                            <div class="emoji">${card.emoji}</div>
-                            <div class="day-number">${card.day}</div>
-                            <div class="day-text">Décembre</div>
+                        <!-- Face avant (RECTO) --><div class="card-front ${bgClass} text-white rounded-xl shadow-lg border-4">
+                            ${frontContent}
                         </div>
-                        <div class="card-back">
-                            <h3>${card.title}</h3>
-                            <p>${card.desc}</p>
-                            <a href="${card.url}" target="_blank" onclick="event.stopPropagation()">Accéder</a>
+                        
+                        <!-- Face arrière (VERSO) --><div class="card-back bg-white text-gray-800 rounded-xl shadow-xl ${backBorder}">
+                            <!-- Titre sans (Jour X) --><div class="flex flex-col flex-grow relative z-10 w-full">
+                                <h3 class="text-lg font-bold ${palette.backColor.replace('border-', 'text-')} mb-2">${card.title}</h3>
+                                <p class="text-sm text-gray-600 mb-4 line-clamp-3 overflow-hidden">${card.desc}</p>
+                            </div>
+                            <!-- Bouton avec texte adapté à la taille de la carte --><a href="${card.url}" target="_blank" 
+                               class="flex-shrink-0 w-full py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition-colors text-xs uppercase tracking-wider mt-auto relative z-10"
+                               onclick="event.stopPropagation()">
+                                ${buttonText}
+                            </a>
                         </div>
                     </div>
                 </div>
             `;
         }
 
+        /** Affiche toutes les cartes dans la grille. */
         function renderCards() {
             const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = calendarData.map(card => createCard(card)).join('');
+            const shuffledData = shuffleArray([...calendarData]);
+            grid.innerHTML = shuffledData.map((card, index) => createCard(card, index)).join('');
         }
 
+        /** Gère le retournement de la carte. */
         function flipCard(container) {
             container.classList.toggle('flipped');
         }
 
+        // Exécution du rendu
         renderCards();
     </script>
-
 </body>
 </html>
