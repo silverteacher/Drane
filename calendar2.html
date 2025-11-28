@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier de Décembre Numérique (Débloqué)</title>
+    <!-- Chargement de Tailwind CSS pour un style moderne et light -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Configuration de la police Inter (recommandée par défaut avec Tailwind) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Styles spécifiques pour la carte à retourner (flip) */
+        .card-container {
+            perspective: 1000px;
+            height: 180px; /* Taille légèrement ajustée pour le design moderne */
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        /* Effet de survol sur la carte débloquée */
+        .card-container:hover {
+             transform: translateY(-5px) rotate(1deg);
+        }
+
+        .data-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card-container.flipped .data-card {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Animation de la carte du jour (Aujourd'hui) - Conservée pour l'effet visuel sur le jour actuel, mais toutes sont cliquables */
+        .card-container.today {
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 15px rgba(253, 224, 71, 0.7); }
+            50% { box-shadow: 0 0 30px rgba(253, 224, 71, 1), 0 0 40px rgba(253, 224, 71, 0.5); }
+            100% { box-shadow: 0 0 15px rgba(253, 224, 71, 0.7); }
+        }
+
+        /* L'overlay de verrouillage n'est plus utilisé dans cette version débloquée */
+        .locked-overlay {
+            display: none !important; 
+        }
+
+        /* Assurer que la grille s'adapte bien */
+        @media (max-width: 640px) {
+            .card-container {
+                height: 150px;
+            }
+            .text-6xl {
+                font-size: 3.5rem; /* Ajuster la taille du numéro du jour sur mobile */
+            }
+            .text-5xl {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- En-tête -->
+    <header class="bg-gradient-to-br from-red-600 to-red-800 text-white p-10 md:p-16 rounded-b-3xl shadow-2xl relative overflow-hidden">
+        <div class="max-w-7xl mx-auto text-center">
+            <!-- Arrière-plan stylisé -->
+            <div class="absolute inset-0 opacity-10 bg-[url('https://placehold.co/1000x500/ffffff/ffffff?text=XMAS+PATTERN')] mix-blend-overlay"></div>
+            
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-3 tracking-tight relative z-10 text-yellow-300">
+                <span class="inline-block transform -rotate-6 text-5xl md:text-7xl">🔓</span> 
+                Calendrier Numérique - ACCÈS LIBRE 
+                <span class="inline-block transform rotate-6 text-5xl md:text-7xl">🔓</span>
+            </h1>
+            <p class="text-lg md:text-xl relative z-10 font-light italic mt-4 text-red-100">
+                Toutes les ressources sont disponibles immédiatement pour les inspecteurs et les cadres.
+            </p>
+        </div>
+    </header>
+
+    <!-- Grille du Calendrier -->
+    <main class="py-12 px-4">
+        <div id="calendarGrid" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 max-w-7xl mx-auto">
+            <!-- Les cartes seront injectées ici par JavaScript -->
+        </div>
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-10">
+        <p>
+            Propulsé par les données et les liens originaux. Adapté avec un design moderne (Tailwind CSS).
+            <br>
+            Crédit original : <strong><a href="/cdn-cgi/l/email-protection#8eefe3ebe2e7eba0fde7e2f8ebfcfacefcebe9e7e1e0a3efedefeaebe3e7fffbeba3e6eae8a0e8fc" class="text-red-600 hover:text-red-800 transition-colors font-semibold">Amélie Silvert</a></strong>
+        </p>
+    </footer>
+
+    <script>
+        // --- DONNÉES ET LOGIQUE DU CALENDRIER ---
+
+        // Les données du calendrier sont strictement conservées
+        const calendarData = [
+            { day: 1, title: 'Nuage', desc: 'Stockage et partage sécurisé', url: 'https://nuage.apps.education.fr', emoji: '☁️' },
+            { day: 2, title: 'Tchap', desc: 'Messagerie sécurisée', url: 'https://www.tchap.gouv.fr/', emoji: '💬' },
+            { day: 3, title: 'Visio Agents', desc: 'Visioconférence', url: 'https://portail.apps.education.fr/services/visio-agents', emoji: '📹' },
+            { day: 4, title: 'Fichiers (DINUM)', desc: 'Envoi de fichiers', url: 'https://fichiers.numerique.gouv.fr', emoji: '📤' },
+            { day: 5, title: 'FranceTransfert', desc: 'Transfert de documents', url: 'https://francetransfert.numerique.gouv.fr/upload', emoji: '📦' },
+            { day: 6, title: 'CodiMD', desc: 'Éditeur collaboratif', url: 'https://portail.apps.education.fr/services/pad-avance-codimd', emoji: '✍️' },
+            { day: 7, title: 'Tribu', desc: 'Espace de travail commun', url: 'https://tribu.phm.education.gouv.fr/', emoji: '🏕️' },
+            { day: 8, title: 'Portail Tubes', desc: 'Hébergement vidéo', url: 'https://portail.apps.education.fr/services/portail-tubes', emoji: '📺' },
+            { day: 9, title: 'PodEduc', desc: 'Création de podcasts', url: 'https://podeduc.apps.education.gouv.fr/', emoji: '🎙️' },
+            { day: 10, title: 'Questionnaire', desc: 'Recueil de réponses', url: 'https://questionnaire.apps.education.fr', emoji: '✅' },
+            { day: 11, title: 'Sondage', desc: 'Vote en ligne', url: 'https://sondage.apps.education.fr/', emoji: '📊' },
+            { day: 12, title: 'Éléa', desc: 'Plateforme pédagogique', url: 'https://dane.site.ac-lille.fr/2024/09/20/simplifiez-votre-enseignement-avec-elea/', emoji: '💻' },
+            { day: 13, title: 'Scratch', desc: 'Programmation créative', url: 'https://scratch.mit.edu/', emoji: '🎮' },
+            { day: 14, title: 'OpenBoard', desc: 'Tableau numérique', url: 'https://openboard.ch/', emoji: '📝' },
+            { day: 15, title: 'Édugéo', desc: 'Cartographie', url: 'https://www.edugeo.fr/', emoji: '🗺️' },
+            { day: 16, title: 'Générateur Cartes', desc: 'Création de cartes mentales', url: 'http://generateur-cartes-pdf.tapeps.fr', emoji: '🃏' },
+            { day: 17, title: 'LearningApps', desc: 'Activités interactives', url: 'https://learningapps.org/', emoji: '🧩' },
+            { day: 18, title: 'Lumni', desc: 'Contenus éducatifs', url: 'https://www.lumni.fr/', emoji: '🎓' },
+            { day: 19, title: 'Marble', desc: 'Globe numérique', url: 'https://marble.kde.org/', emoji: '🌍' },
+            { day: 20, title: 'Capytale', desc: 'Activités interactives', url: 'https://capytale2.ac-paris.fr', emoji: '⌨️' },
+            { day: 21, title: 'Les Pépites', desc: 'Chatbot pédagogique', url: 'https://docs.forge.apps.education.fr/pepites/', emoji: '🤖' },
+            { day: 22, title: 'Labo IA Didaklab', desc: 'Expérimentation IA', url: 'https://novapeda.eu/didaklab', emoji: '🔬' },
+            { day: 23, title: 'Shotcut', desc: 'Montage vidéo', url: 'https://shotcut.org/', emoji: '🎬' },
+            { day: 24, title: 'Tournesol', desc: 'Évaluation IA', url: 'https://tournesol.app/', emoji: '🌻' }
+        ];
+
+        const today = new Date();
+        const currentMonth = today.getMonth() + 1;
+        const currentDay = today.getDate();
+        const isDecember = currentMonth === 12;
+
+        /**
+         * Génère le HTML pour une carte du calendrier.
+         * @param {Object} card - Les données de la carte (jour, titre, etc.).
+         */
+        function createCard(card) {
+            const day = card.day;
+
+            // --- CHANGEMENT CLÉ : TOUTES LES CARTES SONT DÉVERROUILLÉES ---
+            const isUnlocked = true; // Forcer le déverrouillage
+            
+            // Afficher l'animation 'today' uniquement si on est en Décembre et c'est le jour
+            const isToday = isDecember && currentDay === day; 
+            
+            // Classes de style conditionnelles (lockedClass est désormais vide)
+            const lockedClass = ''; 
+            const todayClass = isToday ? 'today' : '';
+            
+            // L'attribut onclick pour retourner la carte est toujours actif
+            const onclickAttr = 'onclick="flipCard(this)"';
+
+            // Couleurs de fond de la face avant pour varier les plaisirs (rouge, vert, bleu-gris)
+            const bgClass = [
+                'bg-gradient-to-br from-red-600 to-red-800 border-yellow-300', // Rouge/Or
+                'bg-gradient-to-br from-green-600 to-green-800 border-red-300', // Vert/Rouge
+                'bg-gradient-to-br from-blue-700 to-blue-900 border-green-300', // Bleu/Vert
+                'bg-gradient-to-br from-red-700 to-red-900 border-yellow-300', // Rouge foncé/Or
+                'bg-gradient-to-br from-green-700 to-green-900 border-red-300', // Vert foncé/Rouge
+                'bg-gradient-to-br from-indigo-700 to-indigo-900 border-yellow-300' // Indigo/Or
+            ][(day - 1) % 6];
+            
+            // Classes pour la face arrière (mise en évidence si c'est le jour actuel)
+            const backBorder = isToday ? 'border-yellow-500 border-4' : 'border-red-600 border-2';
+
+            return `
+                <div class="card-container ${lockedClass} ${todayClass} cursor-pointer hover:shadow-xl hover:shadow-red-200 rounded-xl" ${onclickAttr}>
+                    
+                    <!-- L'overlay de verrouillage est présent mais caché via CSS (ou vide) -->
+                    <div class="locked-overlay absolute inset-0 z-20 rounded-xl flex-col items-center justify-center p-4">
+                        <!-- Contenu de l'overlay (maintenant vide) -->
+                    </div>
+                    
+                    <div class="data-card">
+                        <!-- Face avant -->
+                        <div class="card-front ${bgClass} text-white rounded-xl shadow-lg border-4">
+                            <div class="text-5xl mb-1">${card.emoji}</div>
+                            <div class="text-6xl font-black">${day}</div>
+                            <div class="text-xs mt-1 font-semibold opacity-80">DÉCEMBRE</div>
+                        </div>
+                        
+                        <!-- Face arrière -->
+                        <div class="card-back bg-white text-gray-800 rounded-xl shadow-xl ${backBorder} p-4 justify-between">
+                            <h3 class="text-base font-bold text-red-700 mb-1">${card.title}</h3>
+                            <p class="text-sm text-gray-600 line-clamp-3">${card.desc}</p>
+                            <!-- L'événement click sur le lien doit stopper la propagation pour ne pas retourner la carte -->
+                            <a href="${card.url}" target="_blank" 
+                               class="mt-3 w-full py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition-colors text-xs uppercase tracking-wider"
+                               onclick="event.stopPropagation()">
+                                Accéder à la ressource
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Affiche toutes les cartes dans la grille.
+         */
+        function renderCards() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = calendarData.map(card => createCard(card)).join('');
+        }
+
+        /**
+         * Gère le retournement de la carte.
+         * @param {HTMLElement} container - Le conteneur de la carte à retourner.
+         */
+        function flipCard(container) {
+            // Pas de vérification de verrouillage nécessaire car isUnlocked est toujours true
+            container.classList.toggle('flipped');
+        }
+
+        // Exécution du rendu
+        renderCards();
+    </script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+</body>
+</html>
