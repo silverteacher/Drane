@@ -32,7 +32,7 @@
         .card-container.inactive-card {
             opacity: 0.4; /* Opacité réduite pour les jours non débloqués */
             cursor: default; /* Curseur par défaut */
-            pointer-events: none; /* Désactive tous les événements de souris sur la carte */
+            /* J'ai retiré pointer-events: none pour permettre le clic et le message d'erreur */
             filter: grayscale(100%); /* Optionnel : pour renforcer l'idée que c'est "fermé" */
         }
 
@@ -150,6 +150,27 @@
             position: relative;
             z-index: 2; /* Pour que le texte soit au-dessus de l'overlay et de l'image */
         }
+        
+        /* Style pour la boîte de message temporaire (Revenez demain) */
+        #messageBox {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f87171; /* red-400 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none; /* Important pour ne pas bloquer les clics */
+        }
+
+        #messageBox.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -157,9 +178,11 @@
     <!-- En-tête : Nouveau look avec fond de neige et texte simple --><header class="header-bg-snow text-white p-10 md:p-16 rounded-b-3xl shadow-2xl overflow-hidden">
         <div class="header-overlay"></div> <!-- Overlay pour la transparence --><div class="max-w-7xl mx-auto text-center header-content">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-2 tracking-tight text-white">
-                Calendrier numérique de Décembre
-                Une surprise numérique par jour. Rendez-vous le 1er décembre !
+                Calendrier de l'Avent Numérique
             </h1>
+            <!-- SOUS-TITRE : Augmentation de la taille de text-xl/md:text-2xl à text-2xl/md:text-3xl --><p class="text-2xl md:text-3xl font-light italic text-yellow-300 mb-2">
+                Une surprise numérique par jour. Rendez-vous le 1er décembre !
+            </p>
             <p class="text-lg md:text-xl font-light italic mt-2 text-white">
                 Drane
             </p>
@@ -170,6 +193,8 @@
         <div id="calendarGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 md:gap-8 max-w-7xl mx-auto grid-flow-dense auto-rows-min grid-patchwork">
             <!-- Les cartes seront injectées ici par JavaScript --></div>
     </main>
+    
+    <!-- Boîte de message temporaire --><div id="messageBox" class="text-center font-bold"></div>
 
     <!-- Pied de page simplifié --><footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-10">
         <p>
@@ -203,6 +228,7 @@
         
         let activeCard = null; // Variable globale pour suivre la carte actuellement retournée
 
+        // Données originales (dans l'ordre 1-24)
         const calendarData = [
             { day: 1, title: 'Nuage', desc: 'Stockage et partage sécurisé', url: 'https://nuage.apps.education.fr', emoji: '☁️' },
             { day: 2, title: 'Tchap', desc: 'Messagerie sécurisée', url: 'https://www.tchap.gouv.fr/', emoji: '💬' },
@@ -253,7 +279,6 @@
 
         /**
          * Fonction pour mélanger un tableau (Algorithme de Fisher-Yates).
-         * @param {Array} array - Le tableau à mélanger.
          */
         function shuffleArray(array) {
             let currentIndex = array.length, randomIndex;
@@ -266,6 +291,57 @@
             }
             return array;
         }
+        
+        /** Affiche un message temporaire en bas de l'écran (remplace alert()). */
+        function showMessage(text) {
+            const msgBox = document.getElementById('messageBox');
+            msgBox.textContent = text;
+            msgBox.classList.add('show');
+            
+            setTimeout(() => {
+                msgBox.classList.remove('show');
+            }, 3000); // Message visible pendant 3 secondes
+        }
+
+        /**
+         * Charge les données du calendrier (mélangées et persistantes) depuis localStorage.
+         * Si un ordre mélangé n'existe pas, on le crée et le sauvegarde.
+         */
+        function getPersistentCalendarData() {
+            const storageKey = 'shuffledCalendarData';
+            const storedData = localStorage.getItem(storageKey);
+            
+            if (storedData) {
+                // Utilise les données stockées si elles existent et sont valides
+                try {
+                    const parsedData = JSON.parse(storedData);
+                    // Vérifie si les données parsées ressemblent aux données originales (même longueur)
+                    if (parsedData.length === calendarData.length) {
+                        return parsedData;
+                    }
+                    // Si la structure est mauvaise, on continue pour regénérer
+                } catch (e) {
+                    console.error("Erreur de parsing des données stockées, mélange à nouveau.", e);
+                    // Laisse la fonction continuer pour générer un nouvel ordre
+                }
+            }
+
+            // Si aucune donnée stockée ou erreur de parsing, mélanger et sauvegarder
+            let shuffled = shuffleArray([...calendarData]); // Clonage avant mélange
+            
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(shuffled));
+                console.log("Nouvel ordre de cartes mélangé et sauvegardé dans localStorage.");
+            } catch (e) {
+                console.error("Impossible de sauvegarder dans localStorage.", e);
+            }
+            
+            return shuffled;
+        }
+
+        // Récupère les données persistantes (mélangées une seule fois)
+        const PERSISTENT_CALENDAR_DATA = getPersistentCalendarData();
+
 
         /**
          * Génère le HTML pour une carte du calendrier.
@@ -274,19 +350,23 @@
             const day = card.day;
             const isUnlocked = day <= UNLOCKED_DAY;
             
+            // On utilise l'index de la carte dans le tableau PERSISTENT_CALENDAR_DATA pour choisir la couleur/le layout,
+            // garantissant que la même couleur est toujours attribuée à la même POSITION sur la grille.
             const palette = colorPalettes[index % colorPalettes.length];
             const bgClass = `bg-gradient-to-br ${palette.front} ${palette.border}`;
             const backBorder = `${palette.backColor} border-4`;
 
-            const layout = layoutClasses[index % layoutClasses.length];
+            const layoutIndex = index % layoutClasses.length; // Layout basé sur la position (index)
+            const layout = layoutClasses[layoutIndex];
+
             const gridClass = layout.grid;
             const heightClass = layout.height; 
             const isLargeSquare = gridClass.includes('col-span-2 row-span-2'); 
             const buttonText = isLargeSquare ? 'Accéder à la ressource' : 'Accéder';
             
-            // Si la carte n'est pas déverrouillée, elle reçoit la classe 'inactive-card' et ne sera pas cliquable.
-            const statusClass = isUnlocked ? '' : 'inactive-card';
-            const clickHandler = isUnlocked ? `flipCard(this)` : '';
+            // Si la carte est déverrouillée, 'flipCard(this)' est l'action. Sinon, c'est le message d'erreur.
+            let statusClass = isUnlocked ? '' : 'inactive-card';
+            let clickHandler = isUnlocked ? `flipCard(this)` : `showLockedMessage(${day})`;
             
             // Contenu de la Face Avant (RECTO)
             const frontContent = `
@@ -334,26 +414,32 @@
                 </div>
             `;
         }
-
-        /** Affiche toutes les cartes dans la grille. */
-        function renderCards() {
-            const grid = document.getElementById('calendarGrid');
-            const shuffledData = shuffleArray([...calendarData]);
-            grid.innerHTML = shuffledData.map((card, index) => createCard(card, index)).join('');
+        
+        /** Affiche le message de carte verrouillée. */
+        function showLockedMessage(day) {
+            // Empêche le clic sur un jour non déverrouillé et affiche le message
+            showMessage(`Patience ! La surprise du jour ${day} sera disponible le ${day} décembre.`);
         }
 
-        /** * Gère le retournement de la carte.
-         * NOUVEAU: Assure qu'une seule carte est retournée à la fois.
-         */
+
+        /** Affiche toutes les cartes dans la grille, en utilisant les données persistantes. */
+        function renderCards() {
+            const grid = document.getElementById('calendarGrid');
+            // Utilisation des données persistantes (mélangées une seule fois et stockées)
+            grid.innerHTML = PERSISTENT_CALENDAR_DATA.map((card, index) => createCard(card, index)).join('');
+        }
+
+        /** Gère le retournement de la carte. */
         function flipCard(container) {
-            // Si la carte est inactive (jour futur), on ne fait rien.
+            // Si la carte est inactive (jour futur), le showLockedMessage est déjà géré par l'onclick dans createCard.
             if (container.classList.contains('inactive-card')) return;
             
             const isFlipped = container.classList.contains('flipped');
 
-            // 1. Fermer la carte active précédente si elle existe
+            // 1. Si une autre carte est déjà active et différente de celle-ci, on la ferme.
             if (activeCard && activeCard !== container) {
                 activeCard.classList.remove('flipped');
+                activeCard = null; // L'ancienne carte est fermée
             }
 
             // 2. Retourner la carte actuelle
@@ -363,7 +449,7 @@
             if (container.classList.contains('flipped')) {
                 activeCard = container;
             } else {
-                activeCard = null;
+                activeCard = null; // La carte vient d'être refermée
             }
         }
 
