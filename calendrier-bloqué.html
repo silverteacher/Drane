@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendrier de Décembre numérique</title>
+    <title>Calendrier de Décembre Numérique</title>
     <style>
         * {
             margin: 0;
@@ -12,60 +12,64 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Georgia', 'Segoe UI', serif;
             padding: 20px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #f5e6d3 0%, #d4a574 100%);
             color: #333;
         }
         
         .header {
-            background: linear-gradient(135deg, #c92a2a 0%, #A50021 100%);
+            background: linear-gradient(135deg, #8b3a3a 0%, #c92a2a 100%);
             color: white;
             padding: 50px 40px;
-            border-radius: 20px;
+            border-radius: 25px;
             text-align: center;
             margin-bottom: 50px;
-            box-shadow: 0 10px 30px rgba(165, 0, 33, 0.3);
+            box-shadow: 0 15px 40px rgba(139, 58, 58, 0.4);
             position: relative;
             overflow: hidden;
+            border: 5px solid #d4a574;
         }
         
         .header::before {
-            content: '';
+            content: '❄️ ⭐ ✨ 🎄 ❄️ ⭐ ✨ 🎄 ❄️ ⭐ ✨ 🎄';
             position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
+            top: 10px;
+            left: 0;
+            right: 0;
+            font-size: 1.5em;
+            opacity: 0.3;
+            animation: float 20s linear infinite;
         }
         
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes float {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
         }
         
         h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
             position: relative;
             z-index: 1;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
         }
         
         .subtitle {
-            font-size: 1.2em;
+            font-size: 1.3em;
             color: #ffeaa7;
             font-weight: 500;
             position: relative;
             z-index: 1;
+            font-style: italic;
         }
         
         .calendar-grid {
             display: grid;
-            grid-template-columns: repeat(6, 150px);
-            gap: 30px;
+            grid-template-columns: repeat(6, 160px);
+            gap: 15px;
             max-width: 1100px;
             margin: 0 auto;
             justify-content: center;
@@ -73,18 +77,19 @@
         
         .card-container {
             perspective: 1000px;
-            height: 150px;
+            height: 160px;
             transition: transform 0.3s;
             position: relative;
         }
         
         .card-container:hover:not(.flipped):not(.locked) {
-            transform: translateY(-8px);
+            transform: translateY(-10px) rotate(2deg);
         }
         
         .card-container.locked {
             opacity: 0.5;
             cursor: not-allowed;
+            filter: grayscale(40%);
         }
         
         .card-container.locked:hover {
@@ -97,37 +102,116 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.75);
+            border-radius: 20px;
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 10;
+            z-index: 20;
             flex-direction: column;
             color: white;
+            backdrop-filter: blur(3px);
         }
         
         .card-container.locked .locked-overlay {
             display: flex;
         }
         
-        .card-container.today {
-            animation: pulse-gold 2s infinite alternate;
+        .card-container.today:not(.locked) {
+            animation: sparkle 2s infinite alternate;
         }
         
-        @keyframes pulse-gold {
-            from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-            to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), 0 0 40px rgba(255, 215, 0, 0.5); }
+        @keyframes sparkle {
+            from { 
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+                transform: scale(1);
+            }
+            to { 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.6);
+                transform: scale(1.05);
+            }
         }
         
         .locked-icon {
-            font-size: 3em;
-            margin-bottom: 10px;
+            font-size: 3.5em;
+            margin-bottom: 8px;
+            animation: shake 2s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
         }
         
         .locked-text {
-            font-size: 0.8em;
+            font-size: 0.9em;
             font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .card-container.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(40%);
+        }
+        
+        .card-container.locked:hover {
+            transform: none;
+        }
+        
+        .locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            border-radius: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            flex-direction: column;
+            color: white;
+            backdrop-filter: blur(3px);
+        }
+        
+        .card-container.locked .locked-overlay {
+            display: flex;
+        }
+        
+        .card-container.today:not(.locked) {
+            animation: sparkle 2s infinite alternate;
+        }
+        
+        @keyframes sparkle {
+            from { 
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+                transform: scale(1);
+            }
+            to { 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.6);
+                transform: scale(1.05);
+            }
+        }
+        
+        .locked-icon {
+            font-size: 3.5em;
+            margin-bottom: 8px;
+            animation: shake 2s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        
+        .locked-text {
+            font-size: 0.9em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
         .data-card {
@@ -161,69 +245,136 @@
             background: linear-gradient(135deg, #A50021 0%, #d63447 100%);
             border: 4px solid #FFD700;
             color: white;
+            z-index: 2;
         }
         
-        /* Variation de couleurs pour les cartes */
-        .card-container:nth-child(6n+1) .card-front {
-            background: linear-gradient(135deg, #A50021 0%, #d63447 100%);
+        /* Motifs décoratifs variés pour chaque carte */
+        .card-front::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+            background-repeat: repeat;
+            background-size: 30px;
         }
         
-        .card-container:nth-child(6n+2) .card-front {
-            background: linear-gradient(135deg, #006837 0%, #00a651 100%);
+        /* Variations de couleurs et motifs - style plus organique */
+        .card-container:nth-child(1) .card-front { background: linear-gradient(135deg, #8b1e1e 0%, #c92a2a 100%); border-color: #ffd700; }
+        .card-container:nth-child(1) .card-front::before { 
+            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 2px, transparent 2px);
         }
         
-        .card-container:nth-child(6n+3) .card-front {
-            background: linear-gradient(135deg, #c23616 0%, #e84118 100%);
+        .card-container:nth-child(2) .card-front { background: linear-gradient(135deg, #0a5f3f 0%, #0d8058 100%); border-color: #ff6b6b; }
+        .card-container:nth-child(2) .card-front::before {
+            content: '❄️';
+            font-size: 80px;
+            opacity: 0.1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .card-container:nth-child(6n+4) .card-front {
-            background: linear-gradient(135deg, #005c3e 0%, #007749 100%);
+        .card-container:nth-child(3) .card-front { background: linear-gradient(135deg, #862e4f 0%, #b8385e 100%); border-color: #90d5ff; }
+        .card-container:nth-child(3) .card-front::before {
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 10px);
         }
         
-        .card-container:nth-child(6n+5) .card-front {
-            background: linear-gradient(135deg, #8b0000 0%, #b22222 100%);
+        .card-container:nth-child(4) .card-front { background: linear-gradient(135deg, #5c7a8a 0%, #7ba3b8 100%); border-color: #ffd700; }
+        .card-container:nth-child(4) .card-front::before {
+            content: '⭐';
+            font-size: 100px;
+            opacity: 0.15;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .card-container:nth-child(6n+6) .card-front {
-            background: linear-gradient(135deg, #0f6938 0%, #27ae60 100%);
+        .card-container:nth-child(5) .card-front { background: linear-gradient(135deg, #a83232 0%, #d63447 100%); border-color: #c8e6c9; }
+        .card-container:nth-child(5) .card-front::before {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.2) 1px, transparent 1px);
+            background-size: 15px 15px;
         }
+        
+        .card-container:nth-child(6) .card-front { background: linear-gradient(135deg, #0f6841 0%, #16a168 100%); border-color: #f8e5d2; }
+        .card-container:nth-child(6) .card-front::before {
+            content: '🎄';
+            font-size: 90px;
+            opacity: 0.12;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-container:nth-child(7) .card-front { background: linear-gradient(135deg, #7e3b5f 0%, #a84d7b 100%); border-color: #ffd700; }
+        .card-container:nth-child(8) .card-front { background: linear-gradient(135deg, #4a7c8f 0%, #6ba5ba 100%); border-color: #ff8787; }
+        .card-container:nth-child(9) .card-front { background: linear-gradient(135deg, #b42d3b 0%, #d63447 100%); border-color: #90d5ff; }
+        .card-container:nth-child(10) .card-front { background: linear-gradient(135deg, #0e5c3c 0%, #168f5f 100%); border-color: #ffd700; }
+        .card-container:nth-child(11) .card-front { background: linear-gradient(135deg, #903555 0%, #c4486d 100%); border-color: #c8e6c9; }
+        .card-container:nth-child(12) .card-front { background: linear-gradient(135deg, #91222c 0%, #c92a2a 100%); border-color: #90d5ff; }
+        
+        .card-container:nth-child(13) .card-front { background: linear-gradient(135deg, #5a8596 0%, #7cb4c9 100%); border-color: #ffd700; }
+        .card-container:nth-child(14) .card-front { background: linear-gradient(135deg, #0d6845 0%, #17a168 100%); border-color: #f8e5d2; }
+        .card-container:nth-child(15) .card-front { background: linear-gradient(135deg, #8b2d4a 0%, #b8385e 100%); border-color: #90d5ff; }
+        .card-container:nth-child(16) .card-front { background: linear-gradient(135deg, #a73030 0%, #d63447 100%); border-color: #c8e6c9; }
+        .card-container:nth-child(17) .card-front { background: linear-gradient(135deg, #116a48 0%, #1a9d6a 100%); border-color: #ffd700; }
+        .card-container:nth-child(18) .card-front { background: linear-gradient(135deg, #7d3961 0%, #a84d7b 100%); border-color: #ff8787; }
+        
+        .card-container:nth-child(19) .card-front { background: linear-gradient(135deg, #4e7a8c 0%, #6fa4b8 100%); border-color: #ffd700; }
+        .card-container:nth-child(20) .card-front { background: linear-gradient(135deg, #991f2d 0%, #c92a2a 100%); border-color: #90d5ff; }
+        .card-container:nth-child(21) .card-front { background: linear-gradient(135deg, #0c5e3f 0%, #14875a 100%); border-color: #f8e5d2; }
+        .card-container:nth-child(22) .card-front { background: linear-gradient(135deg, #893657 0%, #b8385e 100%); border-color: #c8e6c9; }
+        .card-container:nth-child(23) .card-front { background: linear-gradient(135deg, #b02e3a 0%, #d63447 100%); border-color: #ffd700; }
+        .card-container:nth-child(24) .card-front { background: linear-gradient(135deg, #0f6744 0%, #17a168 100%); border-color: #ff8787; }
         
         .emoji {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
+            font-size: 3em;
+            margin-bottom: 8px;
+            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.4));
+            position: relative;
+            z-index: 1;
         }
         
         .day-number {
-            font-size: 3em;
+            font-size: 3.5em;
             font-weight: bold;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 1;
+            font-family: 'Georgia', serif;
         }
         
         .day-text {
-            font-size: 0.6em;
+            font-size: 0.55em;
             margin-top: 5px;
-            opacity: 0.9;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-style: italic;
         }
         
         .card-back {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            background: #ffffff;
+            background-color: #ffffff;
             transform: rotateY(180deg);
-            border: 4px solid #007749;
+            border: 4px solid #8b3a3a;
             padding: 12px;
             justify-content: space-between;
+            z-index: 10;
         }
         
         .card-back h3 {
-            color: #007749;
-            font-size: 0.95em;
+            color: #8b3a3a;
+            font-size: 1em;
             margin: 0 0 5px 0;
             line-height: 1.15;
             font-weight: 700;
         }
         
         .card-back p {
-            font-size: 0.7em;
+            font-size: 0.72em;
             margin: 0;
             line-height: 1.2;
             color: #555;
@@ -232,57 +383,57 @@
         
         .card-back a {
             display: block;
-            padding: 6px 12px;
-            background: linear-gradient(135deg, #FFD700 0%, #ffa502 100%);
-            color: #333;
+            padding: 7px 12px;
+            background: linear-gradient(135deg, #c92a2a 0%, #8b1e1e 100%);
+            color: white;
             text-decoration: none;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 0.75em;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 4px 10px rgba(139, 30, 30, 0.3);
             margin-top: 8px;
         }
         
         .card-back a:hover {
-            background: linear-gradient(135deg, #A50021 0%, #c92a2a 100%);
-            color: white;
-            transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(165, 0, 33, 0.4);
+            background: linear-gradient(135deg, #ffd700 0%, #ffa502 100%);
+            color: #333;
+            transform: scale(1.08);
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.5);
         }
         
         @media (max-width: 1100px) {
             .calendar-grid {
-                grid-template-columns: repeat(4, 140px);
-                gap: 25px;
+                grid-template-columns: repeat(4, 150px);
+                gap: 12px;
             }
             .card-container {
-                height: 140px;
+                height: 150px;
             }
             h1 {
-                font-size: 2.5em;
+                font-size: 2.8em;
             }
         }
         
         @media (max-width: 700px) {
             .calendar-grid {
-                grid-template-columns: repeat(3, 110px);
-                gap: 20px;
+                grid-template-columns: repeat(3, 120px);
+                gap: 10px;
             }
             .card-container {
-                height: 110px;
+                height: 120px;
             }
             h1 {
-                font-size: 2em;
+                font-size: 2.2em;
             }
             .subtitle {
                 font-size: 1em;
             }
             .emoji {
-                font-size: 2em;
+                font-size: 2.2em;
             }
             .day-number {
-                font-size: 2.2em;
+                font-size: 2.8em;
             }
         }
         
@@ -290,11 +441,12 @@
             text-align: center;
             padding: 30px;
             margin-top: 50px;
-            color: #666;
+            color: #8b3a3a;
+            font-weight: 500;
         }
         
         footer a {
-            color: #A50021;
+            color: #c92a2a;
             text-decoration: none;
             font-weight: bold;
         }
@@ -307,7 +459,7 @@
 <body>
 
     <div class="header">
-        <h1>✨ Calendrier de Décembre numérique ✨</h1>
+        <h1>✨ Calendrier de Décembre Numérique ✨</h1>
         <p class="subtitle">Une surprise numérique tous les jours. Rendez-vous le 1er décembre !</p>
     </div>
 
@@ -317,7 +469,7 @@
 
     <footer>
         <p>
-            Conçu par <strong><a href="/cdn-cgi/l/email-protection#b5d4d8d0d9dcd09bc6dcd9c3d0c7c1f5c7d0d2dcdadb98d4d6d4d1d0d8dcc4c0d098ddd1d39bd3c7">Amélie Silvert</a></strong> à l'aide de l'IA
+            Conçu par <strong><a href="/cdn-cgi/l/email-protection#8eefe3ebe2e7eba0fde7e2f8ebfcfacefcebe9e7e1e0a3efedefeaebe3e7fffbeba3e6eae8a0e8fc">Amélie Silvert</a></strong> à l'aide de l'IA
         </p>
     </footer>
 
@@ -344,31 +496,26 @@
             { day: 19, title: 'Marble', desc: 'Globe numérique', url: 'https://marble.kde.org/', emoji: '🌍' },
             { day: 20, title: 'Capytale', desc: 'Activités interactives', url: 'https://capytale2.ac-paris.fr', emoji: '⌨️' },
             { day: 21, title: 'Les Pépites', desc: 'Chatbot pédagogique', url: 'https://docs.forge.apps.education.fr/pepites/', emoji: '🤖' },
-            { day: 22, title: 'Labo IA Didaklab', desc: 'Expérimentation IA', url: 'https://novapeda.eu/didaklab', emoji: '📋' },
+            { day: 22, title: 'Labo IA Didaklab', desc: 'Expérimentation IA', url: 'https://novapeda.eu/didaklab', emoji: '🔬' },
             { day: 23, title: 'Shotcut', desc: 'Montage vidéo', url: 'https://shotcut.org/', emoji: '🎬' },
             { day: 24, title: 'Tournesol', desc: 'Évaluation IA', url: 'https://tournesol.app/', emoji: '🌻' }
         ];
 
         function createCard(card) {
             const now = new Date();
-            const currentMonth = now.getMonth(); // 0-11 (11 = décembre)
+            const currentMonth = now.getMonth();
             const currentDay = now.getDate();
-            const currentYear = now.getFullYear();
             
-            // Vérifier si la carte doit être déverrouillée
             let isUnlocked = false;
             let isToday = false;
             
-            // Si nous sommes en décembre et que le jour actuel >= jour de la carte
             if (currentMonth === 11 && currentDay >= card.day) {
                 isUnlocked = true;
-                // Vérifier si c'est la carte du jour
                 if (currentDay === card.day) {
                     isToday = true;
                 }
             }
-            // Si nous sommes après décembre (janvier ou plus)
-            else if (currentMonth > 11 || (currentMonth === 0 && currentYear > now.getFullYear())) {
+            else if (currentMonth > 11) {
                 isUnlocked = true;
             }
             
@@ -407,7 +554,6 @@
             container.classList.toggle('flipped');
         }
 
-        // Initialiser le calendrier
         renderCards();
     </script>
 
