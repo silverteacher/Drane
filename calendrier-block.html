@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendrier de l'Avent Numérique</title>
-    <!-- Chargement de Tailwind CSS pour un style moderne et light --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Masque le warning Tailwind CDN -->
+    <script>
+        window.process = { env: { NODE_ENV: 'production' } };
+    </script>
+    <!-- Chargement de Tailwind CSS pour un style moderne et light -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Configuration de la police Inter (recommandée par défaut avec Tailwind) */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
@@ -32,7 +37,6 @@
         .card-container.inactive-card {
             opacity: 0.4; /* Opacité réduite pour les jours non débloqués */
             cursor: default; /* Curseur par défaut */
-            /* J'ai retiré pointer-events: none pour permettre le clic et le message d'erreur */
             filter: grayscale(100%); /* Optionnel : pour renforcer l'idée que c'est "fermé" */
         }
 
@@ -100,64 +104,138 @@
             gap: 1.5rem; /* Augmente l'espace entre les tuiles */
         }
         
-        /* Assurer que la grille s'adapte bien */
-        @media (max-width: 640px) {
+        /* Responsive mobile */
+        @media (max-width: 768px) {
             .grid-patchwork {
-                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-                gap: 1rem; /* Réduit un peu le gap sur mobile */
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
             }
+            
+            /* FORCE toutes les cartes en 1x1 sur mobile/tablette */
             .card-container {
-                height: auto !important; 
+                grid-column: span 1 !important;
+                grid-row: span 1 !important;
+                height: 180px !important;
             }
+            
             .card-front, .card-back {
-                padding: 0.75rem; /* Plus petit padding sur mobile */
+                padding: 0.75rem;
             }
-            .text-5xl, .text-6xl {
-                font-size: 2.5rem !important; 
+            
+            /* Tailles de texte face AVANT */
+            .card-front .text-2xl,
+            .card-front .text-3xl {
+                font-size: 0.875rem !important;
+                margin-bottom: 0.25rem !important;
             }
-            .text-2xl, .text-3xl {
-                font-size: 1rem !important; 
+            
+            .card-front .text-5xl,
+            .card-front .text-6xl {
+                font-size: 2.5rem !important;
             }
-            .text-xs, .text-sm {
+            
+            /* Tailles de texte face ARRIERE */
+            .card-back h3 {
+                font-size: 0.9rem !important;
+                margin-bottom: 0.5rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            .card-back p {
+                font-size: 0.7rem !important;
+                margin-bottom: 0.5rem !important;
+                line-height: 1.3 !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            
+            .card-back a {
+                font-size: 0.65rem !important;
+                padding: 0.5rem 0.25rem !important;
+                white-space: normal !important;
+                line-height: 1.2 !important;
+            }
+            
+            /* Header responsive */
+            .header-bg-snow {
+                padding: 1.5rem 1rem !important;
+                border-radius: 0 0 1.5rem 1.5rem !important;
+            }
+            
+            .header-bg-snow h1 {
+                font-size: 1.5rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .header-bg-snow p:first-of-type {
+                font-size: 0.9rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 0.25rem !important;
+            }
+            
+            .header-bg-snow p:last-of-type {
+                font-size: 0.85rem !important;
+                margin-top: 0.5rem !important;
+            }
+            
+            main {
+                padding: 2rem 0.75rem !important;
+            }
+            
+            footer {
+                padding: 1rem 0.5rem !important;
                 font-size: 0.75rem !important;
             }
-            .text-lg {
-                font-size: 1rem !important;
+        }
+        
+        /* Très petits écrans */
+        @media (max-width: 400px) {
+            .card-container {
+                height: 160px !important;
             }
-            .card-back p {
-                 font-size: 0.75rem !important;
+            
+            .card-front .text-5xl,
+            .card-front .text-6xl {
+                font-size: 2rem !important;
+            }
+            
+            .header-bg-snow h1 {
+                font-size: 1.25rem !important;
             }
         }
         
         /* NOUVEAU STYLE HEADER pour fond de neige en transparence */
         .header-bg-snow {
-            background-color: #011f4b; /* Couleur de base pour le fond, un bleu nuit par exemple */
+            background-color: #011f4b;
             background-image: url('http://silverteacher.github.io/Drane/christmas-6781762_1280.jpg');
             background-size: cover;
             background-position: center;
-            position: relative; /* Nécessaire pour l'overlay */
-            z-index: 0; /* Pour que le contenu soit au-dessus */
+            position: relative;
+            z-index: 0;
         }
 
         .header-overlay {
             position: absolute;
             inset: 0;
-            background-color: rgba(1, 31, 75, 0.7); /* Overlay bleu nuit avec 70% d'opacité */
-            z-index: 1; /* Au-dessus de l'image de fond, en dessous du texte */
+            background-color: rgba(1, 31, 75, 0.7);
+            z-index: 1;
         }
 
         .header-content {
             position: relative;
-            z-index: 2; /* Pour que le texte soit au-dessus de l'overlay et de l'image */
+            z-index: 2;
         }
         
-        /* Style pour la boîte de message temporaire (Revenez demain) */
+        /* Style pour la boîte de message temporaire */
         #messageBox {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #f87171; /* red-400 */
+            background-color: #f87171;
             color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
@@ -165,7 +243,9 @@
             z-index: 100;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
-            pointer-events: none; /* Important pour ne pas bloquer les clics */
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
         }
 
         #messageBox.show {
@@ -175,12 +255,14 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-    <!-- En-tête : Nouveau look avec fond de neige et texte simple --><header class="header-bg-snow text-white p-10 md:p-16 rounded-b-3xl shadow-2xl overflow-hidden">
-        <div class="header-overlay"></div> <!-- Overlay pour la transparence --><div class="max-w-7xl mx-auto text-center header-content">
+    <!-- En-tête -->
+    <header class="header-bg-snow text-white p-10 md:p-16 rounded-b-3xl shadow-2xl overflow-hidden">
+        <div class="header-overlay"></div>
+        <div class="max-w-7xl mx-auto text-center header-content">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-2 tracking-tight text-white">
-                Calendrier de l'Avent Numérique
+                Calendrier numérique de décembre
             </h1>
-            <!-- SOUS-TITRE : Augmentation de la taille de text-xl/md:text-2xl à text-2xl/md:text-3xl --><p class="text-2xl md:text-3xl font-light italic text-yellow-300 mb-2">
+            <p class="text-2xl md:text-3xl font-light italic text-yellow-300 mb-2">
                 Une surprise numérique par jour. Rendez-vous le 1er décembre !
             </p>
             <p class="text-lg md:text-xl font-light italic mt-2 text-white">
@@ -189,16 +271,20 @@
         </div>
     </header>
 
-    <!-- Grille du Calendrier Patchwork --><main class="py-12 px-4">
+    <!-- Grille du Calendrier -->
+    <main class="py-12 px-4">
         <div id="calendarGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 md:gap-8 max-w-7xl mx-auto grid-flow-dense auto-rows-min grid-patchwork">
-            <!-- Les cartes seront injectées ici par JavaScript --></div>
+            <!-- Les cartes seront injectées ici par JavaScript -->
+        </div>
     </main>
     
-    <!-- Boîte de message temporaire --><div id="messageBox" class="text-center font-bold"></div>
+    <!-- Boîte de message temporaire -->
+    <div id="messageBox" class="text-center font-bold"></div>
 
-    <!-- Pied de page simplifié --><footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-10">
+    <!-- Pied de page -->
+    <footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-10">
         <p>
-            Crédit original : <strong><a href="/cdn-cgi/l/email-protection#8eefe3ebe2e7eba0fde7e2f8ebfcfacefcebe9e7e1e0a3efedefeaebe3e7fffbeba3e6eae8a0e8fc" class="text-red-600 hover:text-red-800 transition-colors font-semibold">Amélie Silvert</a></strong>
+            Crédit original : <a href="mailto:amelie.silvert@ac-lille.fr" class="text-red-600 hover:text-red-800 transition-colors font-semibold hover:underline"><strong>Amélie Silvert</strong></a>
         </p>
     </footer>
 
@@ -207,26 +293,21 @@
 
         /**
          * Calcule le jour maximum déverrouillé.
-         * En dehors de décembre, on utilise le jour 0 (tout est verrouillé).
-         * En décembre, on utilise le jour actuel pour déverrouiller au fur et à mesure.
-         * @returns {number} Le jour maximum visible (entre 0 et 24).
          */
         function getUnlockedDay() {
             const today = new Date();
-            const currentMonth = today.getMonth(); // 0 pour Janvier, 11 pour Décembre
+            const currentMonth = today.getMonth();
             
-            // Si c'est Décembre (mois 11) et avant le 25
             if (currentMonth === 11 && today.getDate() >= 1 && today.getDate() <= 24) {
                 return today.getDate();
             }
             
-            // Sinon (hors décembre ou avant le 1er décembre), tout est verrouillé (Jour 0)
             return 0; 
         }
 
         const UNLOCKED_DAY = getUnlockedDay();
         
-        let activeCard = null; // Variable globale pour suivre la carte actuellement retournée
+        let activeCard = null;
 
         // Données originales (dans l'ordre 1-24)
         const calendarData = [
@@ -256,7 +337,7 @@
             { day: 24, title: 'Tournesol', desc: 'Évaluation IA', url: 'https://tournesol.app/', emoji: '🌻' }
         ];
 
-        /** Palettes de couleurs et classes de mise en page (h-44 pour les petites) */
+        /** Palettes de couleurs */
         const colorPalettes = [
             { front: 'from-red-600 to-red-800', border: 'border-yellow-300', hover: 'hover:shadow-red-300', backColor: 'border-red-600' },
             { front: 'from-green-700 to-green-900', border: 'border-red-300', hover: 'hover:shadow-green-300', backColor: 'border-green-700' },
@@ -268,14 +349,13 @@
         ];
         
         const layoutClasses = [
-            { grid: 'col-span-1 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: true }, // 1x1
             { grid: 'col-span-1 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: true },
             { grid: 'col-span-1 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: true },
-            { grid: 'col-span-2 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: false }, // 2x1 (Wide)
-            { grid: 'col-span-1 row-span-2', height: 'h-80', isLarge: true, isNarrow: true, isSquare: false }, // 1x2 (Narrow/Tall)
-            { grid: 'col-span-2 row-span-2', height: 'h-80', isLarge: true, isNarrow: false, isSquare: true }, // 2x2 (Large Square)
+            { grid: 'col-span-1 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: true },
+            { grid: 'col-span-2 row-span-1', height: 'h-44', isLarge: false, isNarrow: false, isSquare: false },
+            { grid: 'col-span-1 row-span-2', height: 'h-80', isLarge: true, isNarrow: true, isSquare: false },
+            { grid: 'col-span-2 row-span-2', height: 'h-80', isLarge: true, isNarrow: false, isSquare: true },
         ];
-
 
         /**
          * Fonction pour mélanger un tableau (Algorithme de Fisher-Yates).
@@ -292,7 +372,7 @@
             return array;
         }
         
-        /** Affiche un message temporaire en bas de l'écran (remplace alert()). */
+        /** Affiche un message temporaire */
         function showMessage(text) {
             const msgBox = document.getElementById('messageBox');
             msgBox.textContent = text;
@@ -300,34 +380,28 @@
             
             setTimeout(() => {
                 msgBox.classList.remove('show');
-            }, 3000); // Message visible pendant 3 secondes
+            }, 3000);
         }
 
         /**
-         * Charge les données du calendrier (mélangées et persistantes) depuis localStorage.
-         * Si un ordre mélangé n'existe pas, on le crée et le sauvegarde.
+         * Charge les données du calendrier (mélangées et persistantes)
          */
         function getPersistentCalendarData() {
             const storageKey = 'shuffledCalendarData';
             const storedData = localStorage.getItem(storageKey);
             
             if (storedData) {
-                // Utilise les données stockées si elles existent et sont valides
                 try {
                     const parsedData = JSON.parse(storedData);
-                    // Vérifie si les données parsées ressemblent aux données originales (même longueur)
                     if (parsedData.length === calendarData.length) {
                         return parsedData;
                     }
-                    // Si la structure est mauvaise, on continue pour regénérer
                 } catch (e) {
                     console.error("Erreur de parsing des données stockées, mélange à nouveau.", e);
-                    // Laisse la fonction continuer pour générer un nouvel ordre
                 }
             }
 
-            // Si aucune donnée stockée ou erreur de parsing, mélanger et sauvegarder
-            let shuffled = shuffleArray([...calendarData]); // Clonage avant mélange
+            let shuffled = shuffleArray([...calendarData]);
             
             try {
                 localStorage.setItem(storageKey, JSON.stringify(shuffled));
@@ -339,9 +413,7 @@
             return shuffled;
         }
 
-        // Récupère les données persistantes (mélangées une seule fois)
         const PERSISTENT_CALENDAR_DATA = getPersistentCalendarData();
-
 
         /**
          * Génère le HTML pour une carte du calendrier.
@@ -350,13 +422,11 @@
             const day = card.day;
             const isUnlocked = day <= UNLOCKED_DAY;
             
-            // On utilise l'index de la carte dans le tableau PERSISTENT_CALENDAR_DATA pour choisir la couleur/le layout,
-            // garantissant que la même couleur est toujours attribuée à la même POSITION sur la grille.
             const palette = colorPalettes[index % colorPalettes.length];
             const bgClass = `bg-gradient-to-br ${palette.front} ${palette.border}`;
             const backBorder = `${palette.backColor} border-4`;
 
-            const layoutIndex = index % layoutClasses.length; // Layout basé sur la position (index)
+            const layoutIndex = index % layoutClasses.length;
             const layout = layoutClasses[layoutIndex];
 
             const gridClass = layout.grid;
@@ -364,11 +434,9 @@
             const isLargeSquare = gridClass.includes('col-span-2 row-span-2'); 
             const buttonText = isLargeSquare ? 'Accéder à la ressource' : 'Accéder';
             
-            // Si la carte est déverrouillée, 'flipCard(this)' est l'action. Sinon, c'est le message d'erreur.
             let statusClass = isUnlocked ? '' : 'inactive-card';
             let clickHandler = isUnlocked ? `flipCard(this)` : `showLockedMessage(${day})`;
             
-            // Contenu de la Face Avant (RECTO)
             const frontContent = `
                 <div class="text-2xl font-light mb-0.5 opacity-80 
                             ${isLargeSquare ? 'text-3xl mb-1' : 'text-2xl mb-0.5'}">
@@ -379,7 +447,6 @@
                     ${day}
                 </div>
             `;
-
 
             return `
                 <div class="card-container ${gridClass} ${heightClass} ${statusClass}
@@ -403,7 +470,7 @@
                                 <p class="text-sm text-gray-600 mb-4 line-clamp-3 overflow-hidden">${card.desc}</p>
                             </div>
                             
-                            <!-- Bouton avec texte adapté à la taille de la carte -->
+                            <!-- Bouton -->
                             <a href="${card.url}" target="_blank" 
                                class="flex-shrink-0 w-full py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition-colors text-xs uppercase tracking-wider mt-auto relative z-10"
                                onclick="event.stopPropagation()">
@@ -417,39 +484,32 @@
         
         /** Affiche le message de carte verrouillée. */
         function showLockedMessage(day) {
-            // Empêche le clic sur un jour non déverrouillé et affiche le message
             showMessage(`Patience ! La surprise du jour ${day} sera disponible le ${day} décembre.`);
         }
 
-
-        /** Affiche toutes les cartes dans la grille, en utilisant les données persistantes. */
+        /** Affiche toutes les cartes dans la grille */
         function renderCards() {
             const grid = document.getElementById('calendarGrid');
-            // Utilisation des données persistantes (mélangées une seule fois et stockées)
             grid.innerHTML = PERSISTENT_CALENDAR_DATA.map((card, index) => createCard(card, index)).join('');
         }
 
         /** Gère le retournement de la carte. */
         function flipCard(container) {
-            // Si la carte est inactive (jour futur), le showLockedMessage est déjà géré par l'onclick dans createCard.
             if (container.classList.contains('inactive-card')) return;
             
             const isFlipped = container.classList.contains('flipped');
 
-            // 1. Si une autre carte est déjà active et différente de celle-ci, on la ferme.
             if (activeCard && activeCard !== container) {
                 activeCard.classList.remove('flipped');
-                activeCard = null; // L'ancienne carte est fermée
+                activeCard = null;
             }
 
-            // 2. Retourner la carte actuelle
             container.classList.toggle('flipped');
             
-            // 3. Mettre à jour la carte active
             if (container.classList.contains('flipped')) {
                 activeCard = container;
             } else {
-                activeCard = null; // La carte vient d'être refermée
+                activeCard = null;
             }
         }
 
