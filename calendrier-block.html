@@ -18,26 +18,11 @@
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            background-image: url('https://cdn.pixabay.com/photo/2018/09/21/14/01/snowflakes-3693171_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             background-color: #f9fafb;
-            position: relative;
-        }
-        
-        /* Pattern hivernal sur le fond uniquement */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            background-color: #f9fafb;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(219, 234, 254, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(254, 226, 226, 0.2) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 30%),
-                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(229, 231, 235, 0.3) 10px, rgba(229, 231, 235, 0.3) 20px);
-            background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px;
         }
 
         /* Styles spécifiques pour la carte à retourner (flip) */
@@ -66,19 +51,6 @@
             position: relative;
             transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             transform-style: preserve-3d;
-            background: transparent;
-        }
-        
-        /* Assure que les cartes ont un fond opaque */
-        .card-container {
-            background-color: transparent;
-        }
-        
-        /* Zone principale avec fond opaque */
-        main {
-            background-color: #f9fafb;
-            position: relative;
-            z-index: 1;
         }
 
         .card-container.flipped .data-card {
@@ -95,14 +67,13 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 1rem;
+            padding: 1rem; 
         }
 
         .card-back {
             transform: rotateY(180deg);
             justify-content: space-between; 
-            padding: 1.5rem;
-            background-color: #ffffff !important;
+            padding: 1.5rem; 
         }
         
         /* Correction du débordement du bouton sur la face arrière */
@@ -243,8 +214,8 @@
         
         /* NOUVEAU STYLE HEADER pour fond de neige en transparence */
         .header-bg-snow {
-            background-color: #011f4b;
-            background-image: url('http://silverteacher.github.io/Drane/christmas-6781762_1280.jpg');
+            background-color: #1e3a8a;
+            background-image: url('https://cdn.pixabay.com/photo/2018/09/21/14/01/snowflakes-3693171_1280.jpg');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -254,13 +225,23 @@
         .header-overlay {
             position: absolute;
             inset: 0;
-            background-color: rgba(1, 31, 75, 0.7);
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.5), rgba(220, 38, 38, 0.45));
             z-index: 1;
         }
 
         .header-content {
             position: relative;
             z-index: 2;
+        }
+        
+        /* Zone principale avec overlay blanc pour atténuer les flocons */
+        main {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.92);
+        }
+        
+        footer {
+            background-color: rgba(255, 255, 255, 0.95);
         }
         
         /* Style pour la boîte de message temporaire */
@@ -287,7 +268,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="bg-gray-50 min-h-screen">
 
     <!-- En-tête -->
     <header class="header-bg-snow text-white p-10 md:p-16 rounded-b-3xl shadow-2xl overflow-hidden">
@@ -301,9 +282,6 @@
             </p>
             <p class="text-lg md:text-xl font-light italic mt-2 text-white">
                 Drane
-            </p>
-            <p class="text-xs md:text-sm font-light mt-1 text-gray-200 opacity-80">
-                (connectez-vous à Eduline pour accéder directement à certaines d'entre elles)
             </p>
         </div>
     </header>
@@ -356,7 +334,7 @@
             { day: 6, title: 'CodiMD', desc: 'Éditeur collaboratif', url: 'https://portail.apps.education.fr/services/pad-avance-codimd', emoji: '✍️' },
             { day: 7, title: 'Tribu', desc: 'Espace de travail commun', url: 'https://tribu.phm.education.gouv.fr/', emoji: '🏕️' },
             { day: 8, title: 'Portail Tubes', desc: 'Hébergement vidéo', url: 'https://portail.apps.education.fr/services/portail-tubes', emoji: '📺' },
-            { day: 9, title: 'PodEduc', desc: 'Plateforme de vidéos et podcasts éducatifs', url: 'https://podeduc.apps.education.fr/', emoji: '🎙️' },
+            { day: 9, title: 'PodEduc', desc: 'Plateforme de vidéos et podcasts éducatifs', url: 'https://podeduc.apps.education.gouv.fr/', emoji: '🎙️' },
             { day: 10, title: 'Questionnaire', desc: 'Recueil de réponses', url: 'https://questionnaire.apps.education.fr', emoji: '✅' },
             { day: 11, title: 'Sondage', desc: 'Vote en ligne', url: 'https://sondage.apps.education.fr/', emoji: '📊' },
             { day: 12, title: 'Éléa', desc: 'Plateforme pédagogique', url: 'https://dane.site.ac-lille.fr/2024/09/20/simplifiez-votre-enseignement-avec-elea/', emoji: '💻' },
