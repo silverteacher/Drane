@@ -240,6 +240,16 @@
             height: 20px;
         }
 
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            color: white;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
         @media (max-width: 1024px) {
             .main-layout {
                 grid-template-columns: 1fr;
@@ -388,7 +398,7 @@ Le projet met en avant la continuité des apprentissages entre les classes de 3�
                 icon: BrainIcon,
                 content: `Venez explorer les métiers de l'intelligence artificielle et réfléchir à ses enjeux. Imaginer une solution à un problème social ou environnemental en mobilisant des fonctions d'IA et en formant une équipe pluridisciplinaire.
 
-Des mini-jeux permettront de déconstruire les stéréotypes et d'aborder les questions de biais, de fiabilité et d'impact écologique de l'IA. Ces activités sont transférables et adaptables en classe sur d'autres sujets.`
+Des mini-jeux permettront de déconstruire les stéréotypes et aborder les questions de biais, de fiabilité et d'impact écologique de l'IA. Ces activités sont transférables et adaptables en classe sur d'autres sujets.`
             },
             {
                 id: 5,
@@ -436,64 +446,69 @@ L'objectif est de développer empathie, posture professionnelle et aisance à l'
             };
 
             return (
-                <div className="container">
-                    <div className="main-layout">
-                        <div className="image-frame">
-                            <img 
-                                src="https://dane.site.ac-lille.fr/wp-content/uploads/sites/8/2025/12/Journee-de-linnovation-numerique-1.png" 
-                                alt="Journée de l'innovation numérique"
-                            />
-                        </div>
+                <>
+                    <div className="container">
+                        <div className="main-layout">
+                            <div className="image-frame">
+                                <img 
+                                    src="https://dane.site.ac-lille.fr/wp-content/uploads/sites/8/2025/12/Journee-de-linnovation-numerique-1.png" 
+                                    alt="Journée de l'innovation numérique"
+                                />
+                            </div>
 
-                        <div className="workshops-section">
-                            <h1 className="section-title">Ateliers disponibles</h1>
-                            
-                            {workshops.map((workshop) => {
-                                const IconComponent = workshop.icon;
-                                const isActive = activeId === workshop.id;
+                            <div className="workshops-section">
+                                <h1 className="section-title">Ateliers disponibles</h1>
                                 
-                                return (
-                                    <div key={workshop.id} className="workshop-item">
-                                        <div 
-                                            className={`workshop-header ${isActive ? 'active' : ''}`}
-                                            onClick={() => toggleWorkshop(workshop.id)}
-                                        >
-                                            <div className="workshop-icon">
-                                                <IconComponent />
-                                            </div>
-                                            <div className="workshop-title-container">
-                                                <div className="workshop-title">
-                                                    Atelier {workshop.id} : {workshop.title}
+                                {workshops.map((workshop) => {
+                                    const IconComponent = workshop.icon;
+                                    const isActive = activeId === workshop.id;
+                                    
+                                    return (
+                                        <div key={workshop.id} className="workshop-item">
+                                            <div 
+                                                className={`workshop-header ${isActive ? 'active' : ''}`}
+                                                onClick={() => toggleWorkshop(workshop.id)}
+                                            >
+                                                <div className="workshop-icon">
+                                                    <IconComponent />
                                                 </div>
-                                                <div className="workshop-gauge">
-                                                    <UsersIcon />
-                                                    Jauge : {workshop.gauge} personnes
+                                                <div className="workshop-title-container">
+                                                    <div className="workshop-title">
+                                                        Atelier {workshop.id} : {workshop.title}
+                                                    </div>
+                                                    <div className="workshop-gauge">
+                                                        <UsersIcon />
+                                                        Jauge : {workshop.gauge} personnes
+                                                    </div>
+                                                </div>
+                                                <div className="chevron">
+                                                    <ChevronDownIcon />
                                                 </div>
                                             </div>
-                                            <div className="chevron">
-                                                <ChevronDownIcon />
+                                            <div className={`workshop-content ${isActive ? 'active' : ''}`}>
+                                                {workshop.content ? (
+                                                    <div className="content-text">{workshop.content}</div>
+                                                ) : (
+                                                    <div className="content-empty">Contenu à venir</div>
+                                                )}
                                             </div>
                                         </div>
-                                        <div className={`workshop-content ${isActive ? 'active' : ''}`}>
-                                            {workshop.content ? (
-                                                <div className="content-text">{workshop.content}</div>
-                                            ) : (
-                                                <div className="content-empty">Contenu à venir</div>
-                                            )}
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
 
-                            <div className="inscription-container">
-                                <a href="#inscription" className="inscription-button">
-                                    <span>Cliquer ici pour vous inscrire</span>
-                                    <ExternalLinkIcon />
-                                </a>
+                                <div className="inscription-container">
+                                    <a href="https://eduline.ac-lille.fr/limesurvey-eafc/449366?lang=fr" target="_blank" rel="noopener noreferrer" className="inscription-button">
+                                        <span>Cliquer ici pour vous inscrire</span>
+                                        <ExternalLinkIcon />
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                    <div className="footer">
+                        Drane de Lille
+                    </div>
+                </>
             );
         }
 
