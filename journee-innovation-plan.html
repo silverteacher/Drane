@@ -275,6 +275,28 @@
             overflow-y: auto;
             animation: slideInRight 0.3s ease;
             cursor: default;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        /* Indicateur de scroll pour mobile */
+        .side-panel::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .side-panel::after {
+                opacity: 1;
+            }
         }
 
         @keyframes slideInRight {
@@ -288,6 +310,22 @@
 
         .side-panel-content {
             padding: 1.5rem;
+        }
+
+        /* Poignée pour mobile */
+        .panel-handle {
+            display: none;
+            width: 40px;
+            height: 4px;
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 2px;
+            margin: 0.75rem auto 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .panel-handle {
+                display: block;
+            }
         }
 
         .side-panel-close {
@@ -387,6 +425,9 @@
             line-height: 1.5;
             color: #4a5568;
             white-space: pre-line;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
         }
 
         /* Workshops list */
@@ -530,6 +571,9 @@
             line-height: 1.7;
             font-size: 1rem;
             white-space: pre-line;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
         }
 
         .inscription-container {
@@ -679,26 +723,55 @@
             .workshop-header {
                 padding: 1rem;
                 gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+
+            .workshop-icon {
+                width: 20px;
+                height: 20px;
+            }
+
+            .workshop-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .workshop-title-container {
+                flex: 1;
+                min-width: 0; /* Pour permettre le text-wrap */
             }
 
             .workshop-title {
-                font-size: 1rem;
+                font-size: 0.95rem;
                 line-height: 1.3;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
             }
 
             .workshop-gauge,
             .workshop-location {
                 font-size: 0.8rem;
+                flex-wrap: wrap;
+            }
+
+            .workshop-gauge svg,
+            .workshop-location svg {
+                width: 14px;
+                height: 14px;
+                flex-shrink: 0;
             }
 
             .workshop-content.active {
-                max-height: 600px;
+                max-height: 800px;
+                overflow-y: auto;
             }
 
             .content-text {
                 padding: 1rem;
-                font-size: 0.95rem;
+                font-size: 0.9rem;
                 line-height: 1.6;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
             }
 
             .inscription-container {
@@ -714,12 +787,14 @@
             /* Panneau latéral mobile */
             .side-panel {
                 width: 100% !important;
-                height: 85vh !important;
+                height: 90vh !important;
                 top: auto !important;
                 bottom: 0 !important;
-                max-height: 85vh !important;
+                max-height: 90vh !important;
                 animation: slideInUp 0.3s ease !important;
                 border-radius: 20px 20px 0 0;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             @keyframes slideInUp {
@@ -732,16 +807,151 @@
             }
 
             .side-panel-content {
-                padding: 1.25rem;
+                padding: 1rem 1.25rem 2rem 1.25rem;
+                min-height: 100%;
             }
 
             .side-panel-close {
                 top: 0.75rem;
                 right: 0.75rem;
+                width: 36px;
+                height: 36px;
+                background: rgba(102, 126, 234, 0.15);
+            }
+
+            .side-panel-close svg {
+                width: 22px;
+                height: 22px;
             }
 
             .panel-header {
-                padding-right: 2.5rem;
+                padding-right: 3rem;
+                gap: 0.625rem;
+                margin-bottom: 1rem;
+                padding-bottom: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .panel-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                flex-shrink: 0;
+            }
+
+            .panel-icon svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .panel-title {
+                font-size: 1.05rem;
+                line-height: 1.3;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                flex: 1;
+                min-width: 0;
+            }
+
+            .panel-info {
+                gap: 0.75rem;
+                padding: 0.875rem;
+                margin-bottom: 1rem;
+                border-radius: 8px;
+            }
+
+            .panel-info-item {
+                font-size: 0.875rem;
+                line-height: 1.4;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            .panel-info-item svg {
+                width: 16px;
+                height: 16px;
+                flex-shrink: 0;
+            }
+
+            .panel-info-label {
+                flex-shrink: 0;
+            }
+
+            .panel-description {
+                font-size: 0.9rem;
+                line-height: 1.6;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                white-space: pre-wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 13px;
+            }
+
+            .container {
+                padding: 0.5rem;
+            }
+
+            .content-section {
+                padding: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.15rem;
+                margin-bottom: 0.875rem;
+            }
+
+            .tab-button {
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            /* Liste ateliers très petits écrans */
+            .workshop-header {
+                padding: 0.875rem;
+            }
+
+            .workshop-title {
+                font-size: 0.9rem;
+            }
+
+            .workshop-gauge,
+            .workshop-location {
+                font-size: 0.75rem;
+            }
+
+            .content-text {
+                padding: 0.875rem;
+                font-size: 0.875rem;
+            }
+
+            /* Marqueurs très petits écrans */
+            .marker {
+                width: 36px;
+                height: 36px;
+                min-width: 40px;
+                min-height: 40px;
+            }
+
+            .marker svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* Panneau très petits écrans */
+            .side-panel {
+                height: 92vh !important;
+                max-height: 92vh !important;
+            }
+
+            .side-panel-content {
+                padding: 0.875rem 1rem 1.5rem 1rem;
+            }
+
+            .panel-header {
                 gap: 0.5rem;
                 margin-bottom: 0.875rem;
                 padding-bottom: 0.875rem;
@@ -758,66 +968,31 @@
             }
 
             .panel-title {
-                font-size: 1.05rem;
-                line-height: 1.3;
-            }
-
-            .panel-info {
-                gap: 0.625rem;
-                padding: 0.625rem;
-                margin-bottom: 0.875rem;
-            }
-
-            .panel-info-item {
-                font-size: 0.875rem;
-            }
-
-            .panel-info-item svg {
-                width: 15px;
-                height: 15px;
-            }
-
-            .panel-description {
-                font-size: 0.9rem;
-                line-height: 1.5;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 0.5rem;
-            }
-
-            .section-title {
-                font-size: 1.2rem;
-            }
-
-            .tab-button {
-                padding: 0.625rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .workshop-title {
-                font-size: 0.95rem;
-            }
-
-            .marker {
-                width: 32px;
-                height: 32px;
-            }
-
-            .marker svg {
-                width: 18px;
-                height: 18px;
-            }
-
-            .panel-title {
                 font-size: 1rem;
             }
 
-            .side-panel {
-                height: 90vh !important;
-                max-height: 90vh !important;
+            .panel-info {
+                padding: 0.75rem;
+                gap: 0.625rem;
+            }
+
+            .panel-info-item {
+                font-size: 0.8rem;
+            }
+
+            .panel-info-item svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .panel-description {
+                font-size: 0.85rem;
+                line-height: 1.5;
+            }
+
+            .inscription-button {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.95rem;
             }
         }
     </style>
@@ -1056,6 +1231,7 @@ Une opportunité de partager vos impressions, vos questions et vos retours d'exp
                     <div className="side-panel-overlay" onClick={onClose}></div>
                     <div className="side-panel" style={panelStyle}>
                         <div className="side-panel-content">
+                            <div className="panel-handle"></div>
                             <button className="side-panel-close" onClick={onClose}>
                                 <CloseIcon />
                             </button>
