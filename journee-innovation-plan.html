@@ -241,6 +241,51 @@
             color: white;
         }
 
+        /* Marqueur spécial pour le Débrief (vert avec texte) */
+        .marker-label {
+            position: absolute;
+            background: rgba(34, 197, 94, 0.95);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+            border: 2px solid white;
+            z-index: 10;
+            white-space: nowrap;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .marker-label:not(.clicked) {
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+            }
+            50% {
+                box-shadow: 0 6px 20px rgba(34, 197, 94, 0.6);
+            }
+        }
+
+        .marker-label:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.6);
+        }
+
+        .marker-label:active {
+            transform: scale(1);
+        }
+
         /* Side Panel */
         .side-panel-overlay {
             position: fixed;
@@ -725,6 +770,16 @@
                 height: 20px;
             }
 
+            /* Label vert responsive */
+            .marker-label {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.6rem;
+                white-space: normal;
+                text-align: center;
+                line-height: 1.2;
+                max-width: 120px;
+            }
+
             /* Liste ateliers mobile */
             .workshop-item {
                 margin-bottom: 0.75rem;
@@ -971,6 +1026,13 @@
                 height: 18px;
             }
 
+            /* Label vert très petits écrans */
+            .marker-label {
+                font-size: 0.7rem;
+                padding: 0.35rem 0.5rem;
+                max-width: 100px;
+            }
+
             /* Panneau très petits écrans */
             .side-panel {
                 height: 92vh !important;
@@ -1212,7 +1274,18 @@ Initiation aux usages pédagogiques du drone en établissement scolaire : pilota
 
 L'objectif est de développer empathie, posture professionnelle et aisance à l'oral grâce à un entraînement réaliste et ludique.`
             },
-           
+            {
+                id: 9,
+                title: "Débrief express avec la DRANE",
+                room: "La Marquise",
+                gauge: 12,
+                icon: UsersIcon,
+                floor: 0, // 1er étage
+                position: { top: '18%', left: '72%' }, // Sur le carré rouge MARQUISE
+                content: `Moment d'échanges avec les participants sur leurs ressentis des ateliers en mode interview.
+
+Une opportunité de partager vos impressions, vos questions et vos retours d'expérience dans un cadre convivial et interactif.`
+            }
         ];
 
         const floors = [
@@ -1315,6 +1388,27 @@ L'objectif est de développer empathie, posture professionnelle et aisance à l'
                                         {floorWorkshops.map(workshop => {
                                             const IconComponent = workshop.icon;
                                             const isClicked = selectedWorkshop?.id === workshop.id;
+                                            const isDebrief = workshop.id === 9;
+                                            
+                                            if (isDebrief) {
+                                                // Affichage spécial pour le Débrief (label vert)
+                                                return (
+                                                    <div
+                                                        key={workshop.id}
+                                                        className={`marker-label ${isClicked ? 'clicked' : ''}`}
+                                                        style={{
+                                                            top: workshop.position.top,
+                                                            left: workshop.position.left,
+                                                            transform: 'translate(-50%, -50%)'
+                                                        }}
+                                                        onClick={(e) => handleMarkerClick(workshop, e)}
+                                                        title={workshop.title}
+                                                    >
+                                                        Débrief express avec la DRANE
+                                                    </div>
+                                                );
+                                            }
+                                            
                                             return (
                                                 <div
                                                     key={workshop.id}
@@ -1361,7 +1455,7 @@ L'objectif est de développer empathie, posture professionnelle et aisance à l'
 
             return (
                 <div>
-                    {workshops.map((workshop) => {
+                    {workshops.filter(w => w.id !== 9).map((workshop) => {
                         const IconComponent = workshop.icon;
                         const isActive = activeId === workshop.id;
                         
@@ -1421,7 +1515,7 @@ L'objectif est de développer empathie, posture professionnelle et aisance à l'
                     <div className="main-layout">
                         <div className="image-frame">
                             <img 
-                                src="https://dane.site.ac-lille.fr/wp-content/uploads/sites/8/2025/12/Journee-de-linnovation-numerique-1.png" 
+                                src="https://dane.site.ac-lille.fr/wp-content/uploads/sites/8/2025/12/Journee-de-linnovation-conseils-participants.png" 
                                 alt="Journée de l'innovation numérique"
                             />
                         </div>
