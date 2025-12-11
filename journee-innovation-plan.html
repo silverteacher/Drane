@@ -621,6 +621,7 @@
             .image-frame {
                 position: relative;
                 top: 0;
+                margin-bottom: 1.5rem;
             }
 
             .side-panel {
@@ -628,6 +629,7 @@
             }
         }
 
+        /* Cacher l'image uniquement sur mobile (768px et moins) */
         @media (max-width: 768px) {
             body {
                 font-size: 14px;
@@ -641,9 +643,9 @@
                 gap: 1rem;
             }
 
+            /* Cacher l'image de la journée sur mobile */
             .image-frame {
-                padding: 1rem;
-                border-radius: 16px;
+                display: none;
             }
 
             .content-section {
@@ -678,9 +680,9 @@
                 flex-shrink: 0;
             }
 
-            /* Plans mobile */
+            /* Plans mobile optimisés */
             .plans-container {
-                gap: 1rem;
+                gap: 1.5rem;
             }
 
             .floor-section {
@@ -689,18 +691,27 @@
             }
 
             .floor-title {
-                font-size: 1.1rem;
-                margin-bottom: 0.75rem;
+                font-size: 1.15rem;
+                margin-bottom: 1rem;
+                font-weight: 700;
+                color: #2d3748;
             }
 
             .plan-wrapper {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
+                border-radius: 12px;
+                background: #f7fafc;
+            }
+
+            .plan-scroll-hint {
+                display: none;
             }
 
             .plan-image {
-                min-width: 600px;
-                width: auto;
+                min-width: 100%;
+                width: 100%;
+                height: auto;
             }
 
             .marker {
@@ -895,6 +906,11 @@
                 padding: 0.5rem;
             }
 
+            /* L'image reste cachée */
+            .image-frame {
+                display: none;
+            }
+
             .content-section {
                 padding: 1rem;
             }
@@ -907,6 +923,20 @@
             .tab-button {
                 padding: 0.625rem 1rem;
                 font-size: 0.875rem;
+            }
+
+            /* Plans très petits écrans */
+            .plans-container {
+                gap: 1.25rem;
+            }
+
+            .floor-section {
+                padding: 0.875rem;
+            }
+
+            .floor-title {
+                font-size: 1.05rem;
+                margin-bottom: 0.875rem;
             }
 
             /* Liste ateliers très petits écrans */
