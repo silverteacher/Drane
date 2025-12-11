@@ -110,11 +110,17 @@
             border-bottom: 3px solid transparent;
             position: relative;
             border-radius: 12px 12px 0 0;
+            min-height: 44px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .tab-button:hover {
             color: #667eea;
             background: rgba(102, 126, 234, 0.08);
+        }
+
+        .tab-button:active {
+            background: rgba(102, 126, 234, 0.15);
         }
 
         .tab-button.active {
@@ -153,6 +159,33 @@
             border-radius: 12px;
         }
 
+        .plan-scroll-hint {
+            display: none;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 20;
+            pointer-events: none;
+            animation: fadeInOut 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .plan-scroll-hint {
+                display: block;
+            }
+        }
+
         .plan-image {
             width: 100%;
             height: auto;
@@ -174,6 +207,10 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
             border: 2px solid white;
             z-index: 10;
+            /* Touch target minimum 44x44px */
+            min-width: 44px;
+            min-height: 44px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .marker:not(.clicked) {
@@ -192,6 +229,10 @@
         .marker:hover {
             transform: scale(1.15);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .marker:active {
+            transform: scale(1.05);
         }
 
         .marker svg {
@@ -372,10 +413,16 @@
             background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
             border-left: 4px solid #667eea;
             transition: all 0.3s ease;
+            min-height: 44px; /* Touch target */
+            -webkit-tap-highlight-color: transparent;
         }
 
         .workshop-header:hover {
             background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+        }
+
+        .workshop-header:active {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
         }
 
         .workshop-header.active {
@@ -503,11 +550,18 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            min-height: 44px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .inscription-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .inscription-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
 
         .inscription-button svg {
@@ -531,32 +585,141 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+
             .container {
+                padding: 0.75rem;
+            }
+
+            .main-layout {
+                gap: 1rem;
+            }
+
+            .image-frame {
                 padding: 1rem;
+                border-radius: 16px;
+            }
+
+            .content-section {
+                padding: 1.25rem;
+                border-radius: 16px;
             }
 
             .section-title {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
             }
 
+            /* Onglets mobile */
             .tabs-container {
                 overflow-x: auto;
                 flex-wrap: nowrap;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tabs-container::-webkit-scrollbar {
+                display: none;
             }
 
             .tab-button {
-                padding: 0.75rem 1.5rem;
-                font-size: 1rem;
+                padding: 0.75rem 1.25rem;
+                font-size: 0.95rem;
                 white-space: nowrap;
+                border-radius: 10px 10px 0 0;
+                flex-shrink: 0;
             }
 
+            /* Plans mobile */
+            .plans-container {
+                gap: 1rem;
+            }
+
+            .floor-section {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+
+            .floor-title {
+                font-size: 1.1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .plan-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .plan-image {
+                min-width: 600px;
+                width: auto;
+            }
+
+            .marker {
+                width: 36px;
+                height: 36px;
+                border: 2px solid white;
+            }
+
+            .marker svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            /* Liste ateliers mobile */
+            .workshop-item {
+                margin-bottom: 0.75rem;
+                border-radius: 10px;
+            }
+
+            .workshop-header {
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+
+            .workshop-title {
+                font-size: 1rem;
+                line-height: 1.3;
+            }
+
+            .workshop-gauge,
+            .workshop-location {
+                font-size: 0.8rem;
+            }
+
+            .workshop-content.active {
+                max-height: 600px;
+            }
+
+            .content-text {
+                padding: 1rem;
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+            .inscription-container {
+                margin-top: 1.5rem;
+            }
+
+            .inscription-button {
+                padding: 0.875rem 1.5rem;
+                font-size: 1rem;
+                border-radius: 10px;
+            }
+
+            /* Panneau latéral mobile */
             .side-panel {
                 width: 100% !important;
-                height: 80vh !important;
+                height: 85vh !important;
                 top: auto !important;
                 bottom: 0 !important;
-                max-height: 80vh !important;
+                max-height: 85vh !important;
                 animation: slideInUp 0.3s ease !important;
+                border-radius: 20px 20px 0 0;
             }
 
             @keyframes slideInUp {
@@ -569,15 +732,92 @@
             }
 
             .side-panel-content {
-                padding: 1.5rem;
+                padding: 1.25rem;
+            }
+
+            .side-panel-close {
+                top: 0.75rem;
+                right: 0.75rem;
+            }
+
+            .panel-header {
+                padding-right: 2.5rem;
+                gap: 0.5rem;
+                margin-bottom: 0.875rem;
+                padding-bottom: 0.875rem;
+            }
+
+            .panel-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .panel-icon svg {
+                width: 20px;
+                height: 20px;
             }
 
             .panel-title {
-                font-size: 1.2rem;
+                font-size: 1.05rem;
+                line-height: 1.3;
             }
 
             .panel-info {
-                gap: 0.75rem;
+                gap: 0.625rem;
+                padding: 0.625rem;
+                margin-bottom: 0.875rem;
+            }
+
+            .panel-info-item {
+                font-size: 0.875rem;
+            }
+
+            .panel-info-item svg {
+                width: 15px;
+                height: 15px;
+            }
+
+            .panel-description {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .tab-button {
+                padding: 0.625rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .workshop-title {
+                font-size: 0.95rem;
+            }
+
+            .marker {
+                width: 32px;
+                height: 32px;
+            }
+
+            .marker svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .panel-title {
+                font-size: 1rem;
+            }
+
+            .side-panel {
+                height: 90vh !important;
+                max-height: 90vh !important;
             }
         }
     </style>
@@ -678,7 +918,7 @@
                 gauge: 8,
                 icon: VideoIcon,
                 floor: 0, // Rez-de-chaussée
-                position: { top: '45%', left: '25%' },
+                position: { top: '62%', left: '72%' }, // Sur le carré rouge PASSERELLE
                 content: `Faire ses premiers pas avec la webTV :
 - Créer un projet d'animation en stop-motion motivant pour sa classe
 - Réaliser son premier reportage journalistique`
@@ -689,8 +929,8 @@
                 room: "Salle de conférence",
                 gauge: 12,
                 icon: GamepadIcon,
-                floor: 0,
-                position: { top: '60%', left: '70%' },
+                floor: 1, // 1er étage
+                position: { top: '60%', left: '50%' },
                 content: `La ludicisation au service des apprentissages
 
 Au travers d'exemples concrets soutenus par un apport scientifique ciblé, vous découvrirez les potentiels de Genially pour la création d'aventures graphiques destinées à maintenir la motivation des élèves.`
@@ -701,8 +941,8 @@ Au travers d'exemples concrets soutenus par un apport scientifique ciblé, vous 
                 room: "Le Studio",
                 gauge: 8,
                 icon: RobotIcon,
-                floor: 0,
-                position: { top: '30%', left: '55%' },
+                floor: 2, // 2ème étage
+                position: { top: '30%', left: '25%' }, // Sur le carré rouge LE STUDIO
                 content: `Cette action s'inscrit dans une démarche de projet favorisant la liaison collège-lycée autour du challenge Blaise Robotics. Elle présente l'organisation et le règlement du challenge, ainsi que la manière dont il structure la progression des élèves.
 
 Le projet met en avant la continuité des apprentissages entre les classes de 3ᵉ et de 2nde SI-CIT, en valorisant les activités menées au cours de l'année et la cohérence du parcours technologique proposé.`
@@ -714,7 +954,7 @@ Le projet met en avant la continuité des apprentissages entre les classes de 3�
                 gauge: 10,
                 icon: BrainIcon,
                 floor: 1, // 1er étage
-                position: { top: '50%', left: '65%' },
+                position: { top: '60%', left: '55%' },
                 content: `Venez explorer les métiers de l'intelligence artificielle et réfléchir à ses enjeux. Imaginer une solution à un problème social ou environnemental en mobilisant des fonctions d'IA et en formant une équipe pluridisciplinaire.
 
 Des mini-jeux permettront de déconstruire les stéréotypes et aborder les questions de biais, de fiabilité et d'impact écologique de l'IA. Ces activités sont transférables et adaptables en classe sur d'autres sujets.`
@@ -725,8 +965,8 @@ Des mini-jeux permettront de déconstruire les stéréotypes et aborder les ques
                 room: "Salle de conférence",
                 gauge: 10,
                 icon: LightbulbIcon,
-                floor: 1,
-                position: { top: '65%', left: '40%' },
+                floor: 1, // 1er étage
+                position: { top: '60%', left: '45%' },
                 content: `Vous souhaitez mieux accompagner vos élèves dans la prise d'initiative ? Vous avez des projets numériques en tête, ou vous souhaitez comprendre comment les développer ? Cet atelier est fait pour vous !
 
 La Fresque de l'Esprit d'Entreprendre est une expérience collaborative et visuelle qui vous fait vivre toutes les étapes d'un projet : formuler une idée, identifier les besoins, créer un prototype, tester, itérer, mobiliser une équipe… exactement comme le ferait un entrepreneur numérique.`
@@ -737,8 +977,8 @@ La Fresque de l'Esprit d'Entreprendre est une expérience collaborative et visue
                 room: "au Fablab",
                 gauge: 10,
                 icon: WrenchIcon,
-                floor: 1,
-                position: { top: '35%', left: '25%' },
+                floor: 0, // Rez-de-chaussée
+                position: { top: '50%', left: '25%' }, // Position OK
                 content: `Dans cet atelier, nous allons vous montrer comment fabriquer un objet sans être technicien, ni informaticien et encore moins spécialiste.
 
 Nous allons vous expliquer le fonctionnement d'une coupeuse laser ou d'une imprimante 3D, vous donner des banques de données et matérialiser vos projets didactiques quelle que soit la matière que vous enseignez.`
@@ -749,8 +989,8 @@ Nous allons vous expliquer le fonctionnement d'une coupeuse laser ou d'une impri
                 room: "dans le cube",
                 gauge: 5,
                 icon: DroneIcon,
-                floor: 2, // 2ème étage
-                position: { top: '50%', left: '50%' },
+                floor: 0, // Rez-de-chaussée
+                position: { top: '42%', left: '80%' }, // Sur le carré rouge CUBE
                 content: `Découverte de l'option BIMD (Brevet d'Initiation aux Métiers du Drone) et du Drone Soccer
 
 Initiation aux usages pédagogiques du drone en établissement scolaire : pilotage, sécurité, usages professionnels et découverte du Drone Soccer, une activité mêlant technologie, esprit d'équipe et compétition.`
@@ -761,11 +1001,23 @@ Initiation aux usages pédagogiques du drone en établissement scolaire : pilota
                 room: "Salle de conférence",
                 gauge: 10,
                 icon: VRIcon,
-                floor: 0,
-                position: { top: '75%', left: '50%' },
+                floor: 1, // 1er étage
+                position: { top: '60%', left: '60%' },
                 content: `Découverte de la réalité virtuelle pour se former à la relation client en situation immersive. On enfile un casque VR et on vit des scénarios concrets : accueil, écoute, gestion de conflit, conseil personnalisé.
 
 L'objectif est de développer empathie, posture professionnelle et aisance à l'oral grâce à un entraînement réaliste et ludique.`
+            },
+            {
+                id: 9,
+                title: "Débrief express avec la DRANE",
+                room: "La Marquise",
+                gauge: 12,
+                icon: UsersIcon,
+                floor: 0, // Rez-de-chaussée
+                position: { top: '18%', left: '72%' }, // Sur le carré rouge MARQUISE
+                content: `Moment d'échanges avec les participants sur leurs ressentis des ateliers en mode interview.
+
+Une opportunité de partager vos impressions, vos questions et vos retours d'expérience dans un cadre convivial et interactif.`
             }
         ];
 
@@ -864,6 +1116,7 @@ L'objectif est de développer empathie, posture professionnelle et aisance à l'
                                     <div className="floor-title">{floor.name}</div>
                                     <div className="plan-wrapper">
                                         <img src={floor.image} alt={floor.name} className="plan-image" />
+                                        <div className="plan-scroll-hint">👈 Faites glisser pour explorer</div>
                                         {floorWorkshops.map(workshop => {
                                             const IconComponent = workshop.icon;
                                             const isClicked = selectedWorkshop?.id === workshop.id;
