@@ -1122,7 +1122,7 @@
                 room: "La Passerelle",
                 gauge: 8,
                 icon: VideoIcon,
-                floor: 0, // Rez-de-chaussée
+                floor: 0, // 1er étage
                 position: { top: '62%', left: '72%' }, // Sur le carré rouge PASSERELLE
                 content: `Faire ses premiers pas avec la webTV :
 - Créer un projet d'animation en stop-motion motivant pour sa classe
@@ -1134,8 +1134,8 @@
                 room: "Salle de conférence",
                 gauge: 12,
                 icon: GamepadIcon,
-                floor: 1, // 1er étage
-                position: { top: '60%', left: '50%' },
+                floor: 1, // 2ème étage
+                position: { top: '52%', left: '40%' }, // En haut à gauche - plus espacé
                 content: `La ludicisation au service des apprentissages
 
 Au travers d'exemples concrets soutenus par un apport scientifique ciblé, vous découvrirez les potentiels de Genially pour la création d'aventures graphiques destinées à maintenir la motivation des élèves.`
@@ -1146,7 +1146,7 @@ Au travers d'exemples concrets soutenus par un apport scientifique ciblé, vous 
                 room: "Le Studio",
                 gauge: 8,
                 icon: RobotIcon,
-                floor: 2, // 2ème étage
+                floor: 2, // 3ème étage
                 position: { top: '30%', left: '25%' }, // Sur le carré rouge LE STUDIO
                 content: `Cette action s'inscrit dans une démarche de projet favorisant la liaison collège-lycée autour du challenge Blaise Robotics. Elle présente l'organisation et le règlement du challenge, ainsi que la manière dont il structure la progression des élèves.
 
@@ -1158,8 +1158,8 @@ Le projet met en avant la continuité des apprentissages entre les classes de 3�
                 room: "Salle de conférence",
                 gauge: 10,
                 icon: BrainIcon,
-                floor: 1, // 1er étage
-                position: { top: '60%', left: '55%' },
+                floor: 1, // 2ème étage
+                position: { top: '52%', left: '60%' }, // En haut à droite - plus espacé
                 content: `Venez explorer les métiers de l'intelligence artificielle et réfléchir à ses enjeux. Imaginer une solution à un problème social ou environnemental en mobilisant des fonctions d'IA et en formant une équipe pluridisciplinaire.
 
 Des mini-jeux permettront de déconstruire les stéréotypes et aborder les questions de biais, de fiabilité et d'impact écologique de l'IA. Ces activités sont transférables et adaptables en classe sur d'autres sujets.`
@@ -1170,8 +1170,8 @@ Des mini-jeux permettront de déconstruire les stéréotypes et aborder les ques
                 room: "Salle de conférence",
                 gauge: 10,
                 icon: LightbulbIcon,
-                floor: 1, // 1er étage
-                position: { top: '60%', left: '45%' },
+                floor: 1, // 2ème étage
+                position: { top: '68%', left: '40%' }, // En bas à gauche - plus espacé
                 content: `Vous souhaitez mieux accompagner vos élèves dans la prise d'initiative ? Vous avez des projets numériques en tête, ou vous souhaitez comprendre comment les développer ? Cet atelier est fait pour vous !
 
 La Fresque de l'Esprit d'Entreprendre est une expérience collaborative et visuelle qui vous fait vivre toutes les étapes d'un projet : formuler une idée, identifier les besoins, créer un prototype, tester, itérer, mobiliser une équipe… exactement comme le ferait un entrepreneur numérique.`
@@ -1182,7 +1182,7 @@ La Fresque de l'Esprit d'Entreprendre est une expérience collaborative et visue
                 room: "au Fablab",
                 gauge: 10,
                 icon: WrenchIcon,
-                floor: 0, // Rez-de-chaussée
+                floor: 0, // 1er étage
                 position: { top: '50%', left: '25%' }, // Position OK
                 content: `Dans cet atelier, nous allons vous montrer comment fabriquer un objet sans être technicien, ni informaticien et encore moins spécialiste.
 
@@ -1194,7 +1194,7 @@ Nous allons vous expliquer le fonctionnement d'une coupeuse laser ou d'une impri
                 room: "dans le cube",
                 gauge: 5,
                 icon: DroneIcon,
-                floor: 0, // Rez-de-chaussée
+                floor: 0, // 1er étage
                 position: { top: '42%', left: '80%' }, // Sur le carré rouge CUBE
                 content: `Découverte de l'option BIMD (Brevet d'Initiation aux Métiers du Drone) et du Drone Soccer
 
@@ -1206,8 +1206,8 @@ Initiation aux usages pédagogiques du drone en établissement scolaire : pilota
                 room: "Salle de conférence",
                 gauge: 10,
                 icon: VRIcon,
-                floor: 1, // 1er étage
-                position: { top: '60%', left: '60%' },
+                floor: 1, // 2ème étage
+                position: { top: '68%', left: '60%' }, // En bas à droite - plus espacé
                 content: `Découverte de la réalité virtuelle pour se former à la relation client en situation immersive. On enfile un casque VR et on vit des scénarios concrets : accueil, écoute, gestion de conflit, conseil personnalisé.
 
 L'objectif est de développer empathie, posture professionnelle et aisance à l'oral grâce à un entraînement réaliste et ludique.`
@@ -1218,7 +1218,7 @@ L'objectif est de développer empathie, posture professionnelle et aisance à l'
                 room: "La Marquise",
                 gauge: 12,
                 icon: UsersIcon,
-                floor: 0, // Rez-de-chaussée
+                floor: 0, // 1er étage
                 position: { top: '18%', left: '72%' }, // Sur le carré rouge MARQUISE
                 content: `Moment d'échanges avec les participants sur leurs ressentis des ateliers en mode interview.
 
@@ -1229,17 +1229,17 @@ Une opportunité de partager vos impressions, vos questions et vos retours d'exp
         const floors = [
             {
                 id: 0,
-                name: "Rez-de-chaussée",
+                name: "1er étage",
                 image: "https://dane.site.ac-lille.fr/wp-content/uploads/sites/8/2025/12/Plans-La-Station-Surface-au-sol_00001-scaled.png"
             },
             {
                 id: 1,
-                name: "1er étage",
+                name: "2ème étage",
                 image: "https://dane.site.ac-lille.fr/wp-content/uploads/sites/8/2025/12/Plans-La-Station-Surface-au-sol_00002-scaled.png"
             },
             {
                 id: 2,
-                name: "2ème étage",
+                name: "3ème étage",
                 image: "https://dane.site.ac-lille.fr/wp-content/uploads/sites/8/2025/12/Plans-La-Station-Surface-au-sol_00003-scaled.png"
             }
         ];
@@ -1414,7 +1414,7 @@ Une opportunité de partager vos impressions, vos questions et vos retours d'exp
                     })}
 
                     <div className="inscription-container">
-                        <a href="#inscription" className="inscription-button">
+                        <a href="https://eduline.ac-lille.fr/limesurvey-eafc/449366?lang=fr" className="inscription-button" target="_blank" rel="noopener noreferrer">
                             <span>Cliquer ici pour vous inscrire</span>
                             <ExternalLinkIcon />
                         </a>
