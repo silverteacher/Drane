@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Cartes PDF - Texte & Images</title>
-    <meta name="description" content="Créez des cartes personnalisées avec du texte au recto et des images au verso, optimisées pour l'impression recto-verso">
-    <meta name="author" content="Inspiré de l'application Lovable - Adapté pour texte">
+    <title>Générateur de Cartes PDF - Texte & Images - Pro</title>
+    <meta name="description" content="Créez des cartes personnalisées avec du texte au recto et des images au verso, optimisées pour l'impression recto-verso avec repères de découpe">
+    <meta name="author" content="Inspiré de l'application Lovable - Adapté pour texte par Claude">
     
-    <!-- jsPDF pour la génération de PDF -->
+    <!-- Bibliothèques -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
         * {
@@ -23,6 +25,7 @@
             --secondary: #8b5cf6;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
             --dark: #1e293b;
             --light: #f8fafc;
             --glass-bg: rgba(255, 255, 255, 0.1);
@@ -38,7 +41,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
@@ -73,6 +76,62 @@
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
             font-style: italic;
+        }
+
+        .features {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-tag {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .main-content {
@@ -125,6 +184,8 @@
 
         input[type="text"],
         input[type="number"],
+        input[type="color"],
+        select,
         textarea {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -137,6 +198,15 @@
             backdrop-filter: blur(10px);
         }
 
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: var(--dark);
+            color: white;
+        }
+
         input[type="text"]::placeholder,
         textarea::placeholder {
             color: rgba(255, 255, 255, 0.6);
@@ -144,6 +214,8 @@
 
         input[type="text"]:focus,
         input[type="number"]:focus,
+        input[type="color"]:focus,
+        select:focus,
         textarea:focus {
             outline: none;
             border-color: var(--primary);
@@ -153,7 +225,7 @@
 
         textarea {
             resize: vertical;
-            min-height: 120px;
+            min-height: 100px;
             font-family: inherit;
         }
 
@@ -226,6 +298,16 @@
         .btn-success:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
         }
 
         .btn-danger {
@@ -315,62 +397,17 @@
             white-space: nowrap;
         }
 
-        .card-image-info {
+        .card-meta {
             font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .card-actions {
             display: flex;
             gap: 0.5rem;
-        }
-
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .preview-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .preview-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .preview-face {
-            aspect-ratio: 2.5/3.5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            border-bottom: 2px solid #e5e7eb;
-        }
-
-        .preview-face.recto {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            font-weight: 600;
-            color: var(--dark);
-            text-align: center;
-            word-wrap: break-word;
-            overflow: hidden;
-        }
-
-        .preview-face.verso {
-            background: #f9fafb;
-        }
-
-        .preview-face img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
         }
 
         .empty-state {
@@ -417,6 +454,7 @@
 
         .alert.show {
             display: block;
+            animation: slideDown 0.3s ease;
         }
 
         .alert-success {
@@ -429,6 +467,95 @@
             background: rgba(239, 68, 68, 0.2);
             border: 1px solid var(--danger);
             color: white;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid var(--warning);
+            color: white;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .instructions h3 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .instructions ol, .instructions ul {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .instructions code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .color-preview {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .import-status {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: white;
+        }
+
+        .import-status h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .import-status ul {
+            margin-left: 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes slideIn {
@@ -450,69 +577,182 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎴 Générateur de Cartes PDF</h1>
-            <p class="subtitle">Créez des cartes personnalisées avec du texte au recto et des images au verso</p>
+            <h1>🎴 Générateur de Cartes PDF Pro</h1>
+            <p class="subtitle">Créez des cartes personnalisées avec texte, couleurs et images - Repères de découpe inclus</p>
             <p class="credit">Inspiré de l'application originale créée avec Lovable - Adapté pour le texte par Claude</p>
+            <div class="features">
+                <span class="feature-tag">✂️ Repères de découpe</span>
+                <span class="feature-tag">📊 Import CSV/Excel</span>
+                <span class="feature-tag">🎨 Personnalisation</span>
+                <span class="feature-tag">🖨️ Recto-verso optimisé</span>
+            </div>
         </div>
 
         <div id="alert" class="alert"></div>
 
-        <div class="main-content">
-            <!-- Formulaire de création -->
-            <div class="card">
-                <h2 class="section-title">
-                    <span class="icon">✏️</span>
-                    Créer une carte
-                </h2>
-
-                <form id="cardForm">
-                    <div class="form-group">
-                        <label for="cardText">Texte du recto *</label>
-                        <textarea 
-                            id="cardText" 
-                            placeholder="Entrez le texte qui apparaîtra sur le recto de la carte..."
-                            required
-                        ></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="cardImage">Image du verso (optionnel)</label>
-                        <input type="file" id="cardImage" accept="image/*">
-                        <label for="cardImage" class="file-upload" id="fileUploadLabel">
-                            <span class="icon">📁</span>
-                            <div>Cliquez pour sélectionner une image</div>
-                            <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
-                                JPG, PNG, GIF (max 5MB)
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="button-group">
-                        <button type="submit" class="btn-primary" style="flex: 1;">
-                            ➕ Ajouter la carte
-                        </button>
-                        <button type="button" class="btn-secondary" onclick="resetForm()">
-                            🔄 Effacer
-                        </button>
-                    </div>
-                </form>
+        <!-- Onglets -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('manual')">
+                ✏️ Création manuelle
             </div>
+            <div class="tab" onclick="switchTab('import')">
+                📊 Import CSV/Excel
+            </div>
+        </div>
 
-            <!-- Liste des cartes -->
-            <div class="card">
+        <!-- Contenu Création Manuelle -->
+        <div id="manual-tab" class="tab-content active">
+            <div class="main-content">
+                <!-- Formulaire de création -->
+                <div class="card">
+                    <h2 class="section-title">
+                        <span class="icon">✏️</span>
+                        Créer une carte
+                    </h2>
+
+                    <form id="cardForm">
+                        <div class="form-group">
+                            <label for="cardText">Texte du recto *</label>
+                            <textarea 
+                                id="cardText" 
+                                placeholder="Entrez le texte qui apparaîtra sur le recto de la carte..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fontSize">Taille de police</label>
+                                <select id="fontSize">
+                                    <option value="8">Petite (8pt)</option>
+                                    <option value="10">Petite-moyenne (10pt)</option>
+                                    <option value="12" selected>Moyenne (12pt)</option>
+                                    <option value="14">Grande (14pt)</option>
+                                    <option value="16">Très grande (16pt)</option>
+                                    <option value="18">Extra-grande (18pt)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="textColor">Couleur du texte</label>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="color" id="textColor" value="#1e293b" style="width: 60px; height: 40px; cursor: pointer;">
+                                    <input type="text" id="textColorHex" value="#1e293b" placeholder="#1e293b" style="flex: 1;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardImage">Image du verso (optionnel)</label>
+                            <input type="file" id="cardImage" accept="image/*">
+                            <label for="cardImage" class="file-upload" id="fileUploadLabel">
+                                <span class="icon">📁</span>
+                                <div>Cliquez pour sélectionner une image</div>
+                                <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+                                    JPG, PNG, GIF (max 5MB)
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn-primary" style="flex: 1;">
+                                ➕ Ajouter la carte
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="resetForm()">
+                                🔄 Effacer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Liste des cartes -->
+                <div class="card">
+                    <h2 class="section-title">
+                        <span class="icon">📚</span>
+                        Cartes créées (<span id="cardCount">0</span>)
+                    </h2>
+
+                    <div style="margin-bottom: 1rem;">
+                        <button class="btn-danger" onclick="clearAllCards()" style="width: 100%;">
+                            🗑️ Tout supprimer
+                        </button>
+                    </div>
+
+                    <div id="cardsList" class="cards-list">
+                        <div class="empty-state">
+                            <div class="icon">📋</div>
+                            <p>Aucune carte créée pour le moment</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                                Commencez par créer votre première carte !
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu Import CSV/Excel -->
+        <div id="import-tab" class="tab-content">
+            <div class="card" style="max-width: 1200px; margin: 0 auto;">
                 <h2 class="section-title">
-                    <span class="icon">📚</span>
-                    Cartes créées (<span id="cardCount">0</span>)
+                    <span class="icon">📊</span>
+                    Importer depuis CSV/Excel
                 </h2>
 
-                <div id="cardsList" class="cards-list">
-                    <div class="empty-state">
-                        <div class="icon">📋</div>
-                        <p>Aucune carte créée pour le moment</p>
-                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">
-                            Commencez par créer votre première carte !
-                        </p>
-                    </div>
+                <div class="instructions">
+                    <h3>📝 Instructions pour l'import</h3>
+                    <ol>
+                        <li><strong>Format du fichier :</strong> CSV ou Excel (.xlsx, .xls)</li>
+                        <li><strong>Colonnes requises :</strong>
+                            <ul>
+                                <li><code>Texte_Recto</code> : Le texte à afficher au recto (obligatoire)</li>
+                                <li><code>Taille_Police</code> : Taille de la police en points (8-18, défaut: 12)</li>
+                                <li><code>Couleur</code> : Couleur du texte en hexadécimal (ex: #1e293b ou 1e293b)</li>
+                                <li><code>Image_Verso</code> : Nom du fichier image pour le verso (ex: image1.jpg)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Valeurs par défaut :</strong> Si une cellule est vide, les valeurs par défaut seront utilisées</li>
+                        <li><strong>Images :</strong> Après avoir importé le CSV/Excel, sélectionnez les images correspondantes</li>
+                    </ol>
+
+                    <h3 style="margin-top: 1.5rem;">💡 Exemple de fichier CSV</h3>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; overflow-x: auto;">Texte_Recto,Taille_Police,Couleur,Image_Verso
+Carte numéro 1,12,#000000,image1.jpg
+Carte numéro 2,14,#ff0000,image2.jpg
+Carte numéro 3,10,,
+Sans image,,#0000ff,</pre>
+                </div>
+
+                <div class="form-group">
+                    <label for="csvFile">1️⃣ Sélectionner le fichier CSV/Excel</label>
+                    <input type="file" id="csvFile" accept=".csv,.xlsx,.xls">
+                    <label for="csvFile" class="file-upload" id="csvUploadLabel">
+                        <span class="icon">📄</span>
+                        <div>Cliquez pour sélectionner votre fichier CSV/Excel</div>
+                    </label>
+                </div>
+
+                <div class="form-group" id="imagesUploadGroup" style="display: none;">
+                    <label for="imagesFiles">2️⃣ Sélectionner les images (multiples)</label>
+                    <input type="file" id="imagesFiles" accept="image/*" multiple>
+                    <label for="imagesFiles" class="file-upload" id="imagesUploadLabel">
+                        <span class="icon">🖼️</span>
+                        <div>Cliquez pour sélectionner les images</div>
+                        <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+                            Vous pouvez sélectionner plusieurs images à la fois
+                        </div>
+                    </label>
+                </div>
+
+                <div id="importStatus" class="import-status" style="display: none;"></div>
+
+                <div class="button-group">
+                    <button id="importBtn" class="btn-success" onclick="processImport()" disabled style="flex: 1;">
+                        📥 Importer les cartes
+                    </button>
+                    <button class="btn-secondary" onclick="resetImport()">
+                        🔄 Recommencer
+                    </button>
                 </div>
             </div>
         </div>
@@ -529,10 +769,10 @@
                     onclick="generatePDF()"
                     disabled
                 >
-                    📄 Générer le PDF pour impression recto-verso
+                    📄 Générer le PDF avec repères de découpe
                 </button>
                 <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 0.5rem;">
-                    Le PDF sera optimisé pour l'impression recto-verso : tous les rectos puis tous les versos
+                    Le PDF sera optimisé pour l'impression recto-verso avec lignes de découpe et croix de repérage
                 </p>
             </div>
         </div>
@@ -540,9 +780,37 @@
 
     <script>
         const cards = [];
-        let imageCounter = 0;
+        let csvData = [];
+        let selectedImages = {};
 
-        // Gestion du fichier upload
+        // Synchroniser le color picker avec le champ texte
+        document.getElementById('textColor').addEventListener('input', function(e) {
+            document.getElementById('textColorHex').value = e.target.value;
+        });
+
+        document.getElementById('textColorHex').addEventListener('input', function(e) {
+            let color = e.target.value.trim();
+            if (!color.startsWith('#')) color = '#' + color;
+            if (/^#[0-9A-F]{6}$/i.test(color)) {
+                document.getElementById('textColor').value = color;
+            }
+        });
+
+        // Gestion des onglets
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'manual') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('manual-tab').classList.add('active');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('import-tab').classList.add('active');
+            }
+        }
+
+        // Gestion du fichier upload manuel
         document.getElementById('cardImage').addEventListener('change', function(e) {
             const label = document.getElementById('fileUploadLabel');
             if (e.target.files && e.target.files[0]) {
@@ -569,11 +837,13 @@
             label.classList.remove('has-file');
         }
 
-        // Gestion du formulaire
+        // Gestion du formulaire manuel
         document.getElementById('cardForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const text = document.getElementById('cardText').value.trim();
+            const fontSize = parseInt(document.getElementById('fontSize').value);
+            const textColor = document.getElementById('textColor').value;
             const imageFile = document.getElementById('cardImage').files[0];
             
             if (!text) {
@@ -583,33 +853,243 @@
 
             let imageData = null;
             if (imageFile) {
-                // Vérifier la taille
                 if (imageFile.size > 5 * 1024 * 1024) {
                     showAlert('L\'image est trop volumineuse (max 5MB)', 'error');
                     return;
                 }
-
-                // Convertir l'image en base64
                 imageData = await fileToBase64(imageFile);
             }
 
-            // Ajouter la carte
             cards.push({
                 id: Date.now(),
                 text: text,
+                fontSize: fontSize,
+                color: textColor,
                 image: imageData,
                 imageName: imageFile ? imageFile.name : null
             });
 
-            // Réinitialiser le formulaire
             resetForm();
-            
-            // Mettre à jour l'affichage
             updateCardsList();
             updateCardCount();
             
             showAlert('Carte ajoutée avec succès !', 'success');
         });
+
+        // Gestion de l'import CSV
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            const label = document.getElementById('csvUploadLabel');
+            const file = e.target.files[0];
+            
+            if (file) {
+                label.innerHTML = `
+                    <span class="icon">✅</span>
+                    <div>Fichier sélectionné : ${file.name}</div>
+                `;
+                label.classList.add('has-file');
+                
+                // Lire le fichier
+                readCSVOrExcel(file);
+            } else {
+                resetCSVUpload();
+            }
+        });
+
+        // Gestion de l'import images multiples
+        document.getElementById('imagesFiles').addEventListener('change', function(e) {
+            const label = document.getElementById('imagesUploadLabel');
+            const files = e.target.files;
+            
+            if (files && files.length > 0) {
+                label.innerHTML = `
+                    <span class="icon">✅</span>
+                    <div>${files.length} image(s) sélectionnée(s)</div>
+                `;
+                label.classList.add('has-file');
+                
+                // Stocker les images
+                processImages(files);
+            }
+        });
+
+        async function readCSVOrExcel(file) {
+            const fileName = file.name.toLowerCase();
+            
+            if (fileName.endsWith('.csv')) {
+                // Lecture CSV
+                Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        csvData = results.data;
+                        displayCSVPreview();
+                    },
+                    error: function(error) {
+                        showAlert('Erreur lors de la lecture du fichier CSV : ' + error.message, 'error');
+                    }
+                });
+            } else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+                // Lecture Excel
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        csvData = XLSX.utils.sheet_to_json(firstSheet);
+                        displayCSVPreview();
+                    } catch (error) {
+                        showAlert('Erreur lors de la lecture du fichier Excel : ' + error.message, 'error');
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function displayCSVPreview() {
+            const statusDiv = document.getElementById('importStatus');
+            statusDiv.style.display = 'block';
+            
+            const validRows = csvData.filter(row => row.Texte_Recto && row.Texte_Recto.trim());
+            const rowsWithImages = csvData.filter(row => row.Image_Verso && row.Image_Verso.trim());
+            
+            statusDiv.innerHTML = `
+                <h4>📊 Aperçu du fichier</h4>
+                <ul>
+                    <li>Total de lignes : ${csvData.length}</li>
+                    <li>Lignes valides (avec texte) : ${validRows.length}</li>
+                    <li>Lignes avec image : ${rowsWithImages.length}</li>
+                </ul>
+            `;
+            
+            if (rowsWithImages.length > 0) {
+                document.getElementById('imagesUploadGroup').style.display = 'block';
+                showAlert(`Fichier chargé ! Sélectionnez maintenant les ${rowsWithImages.length} image(s) correspondante(s)`, 'warning');
+            } else {
+                document.getElementById('importBtn').disabled = false;
+                showAlert('Fichier chargé ! Vous pouvez maintenant importer les cartes', 'success');
+            }
+        }
+
+        async function processImages(files) {
+            selectedImages = {};
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.size > 5 * 1024 * 1024) {
+                    showAlert(`L'image ${file.name} est trop volumineuse (max 5MB)`, 'warning');
+                    continue;
+                }
+                
+                const imageData = await fileToBase64(file);
+                selectedImages[file.name] = imageData;
+            }
+            
+            const statusDiv = document.getElementById('importStatus');
+            const currentHTML = statusDiv.innerHTML;
+            statusDiv.innerHTML = currentHTML + `
+                <ul style="margin-top: 1rem;">
+                    <li>Images chargées : ${Object.keys(selectedImages).length}</li>
+                    <li style="font-size: 0.85rem; opacity: 0.8;">
+                        ${Object.keys(selectedImages).join(', ')}
+                    </li>
+                </ul>
+            `;
+            
+            document.getElementById('importBtn').disabled = false;
+            showAlert('Images chargées ! Vous pouvez maintenant importer les cartes', 'success');
+        }
+
+        function processImport() {
+            if (csvData.length === 0) {
+                showAlert('Aucune donnée à importer', 'error');
+                return;
+            }
+            
+            let imported = 0;
+            let skipped = 0;
+            
+            csvData.forEach(row => {
+                const text = row.Texte_Recto ? row.Texte_Recto.trim() : '';
+                
+                if (!text) {
+                    skipped++;
+                    return;
+                }
+                
+                // Valeurs par défaut
+                let fontSize = 12;
+                let color = '#1e293b';
+                let imageData = null;
+                let imageName = null;
+                
+                // Taille de police
+                if (row.Taille_Police) {
+                    const size = parseInt(row.Taille_Police);
+                    if (!isNaN(size) && size >= 8 && size <= 18) {
+                        fontSize = size;
+                    }
+                }
+                
+                // Couleur
+                if (row.Couleur) {
+                    let colorValue = row.Couleur.trim();
+                    if (!colorValue.startsWith('#')) colorValue = '#' + colorValue;
+                    if (/^#[0-9A-F]{6}$/i.test(colorValue)) {
+                        color = colorValue;
+                    }
+                }
+                
+                // Image
+                if (row.Image_Verso) {
+                    imageName = row.Image_Verso.trim();
+                    if (selectedImages[imageName]) {
+                        imageData = selectedImages[imageName];
+                    }
+                }
+                
+                cards.push({
+                    id: Date.now() + imported,
+                    text: text,
+                    fontSize: fontSize,
+                    color: color,
+                    image: imageData,
+                    imageName: imageName
+                });
+                
+                imported++;
+            });
+            
+            updateCardsList();
+            updateCardCount();
+            
+            showAlert(`Import terminé ! ${imported} carte(s) importée(s)${skipped > 0 ? `, ${skipped} ligne(s) ignorée(s)` : ''}`, 'success');
+            
+            // Basculer vers l'onglet manuel pour voir les cartes
+            setTimeout(() => {
+                switchTab('manual');
+            }, 2000);
+        }
+
+        function resetImport() {
+            csvData = [];
+            selectedImages = {};
+            document.getElementById('csvFile').value = '';
+            document.getElementById('imagesFiles').value = '';
+            document.getElementById('imagesUploadGroup').style.display = 'none';
+            document.getElementById('importStatus').style.display = 'none';
+            document.getElementById('importBtn').disabled = true;
+            resetCSVUpload();
+        }
+
+        function resetCSVUpload() {
+            const label = document.getElementById('csvUploadLabel');
+            label.innerHTML = `
+                <span class="icon">📄</span>
+                <div>Cliquez pour sélectionner votre fichier CSV/Excel</div>
+            `;
+            label.classList.remove('has-file');
+        }
 
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
@@ -622,6 +1102,9 @@
 
         function resetForm() {
             document.getElementById('cardForm').reset();
+            document.getElementById('fontSize').value = '12';
+            document.getElementById('textColor').value = '#1e293b';
+            document.getElementById('textColorHex').value = '#1e293b';
             resetFileUpload();
         }
 
@@ -634,6 +1117,17 @@
                     updateCardCount();
                     showAlert('Carte supprimée', 'success');
                 }
+            }
+        }
+
+        function clearAllCards() {
+            if (cards.length === 0) return;
+            
+            if (confirm(`Êtes-vous sûr de vouloir supprimer toutes les ${cards.length} cartes ?`)) {
+                cards.length = 0;
+                updateCardsList();
+                updateCardCount();
+                showAlert('Toutes les cartes ont été supprimées', 'success');
             }
         }
 
@@ -658,8 +1152,10 @@
                     <div class="card-number">${index + 1}</div>
                     <div class="card-content">
                         <div class="card-text">${escapeHtml(card.text)}</div>
-                        <div class="card-image-info">
-                            ${card.image ? '🖼️ ' + card.imageName : '❌ Pas d\'image au verso'}
+                        <div class="card-meta">
+                            <span>📏 ${card.fontSize}pt</span>
+                            <span>🎨 ${card.color}</span>
+                            <span>${card.image ? '🖼️ ' + card.imageName : '❌ Pas d\'image'}</span>
                         </div>
                     </div>
                     <div class="card-actions">
@@ -693,7 +1189,7 @@
             
             setTimeout(() => {
                 alert.classList.remove('show');
-            }, 3000);
+            }, 5000);
         }
 
         async function generatePDF() {
@@ -713,60 +1209,94 @@
                 // Dimensions de carte standard (format poker : 63x88mm)
                 const cardWidth = 63;
                 const cardHeight = 88;
-                const margin = 10;
                 const cardsPerRow = 3;
                 const cardsPerColumn = 3;
                 const cardsPerPage = cardsPerRow * cardsPerColumn;
 
-                // Calculer l'espacement
-                const pageWidth = 210; // A4 width
-                const pageHeight = 297; // A4 height
+                // Dimensions page A4
+                const pageWidth = 210;
+                const pageHeight = 297;
                 const totalWidth = cardsPerRow * cardWidth;
                 const totalHeight = cardsPerColumn * cardHeight;
                 const startX = (pageWidth - totalWidth) / 2;
                 const startY = (pageHeight - totalHeight) / 2;
 
+                // Fonction pour dessiner les repères de découpe
+                function drawCuttingMarks(doc, x, y, width, height) {
+                    doc.setDrawColor(0, 0, 0);
+                    doc.setLineWidth(0.2);
+                    
+                    const markLength = 5;
+                    
+                    // Croix aux 4 coins
+                    // Coin haut-gauche
+                    doc.line(x - markLength, y, x, y);
+                    doc.line(x, y - markLength, x, y);
+                    
+                    // Coin haut-droit
+                    doc.line(x + width, y, x + width + markLength, y);
+                    doc.line(x + width, y - markLength, x + width, y);
+                    
+                    // Coin bas-gauche
+                    doc.line(x - markLength, y + height, x, y + height);
+                    doc.line(x, y + height, x, y + height + markLength);
+                    
+                    // Coin bas-droit
+                    doc.line(x + width, y + height, x + width + markLength, y + height);
+                    doc.line(x + width, y + height, x + width, y + height + markLength);
+                    
+                    // Lignes pointillées entre les cartes
+                    doc.setLineDash([2, 2]);
+                    doc.setDrawColor(100, 100, 100);
+                    doc.setLineWidth(0.3);
+                }
+
                 // Fonction pour ajouter du texte dans une carte
-                function addTextCard(doc, text, x, y) {
-                    // Bordure
+                function addTextCard(doc, card, x, y) {
+                    // Bordure de la carte
                     doc.setDrawColor(200, 200, 200);
                     doc.setLineWidth(0.5);
+                    doc.setLineDash([]);
                     doc.rect(x, y, cardWidth, cardHeight);
 
-                    // Fond dégradé (simulé)
+                    // Fond
                     doc.setFillColor(240, 249, 255);
                     doc.rect(x, y, cardWidth, cardHeight, 'F');
                     doc.rect(x, y, cardWidth, cardHeight);
 
-                    // Texte
-                    doc.setFontSize(12);
-                    doc.setTextColor(30, 41, 59);
+                    // Texte avec couleur personnalisée
+                    const rgb = hexToRgb(card.color);
+                    doc.setTextColor(rgb.r, rgb.g, rgb.b);
+                    doc.setFontSize(card.fontSize);
                     
-                    // Découper le texte pour qu'il tienne dans la carte
                     const maxWidth = cardWidth - 10;
-                    const lines = doc.splitTextToSize(text, maxWidth);
-                    const textHeight = lines.length * 5;
-                    const textY = y + (cardHeight - textHeight) / 2 + 5;
+                    const lines = doc.splitTextToSize(card.text, maxWidth);
+                    const lineHeight = card.fontSize * 0.35;
+                    const textHeight = lines.length * lineHeight;
+                    const textY = y + (cardHeight - textHeight) / 2 + lineHeight;
                     
                     doc.text(lines, x + cardWidth / 2, textY, {
                         align: 'center',
                         maxWidth: maxWidth
                     });
+                    
+                    // Dessiner les repères de découpe
+                    drawCuttingMarks(doc, x, y, cardWidth, cardHeight);
                 }
 
                 // Fonction pour ajouter une image dans une carte
-                async function addImageCard(doc, imageData, x, y) {
+                async function addImageCard(doc, card, x, y) {
                     // Bordure
                     doc.setDrawColor(200, 200, 200);
                     doc.setLineWidth(0.5);
+                    doc.setLineDash([]);
                     doc.rect(x, y, cardWidth, cardHeight);
 
-                    if (imageData) {
+                    if (card.image) {
                         try {
-                            // Ajouter l'image
                             const imgPadding = 3;
                             doc.addImage(
-                                imageData, 
+                                card.image, 
                                 'JPEG', 
                                 x + imgPadding, 
                                 y + imgPadding, 
@@ -776,8 +1306,7 @@
                                 'FAST'
                             );
                         } catch (e) {
-                            console.error('Erreur lors de l\'ajout de l\'image:', e);
-                            // Fond gris si erreur
+                            console.error('Erreur image:', e);
                             doc.setFillColor(249, 250, 251);
                             doc.rect(x, y, cardWidth, cardHeight, 'F');
                             doc.rect(x, y, cardWidth, cardHeight);
@@ -789,7 +1318,6 @@
                             });
                         }
                     } else {
-                        // Fond gris si pas d'image
                         doc.setFillColor(249, 250, 251);
                         doc.rect(x, y, cardWidth, cardHeight, 'F');
                         doc.rect(x, y, cardWidth, cardHeight);
@@ -800,11 +1328,23 @@
                             align: 'center'
                         });
                     }
+                    
+                    // Dessiner les repères de découpe
+                    drawCuttingMarks(doc, x, y, cardWidth, cardHeight);
+                }
+
+                // Fonction pour convertir hex en RGB
+                function hexToRgb(hex) {
+                    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                    return result ? {
+                        r: parseInt(result[1], 16),
+                        g: parseInt(result[2], 16),
+                        b: parseInt(result[3], 16)
+                    } : { r: 30, g: 41, b: 59 };
                 }
 
                 // PARTIE 1 : Tous les RECTOS
                 let cardIndex = 0;
-                let pageNum = 0;
 
                 for (let i = 0; i < cards.length; i++) {
                     const row = Math.floor(cardIndex / cardsPerRow) % cardsPerColumn;
@@ -813,18 +1353,17 @@
                     const x = startX + col * cardWidth;
                     const y = startY + row * cardHeight;
 
-                    addTextCard(doc, cards[i].text, x, y);
+                    addTextCard(doc, cards[i], x, y);
 
                     cardIndex++;
 
-                    // Nouvelle page si nécessaire
                     if (cardIndex % cardsPerPage === 0 && i < cards.length - 1) {
                         doc.addPage();
                         cardIndex = 0;
                     }
                 }
 
-                // PARTIE 2 : Tous les VERSOS (en miroir pour impression recto-verso)
+                // PARTIE 2 : Tous les VERSOS (en miroir)
                 doc.addPage();
                 cardIndex = 0;
 
@@ -832,30 +1371,27 @@
                     const row = Math.floor(cardIndex / cardsPerRow) % cardsPerColumn;
                     const col = cardIndex % cardsPerRow;
                     
-                    // Inverser l'ordre des colonnes pour l'impression recto-verso
                     const mirrorCol = cardsPerRow - 1 - col;
                     const x = startX + mirrorCol * cardWidth;
                     const y = startY + row * cardHeight;
 
-                    await addImageCard(doc, cards[i].image, x, y);
+                    await addImageCard(doc, cards[i], x, y);
 
                     cardIndex++;
 
-                    // Nouvelle page si nécessaire
                     if (cardIndex % cardsPerPage === 0 && i < cards.length - 1) {
                         doc.addPage();
                         cardIndex = 0;
                     }
                 }
 
-                // Sauvegarder le PDF
-                const fileName = `cartes_${new Date().toISOString().split('T')[0]}.pdf`;
+                const fileName = `cartes_avec_reperes_${new Date().toISOString().split('T')[0]}.pdf`;
                 doc.save(fileName);
                 
-                showAlert(`PDF généré avec succès : ${fileName}`, 'success');
+                showAlert(`✅ PDF généré avec succès : ${fileName}`, 'success');
             } catch (error) {
-                console.error('Erreur lors de la génération du PDF:', error);
-                showAlert('Erreur lors de la génération du PDF', 'error');
+                console.error('Erreur génération PDF:', error);
+                showAlert('❌ Erreur lors de la génération du PDF', 'error');
             }
         }
 
