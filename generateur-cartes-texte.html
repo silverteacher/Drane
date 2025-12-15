@@ -579,7 +579,7 @@
         <div class="header">
             <h1>🎴 Générateur de Cartes PDF Pro</h1>
             <p class="subtitle">Créez des cartes personnalisées avec texte, couleurs et images - Repères de découpe inclus</p>
-            <p class="credit">Création Amélie Silvert adaptée avec l'IA>^p>
+            <p class="credit">Inspiré de l'application originale créée avec Lovable - Adapté pour le texte par Claude</p>
             <div class="features">
                 <span class="feature-tag">✂️ Repères de découpe</span>
                 <span class="feature-tag">📊 Import CSV/Excel</span>
@@ -811,16 +811,37 @@ Carte sans taille ni couleur,,</pre>
                 <div class="card-count">
                     <span id="totalCards">0</span> carte(s) prête(s) pour l'impression
                 </div>
-                <button 
-                    id="generatePDF" 
-                    class="btn-success" 
-                    onclick="generatePDF()"
-                    disabled
-                >
-                    📄 Générer le PDF avec repères de découpe
-                </button>
-                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 0.5rem;">
-                    Le PDF sera optimisé pour l'impression recto-verso avec lignes de découpe et croix de repérage
+                
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
+                    <button 
+                        id="generatePDFStandard" 
+                        class="btn-success" 
+                        onclick="generatePDF('standard')"
+                        disabled
+                        style="flex: 1; min-width: 250px; max-width: 400px;"
+                    >
+                        🃏 Générer PDF Format Standard
+                        <div style="font-size: 0.85rem; font-weight: normal; margin-top: 0.3rem; opacity: 0.9;">
+                            Cartes 63×88mm (poker) - 9 par page
+                        </div>
+                    </button>
+                    
+                    <button 
+                        id="generatePDFLarge" 
+                        class="btn-warning" 
+                        onclick="generatePDF('large')"
+                        disabled
+                        style="flex: 1; min-width: 250px; max-width: 400px;"
+                    >
+                        📄 Générer PDF Grandes Cartes
+                        <div style="font-size: 0.85rem; font-weight: normal; margin-top: 0.3rem; opacity: 0.9;">
+                            Cartes A6 (105×148mm) - 4 par page
+                        </div>
+                    </button>
+                </div>
+                
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 1rem;">
+                    ✂️ PDFs optimisés pour l'impression recto-verso avec lignes de découpe et croix de repérage
                 </p>
             </div>
         </div>
@@ -1256,8 +1277,10 @@ Carte sans taille ni couleur,,</pre>
             document.getElementById('cardCount').textContent = count;
             document.getElementById('totalCards').textContent = count;
             
-            const generateBtn = document.getElementById('generatePDF');
-            generateBtn.disabled = count === 0;
+            const generateBtnStandard = document.getElementById('generatePDFStandard');
+            const generateBtnLarge = document.getElementById('generatePDFLarge');
+            generateBtnStandard.disabled = count === 0;
+            generateBtnLarge.disabled = count === 0;
         }
 
         function escapeHtml(text) {
@@ -1276,7 +1299,7 @@ Carte sans taille ni couleur,,</pre>
             }, 5000);
         }
 
-        async function generatePDF() {
+        async function generatePDF(format = 'standard') {
             if (cards.length === 0) {
                 showAlert('Aucune carte à générer', 'error');
                 return;
@@ -1290,18 +1313,34 @@ Carte sans taille ni couleur,,</pre>
                     format: 'a4'
                 });
 
-                // Dimensions de carte standard (format poker : 63x88mm)
-                const cardWidth = 63;
-                const cardHeight = 88;
-                const cardsPerRow = 3;
-                const cardsPerColumn = 3;
+                // Configuration selon le format
+                let cardWidth, cardHeight, cardsPerRow, cardsPerColumn, margin;
+                
+                if (format === 'large') {
+                    // Format A6 (grandes cartes)
+                    cardWidth = 105;
+                    cardHeight = 148;
+                    cardsPerRow = 2;
+                    cardsPerColumn = 2;
+                    margin = 5; // Marge de 5mm entre les cartes
+                } else {
+                    // Format standard (poker)
+                    cardWidth = 63;
+                    cardHeight = 88;
+                    cardsPerRow = 3;
+                    cardsPerColumn = 3;
+                    margin = 0;
+                }
+                
                 const cardsPerPage = cardsPerRow * cardsPerColumn;
 
                 // Dimensions page A4
                 const pageWidth = 210;
                 const pageHeight = 297;
-                const totalWidth = cardsPerRow * cardWidth;
-                const totalHeight = cardsPerColumn * cardHeight;
+                
+                // Calcul avec marges
+                const totalWidth = (cardsPerRow * cardWidth) + ((cardsPerRow - 1) * margin);
+                const totalHeight = (cardsPerColumn * cardHeight) + ((cardsPerColumn - 1) * margin);
                 const startX = (pageWidth - totalWidth) / 2;
                 const startY = (pageHeight - totalHeight) / 2;
 
@@ -1313,111 +1352,139 @@ Carte sans taille ni couleur,,</pre>
                     const markLength = 5;
                     
                     // Croix aux 4 coins
-                    // Coin haut-gauche
                     doc.line(x - markLength, y, x, y);
                     doc.line(x, y - markLength, x, y);
-                    
-                    // Coin haut-droit
                     doc.line(x + width, y, x + width + markLength, y);
                     doc.line(x + width, y - markLength, x + width, y);
-                    
-                    // Coin bas-gauche
                     doc.line(x - markLength, y + height, x, y + height);
                     doc.line(x, y + height, x, y + height + markLength);
-                    
-                    // Coin bas-droit
                     doc.line(x + width, y + height, x + width + markLength, y + height);
                     doc.line(x + width, y + height, x + width, y + height + markLength);
                     
-                    // Lignes pointillées entre les cartes
+                    // Lignes pointillées
                     doc.setLineDash([2, 2]);
                     doc.setDrawColor(100, 100, 100);
                     doc.setLineWidth(0.3);
                 }
 
                 // Fonction pour ajouter du texte dans une carte
-                function addTextCard(doc, card, x, y) {
-                    // Bordure de la carte
+                function addTextCard(doc, card, x, y, width, height) {
                     doc.setDrawColor(200, 200, 200);
                     doc.setLineWidth(0.5);
                     doc.setLineDash([]);
-                    doc.rect(x, y, cardWidth, cardHeight);
+                    doc.rect(x, y, width, height);
 
-                    // Fond
                     doc.setFillColor(240, 249, 255);
-                    doc.rect(x, y, cardWidth, cardHeight, 'F');
-                    doc.rect(x, y, cardWidth, cardHeight);
+                    doc.rect(x, y, width, height, 'F');
+                    doc.rect(x, y, width, height);
 
-                    // Texte avec couleur personnalisée
                     const rgb = hexToRgb(card.color);
                     doc.setTextColor(rgb.r, rgb.g, rgb.b);
                     doc.setFontSize(card.fontSize);
                     
-                    const maxWidth = cardWidth - 10;
+                    const maxWidth = width - 10;
                     const lines = doc.splitTextToSize(card.text, maxWidth);
                     const lineHeight = card.fontSize * 0.35;
                     const textHeight = lines.length * lineHeight;
-                    const textY = y + (cardHeight - textHeight) / 2 + lineHeight;
+                    const textY = y + (height - textHeight) / 2 + lineHeight;
                     
-                    doc.text(lines, x + cardWidth / 2, textY, {
+                    doc.text(lines, x + width / 2, textY, {
                         align: 'center',
                         maxWidth: maxWidth
                     });
                     
-                    // Dessiner les repères de découpe
-                    drawCuttingMarks(doc, x, y, cardWidth, cardHeight);
+                    drawCuttingMarks(doc, x, y, width, height);
                 }
 
-                // Fonction pour ajouter une image dans une carte
-                async function addImageCard(doc, card, x, y) {
-                    // Bordure
+                // Fonction pour ajouter une image dans une carte (avec crop pour remplir)
+                async function addImageCard(doc, card, x, y, width, height) {
                     doc.setDrawColor(200, 200, 200);
                     doc.setLineWidth(0.5);
                     doc.setLineDash([]);
-                    doc.rect(x, y, cardWidth, cardHeight);
+                    doc.rect(x, y, width, height);
 
                     if (card.image) {
                         try {
-                            const imgPadding = 3;
+                            // Créer une image temporaire pour obtenir ses dimensions
+                            const img = new Image();
+                            await new Promise((resolve, reject) => {
+                                img.onload = resolve;
+                                img.onerror = reject;
+                                img.src = card.image;
+                            });
+                            
+                            const imgWidth = img.width;
+                            const imgHeight = img.height;
+                            const imgRatio = imgWidth / imgHeight;
+                            const cardRatio = width / height;
+                            
+                            // Calculer les dimensions pour remplir la carte (crop/cover)
+                            let drawWidth, drawHeight, drawX, drawY;
+                            
+                            if (imgRatio > cardRatio) {
+                                // Image plus large : on adapte à la hauteur
+                                drawHeight = height;
+                                drawWidth = height * imgRatio;
+                                drawX = x - (drawWidth - width) / 2;
+                                drawY = y;
+                            } else {
+                                // Image plus haute : on adapte à la largeur
+                                drawWidth = width;
+                                drawHeight = width / imgRatio;
+                                drawX = x;
+                                drawY = y - (drawHeight - height) / 2;
+                            }
+                            
+                            // Clipper l'image à la zone de la carte
+                            doc.saveGraphicsState();
+                            doc.rect(x, y, width, height, 'S');
+                            doc.setGState(new doc.GState({opacity: 1}));
+                            
                             doc.addImage(
-                                card.image, 
-                                'JPEG', 
-                                x + imgPadding, 
-                                y + imgPadding, 
-                                cardWidth - (imgPadding * 2), 
-                                cardHeight - (imgPadding * 2),
+                                card.image,
+                                'JPEG',
+                                drawX,
+                                drawY,
+                                drawWidth,
+                                drawHeight,
                                 undefined,
                                 'FAST'
                             );
+                            
+                            doc.restoreGraphicsState();
+                            
+                            // Redessiner la bordure par-dessus
+                            doc.setDrawColor(200, 200, 200);
+                            doc.setLineWidth(0.5);
+                            doc.rect(x, y, width, height);
+                            
                         } catch (e) {
                             console.error('Erreur image:', e);
                             doc.setFillColor(249, 250, 251);
-                            doc.rect(x, y, cardWidth, cardHeight, 'F');
-                            doc.rect(x, y, cardWidth, cardHeight);
+                            doc.rect(x, y, width, height, 'F');
+                            doc.rect(x, y, width, height);
                             
                             doc.setFontSize(10);
                             doc.setTextColor(156, 163, 175);
-                            doc.text('Image non disponible', x + cardWidth / 2, y + cardHeight / 2, {
+                            doc.text('Image non disponible', x + width / 2, y + height / 2, {
                                 align: 'center'
                             });
                         }
                     } else {
                         doc.setFillColor(249, 250, 251);
-                        doc.rect(x, y, cardWidth, cardHeight, 'F');
-                        doc.rect(x, y, cardWidth, cardHeight);
+                        doc.rect(x, y, width, height, 'F');
+                        doc.rect(x, y, width, height);
                         
                         doc.setFontSize(10);
                         doc.setTextColor(156, 163, 175);
-                        doc.text('Pas d\'image', x + cardWidth / 2, y + cardHeight / 2, {
+                        doc.text('Pas d\'image', x + width / 2, y + height / 2, {
                             align: 'center'
                         });
                     }
                     
-                    // Dessiner les repères de découpe
-                    drawCuttingMarks(doc, x, y, cardWidth, cardHeight);
+                    drawCuttingMarks(doc, x, y, width, height);
                 }
 
-                // Fonction pour convertir hex en RGB
                 function hexToRgb(hex) {
                     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
                     return result ? {
@@ -1434,10 +1501,10 @@ Carte sans taille ni couleur,,</pre>
                     const row = Math.floor(cardIndex / cardsPerRow) % cardsPerColumn;
                     const col = cardIndex % cardsPerRow;
                     
-                    const x = startX + col * cardWidth;
-                    const y = startY + row * cardHeight;
+                    const x = startX + col * (cardWidth + margin);
+                    const y = startY + row * (cardHeight + margin);
 
-                    addTextCard(doc, cards[i], x, y);
+                    addTextCard(doc, cards[i], x, y, cardWidth, cardHeight);
 
                     cardIndex++;
 
@@ -1456,10 +1523,10 @@ Carte sans taille ni couleur,,</pre>
                     const col = cardIndex % cardsPerRow;
                     
                     const mirrorCol = cardsPerRow - 1 - col;
-                    const x = startX + mirrorCol * cardWidth;
-                    const y = startY + row * cardHeight;
+                    const x = startX + mirrorCol * (cardWidth + margin);
+                    const y = startY + row * (cardHeight + margin);
 
-                    await addImageCard(doc, cards[i], x, y);
+                    await addImageCard(doc, cards[i], x, y, cardWidth, cardHeight);
 
                     cardIndex++;
 
@@ -1469,10 +1536,12 @@ Carte sans taille ni couleur,,</pre>
                     }
                 }
 
-                const fileName = `cartes_avec_reperes_${new Date().toISOString().split('T')[0]}.pdf`;
+                const formatName = format === 'large' ? 'grandes_cartes' : 'standard';
+                const fileName = `cartes_${formatName}_${new Date().toISOString().split('T')[0]}.pdf`;
                 doc.save(fileName);
                 
-                showAlert(`✅ PDF généré avec succès : ${fileName}`, 'success');
+                const formatDesc = format === 'large' ? 'grandes cartes A6' : 'format standard';
+                showAlert(`✅ PDF ${formatDesc} généré avec succès : ${fileName}`, 'success');
             } catch (error) {
                 console.error('Erreur génération PDF:', error);
                 showAlert('❌ Erreur lors de la génération du PDF', 'error');
