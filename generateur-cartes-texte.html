@@ -595,7 +595,7 @@
         <div class="header">
             <h1>🎴 Générateur de Cartes PDF Pro</h1>
             <p class="subtitle">Créez des cartes personnalisées avec texte, couleurs et images - Repères de découpe inclus</p>
-            <p class="credit">Inspiré de l'application originale créée avec Lovable - Adapté pour le texte par Claude</p>
+            <p class="credit">Création Amélie Silvert assistée de l'IA</p>
             <div class="features">
                 <span class="feature-tag">✂️ Repères de découpe</span>
                 <span class="feature-tag">📊 Import CSV/Excel</span>
@@ -1510,45 +1510,49 @@ Carte sans taille ni couleur,,</pre>
                     } : { r: 30, g: 41, b: 59 };
                 }
 
-                // PARTIE 1 : Tous les RECTOS
+                // GÉNÉRATION ALTERNÉE : RECTO puis VERSO pour chaque ensemble de cartes
                 let cardIndex = 0;
+                let pageStartIndex = 0;
 
-                for (let i = 0; i < cards.length; i++) {
-                    const row = Math.floor(cardIndex / cardsPerRow) % cardsPerColumn;
-                    const col = cardIndex % cardsPerRow;
+                while (pageStartIndex < cards.length) {
+                    // PARTIE 1 : PAGE DE RECTOS
+                    cardIndex = 0;
+                    const pageEndIndex = Math.min(pageStartIndex + cardsPerPage, cards.length);
                     
-                    const x = startX + col * (cardWidth + margin);
-                    const y = startY + row * (cardHeight + margin);
+                    for (let i = pageStartIndex; i < pageEndIndex; i++) {
+                        const row = Math.floor(cardIndex / cardsPerRow);
+                        const col = cardIndex % cardsPerRow;
+                        
+                        const x = startX + col * (cardWidth + margin);
+                        const y = startY + row * (cardHeight + margin);
 
-                    addTextCard(doc, cards[i], x, y, cardWidth, cardHeight);
-
-                    cardIndex++;
-
-                    if (cardIndex % cardsPerPage === 0 && i < cards.length - 1) {
-                        doc.addPage();
-                        cardIndex = 0;
+                        addTextCard(doc, cards[i], x, y, cardWidth, cardHeight);
+                        cardIndex++;
                     }
-                }
 
-                // PARTIE 2 : Tous les VERSOS (en miroir)
-                doc.addPage();
-                cardIndex = 0;
+                    // PARTIE 2 : PAGE DE VERSOS (immédiatement après, en miroir)
+                    doc.addPage();
+                    cardIndex = 0;
 
-                for (let i = 0; i < cards.length; i++) {
-                    const row = Math.floor(cardIndex / cardsPerRow) % cardsPerColumn;
-                    const col = cardIndex % cardsPerRow;
+                    for (let i = pageStartIndex; i < pageEndIndex; i++) {
+                        const row = Math.floor(cardIndex / cardsPerRow);
+                        const col = cardIndex % cardsPerRow;
+                        
+                        // Miroir horizontal pour l'impression recto-verso
+                        const mirrorCol = cardsPerRow - 1 - col;
+                        const x = startX + mirrorCol * (cardWidth + margin);
+                        const y = startY + row * (cardHeight + margin);
+
+                        await addImageCard(doc, cards[i], x, y, cardWidth, cardHeight);
+                        cardIndex++;
+                    }
+
+                    // Passer au groupe de cartes suivant
+                    pageStartIndex += cardsPerPage;
                     
-                    const mirrorCol = cardsPerRow - 1 - col;
-                    const x = startX + mirrorCol * (cardWidth + margin);
-                    const y = startY + row * (cardHeight + margin);
-
-                    await addImageCard(doc, cards[i], x, y, cardWidth, cardHeight);
-
-                    cardIndex++;
-
-                    if (cardIndex % cardsPerPage === 0 && i < cards.length - 1) {
+                    // Ajouter une nouvelle page pour les prochains rectos (sauf si on a fini)
+                    if (pageStartIndex < cards.length) {
                         doc.addPage();
-                        cardIndex = 0;
                     }
                 }
 
