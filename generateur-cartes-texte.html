@@ -1,289 +1,1486 @@
-# 🚀 Guide Rapide - Générateur de Cartes PDF Pro
-
-## 📥 NOUVEAU : Téléchargement du modèle intégré !
-
-L'application intègre maintenant un **bouton de téléchargement direct** du modèle Excel.
-
-### 📍 Où le trouver ?
-
-1. Ouvrez `generateur-cartes-pro.html`
-2. Cliquez sur l'onglet "📊 Import CSV/Excel"
-3. En haut des instructions, vous verrez un **encadré vert** avec :
-   - 📥 "Téléchargez le modèle Excel"
-   - Bouton "⬇️ Télécharger le modèle"
-
----
-
-## 🎯 Workflow complet en 4 étapes
-
-### Étape 1️⃣ : Télécharger le modèle
-
-```
-1. Cliquez sur le bouton "⬇️ Télécharger le modèle"
-2. Le fichier se télécharge : modele_cartes.xlsx
-3. Il contient 10 défis sur l'IA (exemple)
-```
-
-**Source du modèle** : https://silverteacher.github.io/Drane/defis_ia_cartes.xlsx
-
-### Étape 2️⃣ : Modifier le modèle
-
-```
-1. Ouvrez modele_cartes.xlsx dans Excel/LibreOffice
-2. Modifiez les colonnes :
-   - Texte_Recto : Vos propres textes
-   - Taille_Police : 8-18 (ou vide pour défaut)
-   - Couleur : Code hex (ou vide pour défaut)
-3. Enregistrez vos modifications
-```
-
-**Structure attendue** :
-```
-| Texte_Recto              | Taille_Police | Couleur  |
-|--------------------------|---------------|----------|
-| Votre texte de carte 1   | 12            | #1e293b  |
-| Votre texte de carte 2   | 14            | #ff0000  |
-| ...                      | ...           | ...      |
-```
-
-### Étape 3️⃣ : Importer dans l'application
-
-```
-1. Dans l'onglet "Import CSV/Excel"
-2. Section "1️⃣ Sélectionner le fichier CSV/Excel"
-3. Choisissez votre fichier modifié
-4. Message : "Fichier chargé ! X carte(s) détectée(s)"
-```
-
-### Étape 4️⃣ : Ajouter une image (optionnel)
-
-Deux options au choix :
-
-#### Option A : Image locale
-```
-1. Section "2️⃣ Image pour toutes les cartes"
-2. "Option A : Image locale"
-3. Cliquez et sélectionnez votre image
-```
-
-#### Option B : URL d'image
-```
-1. Section "2️⃣ Image pour toutes les cartes"
-2. "Option B : URL d'image"
-3. Collez l'URL (ex: Pixabay)
-```
-
-**Exemple d'URL Pixabay** :
-```
-https://pixabay.com/get/[ID-image]/download?force=true
-```
-
-**OU laissez vide** pour des cartes sans image au verso.
-
-### Étape 5️⃣ : Importer et générer
-
-```
-1. Cliquez "📥 Importer les cartes"
-2. Attendez (surtout si URL)
-3. Vos cartes apparaissent dans l'onglet "Création manuelle"
-4. Cliquez "📄 Générer le PDF avec repères de découpe"
-5. Imprimez en recto-verso !
-```
-
----
-
-## 🎨 Personnalisation avancée
-
-### Couleurs disponibles
-
-Voici quelques codes couleur à utiliser dans la colonne `Couleur` :
-
-| Couleur | Code Hex | Usage recommandé |
-|---------|----------|------------------|
-| Noir | `#1e293b` | Texte standard |
-| Bleu foncé | `#1e40af` | Titres |
-| Vert | `#059669` | Positif/succès |
-| Rouge | `#dc2626` | Important/attention |
-| Orange | `#ea580c` | Avertissement |
-| Violet | `#7c3aed` | Créativité |
-| Cyan | `#0891b2` | Information |
-
-### Tailles de police
-
-| Taille | Usage recommandé |
-|--------|------------------|
-| 8-10 | Texte très long (>100 mots) |
-| 11-12 | Texte standard (défaut) |
-| 14-16 | Titres courts |
-| 18 | Mots-clés uniques |
-
----
-
-## 💡 Exemples d'utilisation
-
-### Exemple 1 : Cartes de vocabulaire
-
-**Modèle modifié** :
-```csv
-Texte_Recto,Taille_Police,Couleur
-Artificial Intelligence (AI),16,#1e40af
-Machine Learning (ML),16,#059669
-Deep Learning (DL),16,#7c3aed
-```
-
-**Image** : Icône cerveau ou robot
-**Résultat** : 3 cartes de vocabulaire anglais-français
-
-### Exemple 2 : Défis pédagogiques
-
-**Modèle modifié** :
-```csv
-Texte_Recto,Taille_Police,Couleur
-"DÉFI 1 : Créez un quiz interactif avec l'IA",12,#1e293b
-"DÉFI 2 : Générez une image pour illustrer un concept",12,#059669
-"DÉFI 3 : Analysez un texte avec un outil d'IA",12,#dc2626
-```
-
-**Image** : Logo IA ou Pixabay
-**Résultat** : Cartes de défis pour formation
-
-### Exemple 3 : Flashcards mathématiques
-
-**Modèle modifié** :
-```csv
-Texte_Recto,Taille_Police,Couleur
-Quelle est la dérivée de x² ?,14,#1e293b
-Résoudre : 2x + 5 = 15,14,#1e293b
-Calculer : 15% de 200,14,#1e293b
-```
-
-**Image** : Symboles mathématiques
-**Résultat** : Flashcards d'entraînement
-
----
-
-## 🔧 Astuces et conseils
-
-### ✅ Bonnes pratiques
-
-1. **Testez d'abord** avec le modèle fourni avant de créer le vôtre
-2. **Gardez les en-têtes** exactement comme dans le modèle
-3. **Utilisez des guillemets** pour les textes longs dans CSV
-4. **Vérifiez les codes couleur** (toujours commencer par #)
-5. **Compressez les images** si elles sont trop lourdes
-
-### ⚠️ Erreurs courantes
-
-❌ **Colonnes mal nommées**
-```csv
-Texte,Police,Color  ← INCORRECT
-Texte_Recto,Taille_Police,Couleur  ← CORRECT
-```
-
-❌ **Couleur sans #**
-```csv
-1e293b  ← Peut ne pas fonctionner
-#1e293b  ← CORRECT
-```
-
-❌ **Taille de police invalide**
-```csv
-large  ← INCORRECT
-14  ← CORRECT
-```
-
-### 🎯 Optimisation
-
-**Pour des fichiers volumineux** :
-- Limitez à 50-100 cartes par import
-- Utilisez des images compressées (<500 KB)
-- Préférez JPG à PNG pour les photos
-
-**Pour la qualité d'impression** :
-- Résolution image minimale : 640×480
-- Résolution recommandée : 1280×720
-- Format de carte : 63×88 mm (standard poker)
-
----
-
-## 📱 Partage et collaboration
-
-### Partager vos modèles
-
-```
-1. Créez votre fichier Excel personnalisé
-2. Partagez-le avec vos collègues
-3. Ils peuvent le télécharger et l'importer directement
-4. Tout le monde utilise les mêmes cartes !
-```
-
-### Héberger votre propre modèle
-
-Si vous voulez partager un lien permanent :
-
-```
-1. Placez votre fichier sur GitHub Pages ou Google Drive
-2. Obtenez le lien de téléchargement direct
-3. Partagez ce lien avec votre équipe
-```
-
----
-
-## 🎓 Cas d'usage éducatifs
-
-### Formation des enseignants
-- **Défis IA** (exemple fourni)
-- Bonnes pratiques numériques
-- Scénarios pédagogiques
-
-### Classe
-- Vocabulaire langue étrangère
-- Formules mathématiques
-- Dates historiques
-- Concepts scientifiques
-
-### Gamification
-- Jeux de cartes pédagogiques
-- Quiz interactifs
-- Défis par équipe
-
----
-
-## 📞 Support
-
-### Le bouton ne télécharge pas ?
-
-**Solutions** :
-1. Vérifiez votre connexion internet
-2. Essayez un autre navigateur
-3. Téléchargez directement depuis :
-   https://silverteacher.github.io/Drane/defis_ia_cartes.xlsx
-
-### Le modèle ne s'ouvre pas ?
-
-**Vérifications** :
-1. Avez-vous Excel ou LibreOffice ?
-2. Le fichier est-il bien en .xlsx ?
-3. Essayez d'ouvrir avec Google Sheets
-
-### L'import ne fonctionne pas ?
-
-**Checklist** :
-- [ ] Le fichier a-t-il les 3 colonnes ?
-- [ ] Les en-têtes sont-ils exacts ?
-- [ ] Y a-t-il au moins une ligne de données ?
-- [ ] La colonne Texte_Recto est-elle remplie ?
-
----
-
-## 🎉 C'est tout !
-
-Vous êtes maintenant prêt à créer vos propres cartes personnalisées en quelques clics ! 
-
-**Workflow ultra-rapide** :
-```
-⬇️ Télécharger → ✏️ Modifier → 📤 Importer → 🖼️ Image → 📄 PDF → 🖨️ Imprimer
-                        3 minutes chrono !
-```
-
-Bon travail ! 🚀🎴
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Cartes PDF - Texte & Images - Pro</title>
+    <meta name="description" content="Créez des cartes personnalisées avec du texte au recto et des images au verso, optimisées pour l'impression recto-verso avec repères de découpe">
+    <meta name="author" content="Inspiré de l'application Lovable - Adapté pour texte par Claude">
+    
+    <!-- Bibliothèques -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .credit {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .features {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-tag {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="color"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: var(--dark);
+            color: white;
+        }
+
+        input[type="text"]::placeholder,
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="color"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-upload {
+            width: 100%;
+            padding: 1rem;
+            border: 2px dashed rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .file-upload.has-file {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .cards-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .cards-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .cards-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .cards-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .card-item {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .card-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-number {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .card-content {
+            flex-grow: 1;
+            color: white;
+        }
+
+        .card-text {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-meta {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .footer {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .generate-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .card-count {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success);
+            color: white;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger);
+            color: white;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid var(--warning);
+            color: white;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .instructions h3 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .instructions ol, .instructions ul {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .instructions code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .color-preview {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .import-status {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: white;
+        }
+
+        .import-status h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .import-status ul {
+            margin-left: 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-item {
+            animation: slideIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎴 Générateur de Cartes PDF Pro</h1>
+            <p class="subtitle">Créez des cartes personnalisées avec texte, couleurs et images - Repères de découpe inclus</p>
+            <p class="credit">Création Amélie Silvert adaptée avec l'IA>^p>
+            <div class="features">
+                <span class="feature-tag">✂️ Repères de découpe</span>
+                <span class="feature-tag">📊 Import CSV/Excel</span>
+                <span class="feature-tag">🎨 Personnalisation</span>
+                <span class="feature-tag">🖨️ Recto-verso optimisé</span>
+            </div>
+        </div>
+
+        <div id="alert" class="alert"></div>
+
+        <!-- Onglets -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('manual')">
+                ✏️ Création manuelle
+            </div>
+            <div class="tab" onclick="switchTab('import')">
+                📊 Import CSV/Excel
+            </div>
+        </div>
+
+        <!-- Contenu Création Manuelle -->
+        <div id="manual-tab" class="tab-content active">
+            <div class="main-content">
+                <!-- Formulaire de création -->
+                <div class="card">
+                    <h2 class="section-title">
+                        <span class="icon">✏️</span>
+                        Créer une carte
+                    </h2>
+
+                    <form id="cardForm">
+                        <div class="form-group">
+                            <label for="cardText">Texte du recto *</label>
+                            <textarea 
+                                id="cardText" 
+                                placeholder="Entrez le texte qui apparaîtra sur le recto de la carte..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fontSize">Taille de police</label>
+                                <select id="fontSize">
+                                    <option value="8">Petite (8pt)</option>
+                                    <option value="10">Petite-moyenne (10pt)</option>
+                                    <option value="12" selected>Moyenne (12pt)</option>
+                                    <option value="14">Grande (14pt)</option>
+                                    <option value="16">Très grande (16pt)</option>
+                                    <option value="18">Extra-grande (18pt)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="textColor">Couleur du texte</label>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="color" id="textColor" value="#1e293b" style="width: 60px; height: 40px; cursor: pointer;">
+                                    <input type="text" id="textColorHex" value="#1e293b" placeholder="#1e293b" style="flex: 1;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardImage">Image du verso (optionnel)</label>
+                            <input type="file" id="cardImage" accept="image/*">
+                            <label for="cardImage" class="file-upload" id="fileUploadLabel">
+                                <span class="icon">📁</span>
+                                <div>Cliquez pour sélectionner une image</div>
+                                <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+                                    JPG, PNG, GIF (max 5MB)
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit" class="btn-primary" style="flex: 1;">
+                                ➕ Ajouter la carte
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="resetForm()">
+                                🔄 Effacer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Liste des cartes -->
+                <div class="card">
+                    <h2 class="section-title">
+                        <span class="icon">📚</span>
+                        Cartes créées (<span id="cardCount">0</span>)
+                    </h2>
+
+                    <div style="margin-bottom: 1rem;">
+                        <button class="btn-danger" onclick="clearAllCards()" style="width: 100%;">
+                            🗑️ Tout supprimer
+                        </button>
+                    </div>
+
+                    <div id="cardsList" class="cards-list">
+                        <div class="empty-state">
+                            <div class="icon">📋</div>
+                            <p>Aucune carte créée pour le moment</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                                Commencez par créer votre première carte !
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu Import CSV/Excel -->
+        <div id="import-tab" class="tab-content">
+            <div class="card" style="max-width: 1200px; margin: 0 auto;">
+                <h2 class="section-title">
+                    <span class="icon">📊</span>
+                    Importer depuis CSV/Excel
+                </h2>
+
+                <div class="instructions">
+                    <h3>📝 Instructions pour l'import</h3>
+                    
+                    <div style="background: rgba(16, 185, 129, 0.2); border: 2px solid #10b981; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <h4 style="color: white; margin-bottom: 0.5rem; font-size: 1rem;">
+                                    📥 Téléchargez le modèle Excel
+                                </h4>
+                                <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0;">
+                                    Modifiez-le avec vos propres textes et réimportez-le !
+                                </p>
+                            </div>
+                            <a 
+                                href="https://silverteacher.github.io/Drane/defis_ia_cartes.xlsx" 
+                                download="modele_cartes.xlsx"
+                                style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); transition: transform 0.2s;"
+                                onmouseover="this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.transform='translateY(0)'"
+                            >
+                                <span style="font-size: 1.2rem;">⬇️</span>
+                                Télécharger le modèle
+                            </a>
+                        </div>
+                    </div>
+
+                    <ol>
+                        <li><strong>Format du fichier :</strong> CSV ou Excel (.xlsx, .xls)</li>
+                        <li><strong>Colonnes requises :</strong>
+                            <ul>
+                                <li><code>Texte_Recto</code> : Le texte à afficher au recto (obligatoire)</li>
+                                <li><code>Taille_Police</code> : Taille de la police en points (8-18, défaut: 12)</li>
+                                <li><code>Couleur</code> : Couleur du texte en hexadécimal (ex: #1e293b ou 1e293b)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Valeurs par défaut :</strong> Si une cellule est vide, les valeurs par défaut seront utilisées</li>
+                        <li><strong>Image du verso :</strong> Après l'import du CSV/Excel, choisissez UNE image locale OU entrez une URL. Cette image sera appliquée à toutes les cartes importées (optionnel).</li>
+                    </ol>
+
+                    <h3 style="margin-top: 1.5rem;">💡 Exemple de fichier CSV</h3>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; overflow-x: auto;">Texte_Recto,Taille_Police,Couleur
+Carte numéro 1,12,#000000
+Carte numéro 2,14,#ff0000
+Carte numéro 3,10,#0000ff
+Carte sans taille ni couleur,,</pre>
+                </div>
+
+                <div class="form-group">
+                    <label for="csvFile">1️⃣ Sélectionner le fichier CSV/Excel</label>
+                    <input type="file" id="csvFile" accept=".csv,.xlsx,.xls">
+                    <label for="csvFile" class="file-upload" id="csvUploadLabel">
+                        <span class="icon">📄</span>
+                        <div>Cliquez pour sélectionner votre fichier CSV/Excel</div>
+                    </label>
+                </div>
+
+                <div class="form-group" id="imageOptionsGroup" style="display: none;">
+                    <label>2️⃣ Image pour toutes les cartes (optionnel)</label>
+                    
+                    <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                        <h4 style="color: white; margin-bottom: 1rem; font-size: 1rem;">
+                            📁 Option A : Image locale
+                        </h4>
+                        <input type="file" id="singleImageFile" accept="image/*">
+                        <label for="singleImageFile" class="file-upload" id="singleImageLabel">
+                            <span class="icon">🖼️</span>
+                            <div>Cliquez pour sélectionner UNE image</div>
+                            <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+                                Cette image sera appliquée à toutes les cartes
+                            </div>
+                        </label>
+                    </div>
+
+                    <div style="text-align: center; color: rgba(255,255,255,0.8); margin: 1rem 0; font-weight: 600;">
+                        — OU —
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px;">
+                        <h4 style="color: white; margin-bottom: 1rem; font-size: 1rem;">
+                            🔗 Option B : URL d'image
+                        </h4>
+                        <input 
+                            type="text" 
+                            id="imageURL" 
+                            placeholder="https://exemple.com/image.jpg ou lien Pixabay"
+                            style="margin-bottom: 0.5rem;"
+                        >
+                        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">
+                            Entrez l'URL complète de l'image (ex: lien direct Pixabay, Unsplash, etc.)
+                        </div>
+                    </div>
+                </div>
+
+                <div id="importStatus" class="import-status" style="display: none;"></div>
+
+                <div class="button-group">
+                    <button id="importBtn" class="btn-success" onclick="processImport()" disabled style="flex: 1;">
+                        📥 Importer les cartes
+                    </button>
+                    <button class="btn-secondary" onclick="resetImport()">
+                        🔄 Recommencer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section génération PDF -->
+        <div class="footer">
+            <div class="generate-section">
+                <div class="card-count">
+                    <span id="totalCards">0</span> carte(s) prête(s) pour l'impression
+                </div>
+                <button 
+                    id="generatePDF" 
+                    class="btn-success" 
+                    onclick="generatePDF()"
+                    disabled
+                >
+                    📄 Générer le PDF avec repères de découpe
+                </button>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 0.5rem;">
+                    Le PDF sera optimisé pour l'impression recto-verso avec lignes de découpe et croix de repérage
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cards = [];
+        let csvData = [];
+        let singleImage = null; // Image unique pour toutes les cartes importées
+
+        // Gestion de l'image unique locale
+        document.getElementById('singleImageFile').addEventListener('change', async function(e) {
+            const label = document.getElementById('singleImageLabel');
+            const file = e.target.files[0];
+            
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showAlert('L\'image est trop volumineuse (max 5MB)', 'error');
+                    return;
+                }
+                
+                // Encoder l'image
+                singleImage = await fileToBase64(file);
+                
+                label.innerHTML = `
+                    <span class="icon">✅</span>
+                    <div>Image sélectionnée : ${file.name}</div>
+                    <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+                        Sera appliquée à toutes les cartes
+                    </div>
+                `;
+                label.classList.add('has-file');
+                
+                // Effacer l'URL si une image locale est sélectionnée
+                document.getElementById('imageURL').value = '';
+                
+                showAlert('✅ Image chargée ! Vous pouvez maintenant importer', 'success');
+            }
+        });
+        document.getElementById('textColor').addEventListener('input', function(e) {
+            document.getElementById('textColorHex').value = e.target.value;
+        });
+
+        document.getElementById('textColorHex').addEventListener('input', function(e) {
+            let color = e.target.value.trim();
+            if (!color.startsWith('#')) color = '#' + color;
+            if (/^#[0-9A-F]{6}$/i.test(color)) {
+                document.getElementById('textColor').value = color;
+            }
+        });
+
+        // Synchroniser le color picker avec le champ texte
+        document.getElementById('textColor').addEventListener('input', function(e) {
+            document.getElementById('textColorHex').value = e.target.value;
+        });
+
+        document.getElementById('textColorHex').addEventListener('input', function(e) {
+            let color = e.target.value.trim();
+            if (!color.startsWith('#')) color = '#' + color;
+            if (/^#[0-9A-F]{6}$/i.test(color)) {
+                document.getElementById('textColor').value = color;
+            }
+        });
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'manual') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('manual-tab').classList.add('active');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('import-tab').classList.add('active');
+            }
+        }
+
+        // Gestion du fichier upload manuel
+        document.getElementById('cardImage').addEventListener('change', function(e) {
+            const label = document.getElementById('fileUploadLabel');
+            if (e.target.files && e.target.files[0]) {
+                const fileName = e.target.files[0].name;
+                label.innerHTML = `
+                    <span class="icon">✅</span>
+                    <div>Image sélectionnée : ${fileName}</div>
+                `;
+                label.classList.add('has-file');
+            } else {
+                resetFileUpload();
+            }
+        });
+
+        function resetFileUpload() {
+            const label = document.getElementById('fileUploadLabel');
+            label.innerHTML = `
+                <span class="icon">📁</span>
+                <div>Cliquez pour sélectionner une image</div>
+                <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+                    JPG, PNG, GIF (max 5MB)
+                </div>
+            `;
+            label.classList.remove('has-file');
+        }
+
+        // Gestion du formulaire manuel
+        document.getElementById('cardForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const text = document.getElementById('cardText').value.trim();
+            const fontSize = parseInt(document.getElementById('fontSize').value);
+            const textColor = document.getElementById('textColor').value;
+            const imageFile = document.getElementById('cardImage').files[0];
+            
+            if (!text) {
+                showAlert('Veuillez entrer un texte pour le recto', 'error');
+                return;
+            }
+
+            let imageData = null;
+            if (imageFile) {
+                if (imageFile.size > 5 * 1024 * 1024) {
+                    showAlert('L\'image est trop volumineuse (max 5MB)', 'error');
+                    return;
+                }
+                imageData = await fileToBase64(imageFile);
+            }
+
+            cards.push({
+                id: Date.now(),
+                text: text,
+                fontSize: fontSize,
+                color: textColor,
+                image: imageData,
+                imageName: imageFile ? imageFile.name : null
+            });
+
+            resetForm();
+            updateCardsList();
+            updateCardCount();
+            
+            showAlert('Carte ajoutée avec succès !', 'success');
+        });
+
+        // Gestion de l'import CSV
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            const label = document.getElementById('csvUploadLabel');
+            const file = e.target.files[0];
+            
+            if (file) {
+                label.innerHTML = `
+                    <span class="icon">✅</span>
+                    <div>Fichier sélectionné : ${file.name}</div>
+                `;
+                label.classList.add('has-file');
+                
+                // Lire le fichier
+                readCSVOrExcel(file);
+            } else {
+                resetCSVUpload();
+            }
+        });
+
+        async function processImport() {
+            if (csvData.length === 0) {
+                showAlert('Aucune donnée à importer', 'error');
+                return;
+            }
+            
+            // Récupérer l'image (locale ou URL)
+            let imageData = singleImage;
+            let imageName = 'Image locale';
+            
+            // Si pas d'image locale, vérifier l'URL
+            if (!imageData) {
+                const imageURL = document.getElementById('imageURL').value.trim();
+                if (imageURL) {
+                    try {
+                        showAlert('⏳ Téléchargement de l\'image depuis l\'URL...', 'warning');
+                        imageData = await urlToBase64(imageURL);
+                        imageName = 'Image URL';
+                        showAlert('✅ Image téléchargée !', 'success');
+                    } catch (error) {
+                        showAlert('❌ Erreur lors du téléchargement de l\'image : ' + error.message, 'error');
+                        return;
+                    }
+                }
+            }
+            
+            let imported = 0;
+            let skipped = 0;
+            
+            csvData.forEach(row => {
+                const text = row.Texte_Recto ? row.Texte_Recto.trim() : '';
+                
+                if (!text) {
+                    skipped++;
+                    return;
+                }
+                
+                // Valeurs par défaut
+                let fontSize = 12;
+                let color = '#1e293b';
+                
+                // Taille de police
+                if (row.Taille_Police) {
+                    const size = parseInt(row.Taille_Police);
+                    if (!isNaN(size) && size >= 8 && size <= 18) {
+                        fontSize = size;
+                    }
+                }
+                
+                // Couleur
+                if (row.Couleur) {
+                    let colorValue = row.Couleur.trim();
+                    if (!colorValue.startsWith('#')) colorValue = '#' + colorValue;
+                    if (/^#[0-9A-F]{6}$/i.test(colorValue)) {
+                        color = colorValue;
+                    }
+                }
+                
+                // Ajouter la carte avec l'image unique (ou null si pas d'image)
+                cards.push({
+                    id: Date.now() + imported,
+                    text: text,
+                    fontSize: fontSize,
+                    color: color,
+                    image: imageData,
+                    imageName: imageData ? imageName : null
+                });
+                
+                imported++;
+            });
+            
+            updateCardsList();
+            updateCardCount();
+            
+            const imageInfo = imageData ? ' avec image' : ' sans image';
+            showAlert(`Import terminé ! ${imported} carte(s) importée(s)${imageInfo}${skipped > 0 ? `, ${skipped} ligne(s) ignorée(s)` : ''}`, 'success');
+            
+            // Basculer vers l'onglet manuel pour voir les cartes
+            setTimeout(() => {
+                switchTab('manual');
+            }, 2000);
+        }
+
+        async function urlToBase64(url) {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    const blob = await response.blob();
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        async function readCSVOrExcel(file) {
+            const fileName = file.name.toLowerCase();
+            
+            if (fileName.endsWith('.csv')) {
+                // Lecture CSV
+                Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        csvData = results.data;
+                        displayCSVPreview();
+                    },
+                    error: function(error) {
+                        showAlert('Erreur lors de la lecture du fichier CSV : ' + error.message, 'error');
+                    }
+                });
+            } else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+                // Lecture Excel
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        csvData = XLSX.utils.sheet_to_json(firstSheet);
+                        displayCSVPreview();
+                    } catch (error) {
+                        showAlert('Erreur lors de la lecture du fichier Excel : ' + error.message, 'error');
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function displayCSVPreview() {
+            const statusDiv = document.getElementById('importStatus');
+            statusDiv.style.display = 'block';
+            
+            const validRows = csvData.filter(row => row.Texte_Recto && row.Texte_Recto.trim());
+            
+            statusDiv.innerHTML = `
+                <h4>📊 Aperçu du fichier</h4>
+                <ul>
+                    <li>Total de lignes : ${csvData.length}</li>
+                    <li>Lignes valides (avec texte) : ${validRows.length}</li>
+                </ul>
+                <p style="margin-top: 1rem; color: rgba(255,255,255,0.9);">
+                    💡 Vous pouvez maintenant choisir une image pour toutes les cartes (optionnel)
+                </p>
+            `;
+            
+            // Afficher les options d'image
+            document.getElementById('imageOptionsGroup').style.display = 'block';
+            document.getElementById('importBtn').disabled = false;
+            
+            showAlert(`Fichier chargé ! ${validRows.length} carte(s) détectée(s). Vous pouvez ajouter une image ou importer directement.`, 'success');
+        }
+
+        function resetImport() {
+            csvData = [];
+            singleImage = null;
+            document.getElementById('csvFile').value = '';
+            document.getElementById('singleImageFile').value = '';
+            document.getElementById('imageURL').value = '';
+            document.getElementById('imageOptionsGroup').style.display = 'none';
+            document.getElementById('importStatus').style.display = 'none';
+            document.getElementById('importBtn').disabled = true;
+            resetCSVUpload();
+            resetSingleImageUpload();
+        }
+
+        function resetSingleImageUpload() {
+            const label = document.getElementById('singleImageLabel');
+            label.innerHTML = `
+                <span class="icon">🖼️</span>
+                <div>Cliquez pour sélectionner UNE image</div>
+                <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+                    Cette image sera appliquée à toutes les cartes
+                </div>
+            `;
+            label.classList.remove('has-file');
+        }
+
+        function resetCSVUpload() {
+            const label = document.getElementById('csvUploadLabel');
+            label.innerHTML = `
+                <span class="icon">📄</span>
+                <div>Cliquez pour sélectionner votre fichier CSV/Excel</div>
+            `;
+            label.classList.remove('has-file');
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function resetForm() {
+            document.getElementById('cardForm').reset();
+            document.getElementById('fontSize').value = '12';
+            document.getElementById('textColor').value = '#1e293b';
+            document.getElementById('textColorHex').value = '#1e293b';
+            resetFileUpload();
+        }
+
+        function deleteCard(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette carte ?')) {
+                const index = cards.findIndex(c => c.id === id);
+                if (index > -1) {
+                    cards.splice(index, 1);
+                    updateCardsList();
+                    updateCardCount();
+                    showAlert('Carte supprimée', 'success');
+                }
+            }
+        }
+
+        function clearAllCards() {
+            if (cards.length === 0) return;
+            
+            if (confirm(`Êtes-vous sûr de vouloir supprimer toutes les ${cards.length} cartes ?`)) {
+                cards.length = 0;
+                updateCardsList();
+                updateCardCount();
+                showAlert('Toutes les cartes ont été supprimées', 'success');
+            }
+        }
+
+        function updateCardsList() {
+            const container = document.getElementById('cardsList');
+            
+            if (cards.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📋</div>
+                        <p>Aucune carte créée pour le moment</p>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                            Commencez par créer votre première carte !
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = cards.map((card, index) => `
+                <div class="card-item">
+                    <div class="card-number">${index + 1}</div>
+                    <div class="card-content">
+                        <div class="card-text">${escapeHtml(card.text)}</div>
+                        <div class="card-meta">
+                            <span>📏 ${card.fontSize}pt</span>
+                            <span>🎨 ${card.color}</span>
+                            <span>${card.image ? '🖼️ ' + card.imageName : '❌ Pas d\'image'}</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-danger" onclick="deleteCard(${card.id})">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCardCount() {
+            const count = cards.length;
+            document.getElementById('cardCount').textContent = count;
+            document.getElementById('totalCards').textContent = count;
+            
+            const generateBtn = document.getElementById('generatePDF');
+            generateBtn.disabled = count === 0;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.className = `alert alert-${type} show`;
+            alert.textContent = message;
+            
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        async function generatePDF() {
+            if (cards.length === 0) {
+                showAlert('Aucune carte à générer', 'error');
+                return;
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                // Dimensions de carte standard (format poker : 63x88mm)
+                const cardWidth = 63;
+                const cardHeight = 88;
+                const cardsPerRow = 3;
+                const cardsPerColumn = 3;
+                const cardsPerPage = cardsPerRow * cardsPerColumn;
+
+                // Dimensions page A4
+                const pageWidth = 210;
+                const pageHeight = 297;
+                const totalWidth = cardsPerRow * cardWidth;
+                const totalHeight = cardsPerColumn * cardHeight;
+                const startX = (pageWidth - totalWidth) / 2;
+                const startY = (pageHeight - totalHeight) / 2;
+
+                // Fonction pour dessiner les repères de découpe
+                function drawCuttingMarks(doc, x, y, width, height) {
+                    doc.setDrawColor(0, 0, 0);
+                    doc.setLineWidth(0.2);
+                    
+                    const markLength = 5;
+                    
+                    // Croix aux 4 coins
+                    // Coin haut-gauche
+                    doc.line(x - markLength, y, x, y);
+                    doc.line(x, y - markLength, x, y);
+                    
+                    // Coin haut-droit
+                    doc.line(x + width, y, x + width + markLength, y);
+                    doc.line(x + width, y - markLength, x + width, y);
+                    
+                    // Coin bas-gauche
+                    doc.line(x - markLength, y + height, x, y + height);
+                    doc.line(x, y + height, x, y + height + markLength);
+                    
+                    // Coin bas-droit
+                    doc.line(x + width, y + height, x + width + markLength, y + height);
+                    doc.line(x + width, y + height, x + width, y + height + markLength);
+                    
+                    // Lignes pointillées entre les cartes
+                    doc.setLineDash([2, 2]);
+                    doc.setDrawColor(100, 100, 100);
+                    doc.setLineWidth(0.3);
+                }
+
+                // Fonction pour ajouter du texte dans une carte
+                function addTextCard(doc, card, x, y) {
+                    // Bordure de la carte
+                    doc.setDrawColor(200, 200, 200);
+                    doc.setLineWidth(0.5);
+                    doc.setLineDash([]);
+                    doc.rect(x, y, cardWidth, cardHeight);
+
+                    // Fond
+                    doc.setFillColor(240, 249, 255);
+                    doc.rect(x, y, cardWidth, cardHeight, 'F');
+                    doc.rect(x, y, cardWidth, cardHeight);
+
+                    // Texte avec couleur personnalisée
+                    const rgb = hexToRgb(card.color);
+                    doc.setTextColor(rgb.r, rgb.g, rgb.b);
+                    doc.setFontSize(card.fontSize);
+                    
+                    const maxWidth = cardWidth - 10;
+                    const lines = doc.splitTextToSize(card.text, maxWidth);
+                    const lineHeight = card.fontSize * 0.35;
+                    const textHeight = lines.length * lineHeight;
+                    const textY = y + (cardHeight - textHeight) / 2 + lineHeight;
+                    
+                    doc.text(lines, x + cardWidth / 2, textY, {
+                        align: 'center',
+                        maxWidth: maxWidth
+                    });
+                    
+                    // Dessiner les repères de découpe
+                    drawCuttingMarks(doc, x, y, cardWidth, cardHeight);
+                }
+
+                // Fonction pour ajouter une image dans une carte
+                async function addImageCard(doc, card, x, y) {
+                    // Bordure
+                    doc.setDrawColor(200, 200, 200);
+                    doc.setLineWidth(0.5);
+                    doc.setLineDash([]);
+                    doc.rect(x, y, cardWidth, cardHeight);
+
+                    if (card.image) {
+                        try {
+                            const imgPadding = 3;
+                            doc.addImage(
+                                card.image, 
+                                'JPEG', 
+                                x + imgPadding, 
+                                y + imgPadding, 
+                                cardWidth - (imgPadding * 2), 
+                                cardHeight - (imgPadding * 2),
+                                undefined,
+                                'FAST'
+                            );
+                        } catch (e) {
+                            console.error('Erreur image:', e);
+                            doc.setFillColor(249, 250, 251);
+                            doc.rect(x, y, cardWidth, cardHeight, 'F');
+                            doc.rect(x, y, cardWidth, cardHeight);
+                            
+                            doc.setFontSize(10);
+                            doc.setTextColor(156, 163, 175);
+                            doc.text('Image non disponible', x + cardWidth / 2, y + cardHeight / 2, {
+                                align: 'center'
+                            });
+                        }
+                    } else {
+                        doc.setFillColor(249, 250, 251);
+                        doc.rect(x, y, cardWidth, cardHeight, 'F');
+                        doc.rect(x, y, cardWidth, cardHeight);
+                        
+                        doc.setFontSize(10);
+                        doc.setTextColor(156, 163, 175);
+                        doc.text('Pas d\'image', x + cardWidth / 2, y + cardHeight / 2, {
+                            align: 'center'
+                        });
+                    }
+                    
+                    // Dessiner les repères de découpe
+                    drawCuttingMarks(doc, x, y, cardWidth, cardHeight);
+                }
+
+                // Fonction pour convertir hex en RGB
+                function hexToRgb(hex) {
+                    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                    return result ? {
+                        r: parseInt(result[1], 16),
+                        g: parseInt(result[2], 16),
+                        b: parseInt(result[3], 16)
+                    } : { r: 30, g: 41, b: 59 };
+                }
+
+                // PARTIE 1 : Tous les RECTOS
+                let cardIndex = 0;
+
+                for (let i = 0; i < cards.length; i++) {
+                    const row = Math.floor(cardIndex / cardsPerRow) % cardsPerColumn;
+                    const col = cardIndex % cardsPerRow;
+                    
+                    const x = startX + col * cardWidth;
+                    const y = startY + row * cardHeight;
+
+                    addTextCard(doc, cards[i], x, y);
+
+                    cardIndex++;
+
+                    if (cardIndex % cardsPerPage === 0 && i < cards.length - 1) {
+                        doc.addPage();
+                        cardIndex = 0;
+                    }
+                }
+
+                // PARTIE 2 : Tous les VERSOS (en miroir)
+                doc.addPage();
+                cardIndex = 0;
+
+                for (let i = 0; i < cards.length; i++) {
+                    const row = Math.floor(cardIndex / cardsPerRow) % cardsPerColumn;
+                    const col = cardIndex % cardsPerRow;
+                    
+                    const mirrorCol = cardsPerRow - 1 - col;
+                    const x = startX + mirrorCol * cardWidth;
+                    const y = startY + row * cardHeight;
+
+                    await addImageCard(doc, cards[i], x, y);
+
+                    cardIndex++;
+
+                    if (cardIndex % cardsPerPage === 0 && i < cards.length - 1) {
+                        doc.addPage();
+                        cardIndex = 0;
+                    }
+                }
+
+                const fileName = `cartes_avec_reperes_${new Date().toISOString().split('T')[0]}.pdf`;
+                doc.save(fileName);
+                
+                showAlert(`✅ PDF généré avec succès : ${fileName}`, 'success');
+            } catch (error) {
+                console.error('Erreur génération PDF:', error);
+                showAlert('❌ Erreur lors de la génération du PDF', 'error');
+            }
+        }
+
+        // Initialisation
+        updateCardCount();
+    </script>
+</body>
+</html>
