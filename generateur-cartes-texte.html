@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Générateur de Cartes PDF - Texte & Images - Pro</title>
     <meta name="description" content="Créez des cartes personnalisées avec du texte au recto et des images au verso, optimisées pour l'impression recto-verso avec repères de découpe">
-    <meta name="author" content "Amélie Silvert -
+    <meta name="author" content="Inspiré de l'application Lovable - Adapté pour texte par Claude">
     
     <!-- Bibliothèques -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -579,7 +579,7 @@
         <div class="header">
             <h1>🎴 Générateur de Cartes PDF Pro</h1>
             <p class="subtitle">Créez des cartes personnalisées avec texte, couleurs et images - Repères de découpe inclus</p>
-            <p class="credit">Amélie Silvert - Avec l'aide de l'IA générative</p>
+            <p class="credit">Inspiré de l'application originale créée avec Lovable - Adapté pour le texte par Claude</p>
             <div class="features">
                 <span class="feature-tag">✂️ Repères de découpe</span>
                 <span class="feature-tag">📊 Import CSV/Excel</span>
@@ -953,21 +953,33 @@ Sans image,,#0000ff,</pre>
             const validRows = csvData.filter(row => row.Texte_Recto && row.Texte_Recto.trim());
             const rowsWithImages = csvData.filter(row => row.Image_Verso && row.Image_Verso.trim());
             
+            // Vérifier si les images sont déjà en base64
+            const rowsWithBase64 = csvData.filter(row => 
+                row.Image_Verso && row.Image_Verso.startsWith('data:image/')
+            );
+            const rowsNeedingImages = rowsWithImages.length - rowsWithBase64.length;
+            
             statusDiv.innerHTML = `
                 <h4>📊 Aperçu du fichier</h4>
                 <ul>
                     <li>Total de lignes : ${csvData.length}</li>
                     <li>Lignes valides (avec texte) : ${validRows.length}</li>
                     <li>Lignes avec image : ${rowsWithImages.length}</li>
+                    ${rowsWithBase64.length > 0 ? `<li style="color: #10b981;">✅ Images déjà intégrées : ${rowsWithBase64.length}</li>` : ''}
+                    ${rowsNeedingImages > 0 ? `<li style="color: #f59e0b;">⚠️ Images à sélectionner : ${rowsNeedingImages}</li>` : ''}
                 </ul>
             `;
             
-            if (rowsWithImages.length > 0) {
+            if (rowsNeedingImages > 0) {
                 document.getElementById('imagesUploadGroup').style.display = 'block';
-                showAlert(`Fichier chargé ! Sélectionnez maintenant les ${rowsWithImages.length} image(s) correspondante(s)`, 'warning');
+                showAlert(`Fichier chargé ! Sélectionnez maintenant les ${rowsNeedingImages} image(s) manquante(s)`, 'warning');
             } else {
                 document.getElementById('importBtn').disabled = false;
-                showAlert('Fichier chargé ! Vous pouvez maintenant importer les cartes', 'success');
+                if (rowsWithBase64.length > 0) {
+                    showAlert('✅ Fichier chargé avec images intégrées ! Vous pouvez importer directement', 'success');
+                } else {
+                    showAlert('Fichier chargé ! Vous pouvez maintenant importer les cartes', 'success');
+                }
             }
         }
 
@@ -1042,9 +1054,18 @@ Sans image,,#0000ff,</pre>
                 
                 // Image
                 if (row.Image_Verso) {
-                    imageName = row.Image_Verso.trim();
-                    if (selectedImages[imageName]) {
-                        imageData = selectedImages[imageName];
+                    const imageValue = row.Image_Verso.trim();
+                    
+                    // Vérifier si c'est déjà une image base64
+                    if (imageValue.startsWith('data:image/')) {
+                        imageData = imageValue;
+                        imageName = 'Image intégrée';
+                    } else {
+                        // Sinon, chercher dans les images sélectionnées
+                        imageName = imageValue;
+                        if (selectedImages[imageName]) {
+                            imageData = selectedImages[imageName];
+                        }
                     }
                 }
                 
