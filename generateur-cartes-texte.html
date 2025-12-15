@@ -579,7 +579,7 @@
         <div class="header">
             <h1>🎴 Générateur de Cartes PDF Pro</h1>
             <p class="subtitle">Créez des cartes personnalisées avec texte, couleurs et images - Repères de découpe inclus</p>
-            <p class="credit">Inspiré de l'application originale créée avec Lovable - Adapté pour le texte par Claude</p>
+            <p class="credit">Créée par Amélie Silvert avec l'aide de l'intelligence artificielle générative</p>
             <div class="features">
                 <span class="feature-tag">✂️ Repères de découpe</span>
                 <span class="feature-tag">📊 Import CSV/Excel</span>
@@ -708,19 +708,18 @@
                                 <li><code>Texte_Recto</code> : Le texte à afficher au recto (obligatoire)</li>
                                 <li><code>Taille_Police</code> : Taille de la police en points (8-18, défaut: 12)</li>
                                 <li><code>Couleur</code> : Couleur du texte en hexadécimal (ex: #1e293b ou 1e293b)</li>
-                                <li><code>Image_Verso</code> : Nom du fichier image pour le verso (ex: image1.jpg)</li>
                             </ul>
                         </li>
                         <li><strong>Valeurs par défaut :</strong> Si une cellule est vide, les valeurs par défaut seront utilisées</li>
-                        <li><strong>Images :</strong> Après avoir importé le CSV/Excel, sélectionnez les images correspondantes</li>
+                        <li><strong>Image du verso :</strong> Après l'import du CSV/Excel, choisissez UNE image locale OU entrez une URL. Cette image sera appliquée à toutes les cartes importées (optionnel).</li>
                     </ol>
 
                     <h3 style="margin-top: 1.5rem;">💡 Exemple de fichier CSV</h3>
-                    <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; overflow-x: auto;">Texte_Recto,Taille_Police,Couleur,Image_Verso
-Carte numéro 1,12,#000000,image1.jpg
-Carte numéro 2,14,#ff0000,image2.jpg
-Carte numéro 3,10,,
-Sans image,,#0000ff,</pre>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; overflow-x: auto;">Texte_Recto,Taille_Police,Couleur
+Carte numéro 1,12,#000000
+Carte numéro 2,14,#ff0000
+Carte numéro 3,10,#0000ff
+Carte sans taille ni couleur,,</pre>
                 </div>
 
                 <div class="form-group">
@@ -732,16 +731,41 @@ Sans image,,#0000ff,</pre>
                     </label>
                 </div>
 
-                <div class="form-group" id="imagesUploadGroup" style="display: none;">
-                    <label for="imagesFiles">2️⃣ Sélectionner les images (multiples)</label>
-                    <input type="file" id="imagesFiles" accept="image/*" multiple>
-                    <label for="imagesFiles" class="file-upload" id="imagesUploadLabel">
-                        <span class="icon">🖼️</span>
-                        <div>Cliquez pour sélectionner les images</div>
-                        <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
-                            Vous pouvez sélectionner plusieurs images à la fois
+                <div class="form-group" id="imageOptionsGroup" style="display: none;">
+                    <label>2️⃣ Image pour toutes les cartes (optionnel)</label>
+                    
+                    <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                        <h4 style="color: white; margin-bottom: 1rem; font-size: 1rem;">
+                            📁 Option A : Image locale
+                        </h4>
+                        <input type="file" id="singleImageFile" accept="image/*">
+                        <label for="singleImageFile" class="file-upload" id="singleImageLabel">
+                            <span class="icon">🖼️</span>
+                            <div>Cliquez pour sélectionner UNE image</div>
+                            <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+                                Cette image sera appliquée à toutes les cartes
+                            </div>
+                        </label>
+                    </div>
+
+                    <div style="text-align: center; color: rgba(255,255,255,0.8); margin: 1rem 0; font-weight: 600;">
+                        — OU —
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px;">
+                        <h4 style="color: white; margin-bottom: 1rem; font-size: 1rem;">
+                            🔗 Option B : URL d'image
+                        </h4>
+                        <input 
+                            type="text" 
+                            id="imageURL" 
+                            placeholder="https://exemple.com/image.jpg ou lien Pixabay"
+                            style="margin-bottom: 0.5rem;"
+                        >
+                        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">
+                            Entrez l'URL complète de l'image (ex: lien direct Pixabay, Unsplash, etc.)
                         </div>
-                    </label>
+                    </div>
                 </div>
 
                 <div id="importStatus" class="import-status" style="display: none;"></div>
@@ -781,7 +805,48 @@ Sans image,,#0000ff,</pre>
     <script>
         const cards = [];
         let csvData = [];
-        let selectedImages = {};
+        let singleImage = null; // Image unique pour toutes les cartes importées
+
+        // Gestion de l'image unique locale
+        document.getElementById('singleImageFile').addEventListener('change', async function(e) {
+            const label = document.getElementById('singleImageLabel');
+            const file = e.target.files[0];
+            
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showAlert('L\'image est trop volumineuse (max 5MB)', 'error');
+                    return;
+                }
+                
+                // Encoder l'image
+                singleImage = await fileToBase64(file);
+                
+                label.innerHTML = `
+                    <span class="icon">✅</span>
+                    <div>Image sélectionnée : ${file.name}</div>
+                    <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+                        Sera appliquée à toutes les cartes
+                    </div>
+                `;
+                label.classList.add('has-file');
+                
+                // Effacer l'URL si une image locale est sélectionnée
+                document.getElementById('imageURL').value = '';
+                
+                showAlert('✅ Image chargée ! Vous pouvez maintenant importer', 'success');
+            }
+        });
+        document.getElementById('textColor').addEventListener('input', function(e) {
+            document.getElementById('textColorHex').value = e.target.value;
+        });
+
+        document.getElementById('textColorHex').addEventListener('input', function(e) {
+            let color = e.target.value.trim();
+            if (!color.startsWith('#')) color = '#' + color;
+            if (/^#[0-9A-F]{6}$/i.test(color)) {
+                document.getElementById('textColor').value = color;
+            }
+        });
 
         // Synchroniser le color picker avec le champ texte
         document.getElementById('textColor').addEventListener('input', function(e) {
@@ -795,8 +860,6 @@ Sans image,,#0000ff,</pre>
                 document.getElementById('textColor').value = color;
             }
         });
-
-        // Gestion des onglets
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -895,22 +958,106 @@ Sans image,,#0000ff,</pre>
             }
         });
 
-        // Gestion de l'import images multiples
-        document.getElementById('imagesFiles').addEventListener('change', function(e) {
-            const label = document.getElementById('imagesUploadLabel');
-            const files = e.target.files;
-            
-            if (files && files.length > 0) {
-                label.innerHTML = `
-                    <span class="icon">✅</span>
-                    <div>${files.length} image(s) sélectionnée(s)</div>
-                `;
-                label.classList.add('has-file');
-                
-                // Stocker les images
-                processImages(files);
+        async function processImport() {
+            if (csvData.length === 0) {
+                showAlert('Aucune donnée à importer', 'error');
+                return;
             }
-        });
+            
+            // Récupérer l'image (locale ou URL)
+            let imageData = singleImage;
+            let imageName = 'Image locale';
+            
+            // Si pas d'image locale, vérifier l'URL
+            if (!imageData) {
+                const imageURL = document.getElementById('imageURL').value.trim();
+                if (imageURL) {
+                    try {
+                        showAlert('⏳ Téléchargement de l\'image depuis l\'URL...', 'warning');
+                        imageData = await urlToBase64(imageURL);
+                        imageName = 'Image URL';
+                        showAlert('✅ Image téléchargée !', 'success');
+                    } catch (error) {
+                        showAlert('❌ Erreur lors du téléchargement de l\'image : ' + error.message, 'error');
+                        return;
+                    }
+                }
+            }
+            
+            let imported = 0;
+            let skipped = 0;
+            
+            csvData.forEach(row => {
+                const text = row.Texte_Recto ? row.Texte_Recto.trim() : '';
+                
+                if (!text) {
+                    skipped++;
+                    return;
+                }
+                
+                // Valeurs par défaut
+                let fontSize = 12;
+                let color = '#1e293b';
+                
+                // Taille de police
+                if (row.Taille_Police) {
+                    const size = parseInt(row.Taille_Police);
+                    if (!isNaN(size) && size >= 8 && size <= 18) {
+                        fontSize = size;
+                    }
+                }
+                
+                // Couleur
+                if (row.Couleur) {
+                    let colorValue = row.Couleur.trim();
+                    if (!colorValue.startsWith('#')) colorValue = '#' + colorValue;
+                    if (/^#[0-9A-F]{6}$/i.test(colorValue)) {
+                        color = colorValue;
+                    }
+                }
+                
+                // Ajouter la carte avec l'image unique (ou null si pas d'image)
+                cards.push({
+                    id: Date.now() + imported,
+                    text: text,
+                    fontSize: fontSize,
+                    color: color,
+                    image: imageData,
+                    imageName: imageData ? imageName : null
+                });
+                
+                imported++;
+            });
+            
+            updateCardsList();
+            updateCardCount();
+            
+            const imageInfo = imageData ? ' avec image' : ' sans image';
+            showAlert(`Import terminé ! ${imported} carte(s) importée(s)${imageInfo}${skipped > 0 ? `, ${skipped} ligne(s) ignorée(s)` : ''}`, 'success');
+            
+            // Basculer vers l'onglet manuel pour voir les cartes
+            setTimeout(() => {
+                switchTab('manual');
+            }, 2000);
+        }
+
+        async function urlToBase64(url) {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    const blob = await response.blob();
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
 
         async function readCSVOrExcel(file) {
             const fileName = file.name.toLowerCase();
@@ -951,156 +1098,48 @@ Sans image,,#0000ff,</pre>
             statusDiv.style.display = 'block';
             
             const validRows = csvData.filter(row => row.Texte_Recto && row.Texte_Recto.trim());
-            const rowsWithImages = csvData.filter(row => row.Image_Verso && row.Image_Verso.trim());
-            
-            // Vérifier si les images sont déjà en base64
-            const rowsWithBase64 = csvData.filter(row => 
-                row.Image_Verso && row.Image_Verso.startsWith('data:image/')
-            );
-            const rowsNeedingImages = rowsWithImages.length - rowsWithBase64.length;
             
             statusDiv.innerHTML = `
                 <h4>📊 Aperçu du fichier</h4>
                 <ul>
                     <li>Total de lignes : ${csvData.length}</li>
                     <li>Lignes valides (avec texte) : ${validRows.length}</li>
-                    <li>Lignes avec image : ${rowsWithImages.length}</li>
-                    ${rowsWithBase64.length > 0 ? `<li style="color: #10b981;">✅ Images déjà intégrées : ${rowsWithBase64.length}</li>` : ''}
-                    ${rowsNeedingImages > 0 ? `<li style="color: #f59e0b;">⚠️ Images à sélectionner : ${rowsNeedingImages}</li>` : ''}
                 </ul>
+                <p style="margin-top: 1rem; color: rgba(255,255,255,0.9);">
+                    💡 Vous pouvez maintenant choisir une image pour toutes les cartes (optionnel)
+                </p>
             `;
             
-            if (rowsNeedingImages > 0) {
-                document.getElementById('imagesUploadGroup').style.display = 'block';
-                showAlert(`Fichier chargé ! Sélectionnez maintenant les ${rowsNeedingImages} image(s) manquante(s)`, 'warning');
-            } else {
-                document.getElementById('importBtn').disabled = false;
-                if (rowsWithBase64.length > 0) {
-                    showAlert('✅ Fichier chargé avec images intégrées ! Vous pouvez importer directement', 'success');
-                } else {
-                    showAlert('Fichier chargé ! Vous pouvez maintenant importer les cartes', 'success');
-                }
-            }
-        }
-
-        async function processImages(files) {
-            selectedImages = {};
-            
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                if (file.size > 5 * 1024 * 1024) {
-                    showAlert(`L'image ${file.name} est trop volumineuse (max 5MB)`, 'warning');
-                    continue;
-                }
-                
-                const imageData = await fileToBase64(file);
-                selectedImages[file.name] = imageData;
-            }
-            
-            const statusDiv = document.getElementById('importStatus');
-            const currentHTML = statusDiv.innerHTML;
-            statusDiv.innerHTML = currentHTML + `
-                <ul style="margin-top: 1rem;">
-                    <li>Images chargées : ${Object.keys(selectedImages).length}</li>
-                    <li style="font-size: 0.85rem; opacity: 0.8;">
-                        ${Object.keys(selectedImages).join(', ')}
-                    </li>
-                </ul>
-            `;
-            
+            // Afficher les options d'image
+            document.getElementById('imageOptionsGroup').style.display = 'block';
             document.getElementById('importBtn').disabled = false;
-            showAlert('Images chargées ! Vous pouvez maintenant importer les cartes', 'success');
-        }
-
-        function processImport() {
-            if (csvData.length === 0) {
-                showAlert('Aucune donnée à importer', 'error');
-                return;
-            }
             
-            let imported = 0;
-            let skipped = 0;
-            
-            csvData.forEach(row => {
-                const text = row.Texte_Recto ? row.Texte_Recto.trim() : '';
-                
-                if (!text) {
-                    skipped++;
-                    return;
-                }
-                
-                // Valeurs par défaut
-                let fontSize = 12;
-                let color = '#1e293b';
-                let imageData = null;
-                let imageName = null;
-                
-                // Taille de police
-                if (row.Taille_Police) {
-                    const size = parseInt(row.Taille_Police);
-                    if (!isNaN(size) && size >= 8 && size <= 18) {
-                        fontSize = size;
-                    }
-                }
-                
-                // Couleur
-                if (row.Couleur) {
-                    let colorValue = row.Couleur.trim();
-                    if (!colorValue.startsWith('#')) colorValue = '#' + colorValue;
-                    if (/^#[0-9A-F]{6}$/i.test(colorValue)) {
-                        color = colorValue;
-                    }
-                }
-                
-                // Image
-                if (row.Image_Verso) {
-                    const imageValue = row.Image_Verso.trim();
-                    
-                    // Vérifier si c'est déjà une image base64
-                    if (imageValue.startsWith('data:image/')) {
-                        imageData = imageValue;
-                        imageName = 'Image intégrée';
-                    } else {
-                        // Sinon, chercher dans les images sélectionnées
-                        imageName = imageValue;
-                        if (selectedImages[imageName]) {
-                            imageData = selectedImages[imageName];
-                        }
-                    }
-                }
-                
-                cards.push({
-                    id: Date.now() + imported,
-                    text: text,
-                    fontSize: fontSize,
-                    color: color,
-                    image: imageData,
-                    imageName: imageName
-                });
-                
-                imported++;
-            });
-            
-            updateCardsList();
-            updateCardCount();
-            
-            showAlert(`Import terminé ! ${imported} carte(s) importée(s)${skipped > 0 ? `, ${skipped} ligne(s) ignorée(s)` : ''}`, 'success');
-            
-            // Basculer vers l'onglet manuel pour voir les cartes
-            setTimeout(() => {
-                switchTab('manual');
-            }, 2000);
+            showAlert(`Fichier chargé ! ${validRows.length} carte(s) détectée(s). Vous pouvez ajouter une image ou importer directement.`, 'success');
         }
 
         function resetImport() {
             csvData = [];
-            selectedImages = {};
+            singleImage = null;
             document.getElementById('csvFile').value = '';
-            document.getElementById('imagesFiles').value = '';
-            document.getElementById('imagesUploadGroup').style.display = 'none';
+            document.getElementById('singleImageFile').value = '';
+            document.getElementById('imageURL').value = '';
+            document.getElementById('imageOptionsGroup').style.display = 'none';
             document.getElementById('importStatus').style.display = 'none';
             document.getElementById('importBtn').disabled = true;
             resetCSVUpload();
+            resetSingleImageUpload();
+        }
+
+        function resetSingleImageUpload() {
+            const label = document.getElementById('singleImageLabel');
+            label.innerHTML = `
+                <span class="icon">🖼️</span>
+                <div>Cliquez pour sélectionner UNE image</div>
+                <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">
+                    Cette image sera appliquée à toutes les cartes
+                </div>
+            `;
+            label.classList.remove('has-file');
         }
 
         function resetCSVUpload() {
