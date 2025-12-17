@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 40px 20px;
         }
@@ -91,6 +91,17 @@
             height: auto;
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(52, 77, 89, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container img:hover {
+            transform: scale(1.02);
+        }
+
+        .image-link {
+            display: inline-block;
+            text-decoration: none;
         }
 
         .card {
@@ -102,33 +113,6 @@
             box-shadow: 0 4px 15px rgba(52, 77, 89, 0.1);
         }
 
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-
-        .card-item {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(52, 77, 89, 0.12);
-            border-top: 4px solid #137C8B;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(52, 77, 89, 0.2);
-        }
-
-        .card-item h4 {
-            color: #137C8B;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-        }
-
         .highlight {
             background: linear-gradient(120deg, #B8CBD0 0%, #709CA7 100%);
             color: #344D59;
@@ -136,22 +120,6 @@
             border-radius: 10px;
             margin: 25px 0;
             border-left: 5px solid #137C8B;
-        }
-
-        .question-box {
-            background: #7A90A4;
-            color: white;
-            padding: 20px 25px;
-            margin: 15px 0;
-            border-radius: 8px;
-            font-style: italic;
-            box-shadow: 0 4px 15px rgba(122, 144, 164, 0.3);
-        }
-
-        .question-box::before {
-            content: "❓ ";
-            font-size: 1.2em;
-            margin-right: 10px;
         }
 
         .conclusion-box {
@@ -166,32 +134,112 @@
             box-shadow: 0 10px 40px rgba(19, 124, 139, 0.3);
         }
 
-        .invitation-box {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(52, 77, 89, 0.15);
-            margin: 40px 0;
-            border: 3px solid #137C8B;
-        }
-
-        .invitation-box h3 {
-            color: #137C8B;
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
         strong {
             color: #137C8B;
         }
 
-        ul {
-            margin: 20px 0 20px 30px;
+        /* Styles pour le tableau */
+        .table-container {
+            overflow-x: auto;
+            margin: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(52, 77, 89, 0.15);
         }
 
-        li {
+        .modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            font-size: 0.95em;
+        }
+
+        .modern-table thead {
+            background: linear-gradient(135deg, #137C8B 0%, #344D59 100%);
+            color: white;
+        }
+
+        .modern-table th {
+            padding: 20px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1em;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modern-table th:last-child {
+            border-right: none;
+        }
+
+        .modern-table th:first-child {
+            border-top-left-radius: 15px;
+        }
+
+        .modern-table th:last-child {
+            border-top-right-radius: 15px;
+        }
+
+        .modern-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            border-right: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .modern-table td:last-child {
+            border-right: none;
+        }
+
+        .modern-table tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 15px;
+        }
+
+        .modern-table tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 15px;
+        }
+
+        .modern-table tbody tr:hover {
+            background: #f8fafb;
+        }
+
+        .row-header {
+            background: linear-gradient(135deg, #709CA7 0%, #7A90A4 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .gain-highlight {
+            background: #fff8dc;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 4px solid #137C8B;
             margin: 10px 0;
-            padding-left: 10px;
+            font-weight: 600;
+            color: #137C8B;
+        }
+
+        .question-highlight {
+            background: #7A90A4;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-style: italic;
+            font-size: 0.95em;
+        }
+
+        .question-highlight::before {
+            content: "❓ ";
+            margin-right: 8px;
+        }
+
+        .question-grey {
+            color: #7A90A4;
+            font-style: italic;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f4f7;
+            border-radius: 6px;
         }
 
         @media (max-width: 768px) {
@@ -215,8 +263,13 @@
                 padding: 40px 20px;
             }
 
-            .card-grid {
-                grid-template-columns: 1fr;
+            .modern-table {
+                font-size: 0.85em;
+            }
+
+            .modern-table th,
+            .modern-table td {
+                padding: 12px 10px;
             }
         }
 
@@ -235,6 +288,15 @@
                 padding: 20px;
                 font-size: 1em;
             }
+
+            .modern-table {
+                font-size: 0.8em;
+            }
+
+            .modern-table th,
+            .modern-table td {
+                padding: 10px 8px;
+            }
         }
     </style>
 </head>
@@ -245,6 +307,12 @@
     </header>
 
     <div class="container">
+        <div class="image-container">
+            <a href="https://silverteacher.github.io/Drane/carteIAmonde.png" target="_blank" class="image-link">
+                <img src="https://silverteacher.github.io/Drane/carteIAmonde.png" alt="Carte IA Monde" style="max-width: 900px;">
+            </a>
+        </div>
+
         <div class="section">
             <h2>📚 Définition de la littératie numérique</h2>
             <div class="definition-box">
@@ -256,7 +324,9 @@
             <h2>🌊 La métaphore du filet de pêcheur</h2>
             
             <div class="image-container">
-                <img src="https://silverteacher.github.io/lechialutier.png" alt="Le chalutier" style="max-width: 600px;">
+                <a href="https://silverteacher.github.io/lechialutier.png" target="_blank" class="image-link">
+                    <img src="https://silverteacher.github.io/lechialutier.png" alt="Le chalutier" style="max-width: 800px;">
+                </a>
             </div>
 
             <div class="highlight">
@@ -274,61 +344,59 @@
         <div class="section">
             <h2>👨‍🏫 Perspective enseignant</h2>
             
-            <div class="card">
-                <h3>Processus pédagogique</h3>
-                <ul>
-                    <li>Vidéo maison/quiz</li>
-                    <li>Génération d'une présentation ou d'un PDT différencié</li>
-                    <li>Problématique dégagée</li>
-                    <li>Ressources et travail collectif pour y répondre</li>
-                    <li>Réponses apportées enregistrées, production finale</li>
-                </ul>
-            </div>
-
-            <div class="card-grid">
-                <div class="card-item">
-                    <h4>✅ Positif pour enseignant avec usages de l'IA</h4>
-                    <p><strong>Gain de temps dans le choix.</strong></p>
-                    <p style="margin-top: 10px;"><strong>Gain de temps dans la génération du contenu du quiz. Remédier avec précision.</strong></p>
-                    
-                    <div class="question-box">
-                        Question : l'usage de l'IA améliore-t-il la qualité de mon contenu et l'engagement de mes élèves ?
-                    </div>
-
-                    <p style="margin-top: 15px;">Peut permettre de gagner du temps</p>
-                    
-                    <div class="question-box">
-                        Question : quelle part de ma personnalité transparaît et de mon expertise ? N'y a-t-il pas une dilution et une uniformisation de mon contenu ?
-                    </div>
-
-                    <p style="margin-top: 15px;">Le PDT répond-il bien à mes objectifs pédagogiques en lien avec le profil de mes élèves ?</p>
-                </div>
-
-                <div class="card-item">
-                    <h4>⚖️ Aucun effet</h4>
-                    <p>L'enseignant décide de l'apport de l'IA par rapport à des sites. Validation des ressources à faire en amont.</p>
-                    
-                    <div class="question-box">
-                        Question : temps passé à valider les ressources ? Le syndrome du baratin
-                    </div>
-
-                    <p style="margin-top: 15px;">L'enseignant décide si un usage de l'IA est accepté (génération de son, d'image, de data viz ?) pour enrichir la présentation avec un choix de licence.</p>
-                    
-                    <div class="question-box">
-                        Question : des ressources validées dans l'ENT ne sont-elles pas plus intéressantes ?
-                    </div>
-                </div>
-
-                <div class="card-item">
-                    <h4>🎯 Sans impact pour l'enseignant</h4>
-                    <p>Le choix de la qualité de la vidéo et de sa pertinence par rapport au groupe d'élèves par rapport à leurs intérêts</p>
-                    
-                    <p style="margin-top: 15px;">La personnalisation du contenu donne de la valeur au contenu présenté. Limiter la génération sans retouches.</p>
-                    
-                    <p style="margin-top: 15px;">Travail d'échanges basés sur ce qui a été vu dans la vidéo ou la ressource postée en amont</p>
-                    
-                    <p style="margin-top: 15px;">L'enseignant nourrit sa connaissance des élèves en les voyant interagir, choisir ou rejeter une information, une ressource ou un support pour soutenir leur réflexion</p>
-                </div>
+            <div class="table-container">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Enseignant</th>
+                            <th>Vidéo maison/quiz</th>
+                            <th>Génération d'une présentation ou d'un PDT différencié</th>
+                            <th>Problématique dégagée</th>
+                            <th>Ressources et travail collectif pour y répondre</th>
+                            <th>Réponses apportées enregistrées, production finale</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="row-header">Positif pour enseignant avec usages de l'IA</td>
+                            <td>
+                                <div class="gain-highlight">Gain de temps dans le choix.</div>
+                                <div class="gain-highlight">Gain de temps dans la génération du contenu du quiz.</div>
+                                <p style="margin-top: 10px;">Remédier avec précision.</p>
+                                <div class="question-highlight">Question : l'usage de l'IA améliore-t-il la qualité de mon contenu et l'engagement de mes élèves ?</div>
+                            </td>
+                            <td>
+                                <div class="gain-highlight">Peut permettre de gagner du temps</div>
+                                <div class="question-highlight">Question : quelle part de ma personnalité transparaît et de mon expertise ? N'y a-t-il pas une dilution et une uniformisation de mon contenu ?</div>
+                                <div class="question-grey">Le PDT répond-il bien à mes objectifs pédagogiques en lien avec le profil de mes élèves ?</div>
+                            </td>
+                            <td>Aucun effet</td>
+                            <td>
+                                <p>L'enseignant décide de l'apport de l'IA par rapport à des sites. Validation des ressources à faire en amont.</p>
+                                <div class="question-highlight">Question : temps passé à valider les ressources ? Le syndrome du baratin</div>
+                            </td>
+                            <td>
+                                <p>L'enseignant décide si un usage de l'IA est accepté (génération de son, d'image, de data viz ?) pour enrichir la présentation avec un choix de licence.</p>
+                                <div class="question-highlight">Question : des ressources validées dans l'ENT ne sont-elles pas plus intéressantes ?</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="row-header">Sans impact pour l'enseignant</td>
+                            <td>
+                                <p>Le choix de la qualité de la vidéo et de sa pertinence par rapport au groupe d'élèves par rapport à leurs intérêts</p>
+                            </td>
+                            <td>
+                                <p>La personnalisation du contenu donne de la valeur au contenu présenté. Limiter la génération sans retouches.</p>
+                            </td>
+                            <td>
+                                <p>Travail d'échanges basés sur ce qui a été vu dans la vidéo ou la ressource postée en amont</p>
+                            </td>
+                            <td colspan="2">
+                                <p>L'enseignant nourrit sa connaissance des élèves en les voyant interagir, choisir ou rejeter une information, une ressource ou un support pour soutenir leur réflexion</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -344,15 +412,9 @@
         </div>
 
         <div class="image-container">
-            <img src="https://silverteacher.github.io/IAoupasIA.png" alt="IA ou pas IA" style="max-width: 700px;">
-        </div>
-
-        <div class="invitation-box">
-            <h3>🎓 Invitation à l'action</h3>
-            <p>Nous vous invitons dès à présent à imaginer une activité de formation pour travailler avec les F2 autour de ces deux questions. Chaque groupe d'atelier choisira l'une des activités proposées par ses participants pour l'optimiser grâce à l'intelligence collective du groupe.</p>
-            
-            <h3 style="margin-top: 30px;">🚀 Temps 2 : Comment travailler l'IA sans utiliser l'IA ?</h3>
-            <p>Nous vous invitons, à partir de certaines des ressources asynchrones, à lister des usages et des solutions répondant à ce défi.</p>
+            <a href="https://silverteacher.github.io/IAoupasIA.png" target="_blank" class="image-link">
+                <img src="https://silverteacher.github.io/IAoupasIA.png" alt="IA ou pas IA" style="max-width: 900px;">
+            </a>
         </div>
     </div>
 </body>
